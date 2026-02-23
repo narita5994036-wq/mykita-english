@@ -9,17 +9,14 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #0a0a0a; }
-    #error { color: red; font-family: monospace; padding: 20px; white-space: pre-wrap; }
+    #root { min-height: 100vh; }
   </style>
 </head>
 <body>
-  <div id="root"><div id="error"></div></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js" crossorigin></script>
   <script>
-window.onerror = function(msg, src, line, col, err) {
-  document.getElementById('error').textContent = 'Error: ' + msg + '\nLine: ' + line;
-};
 const {
   useState,
   useRef,
@@ -1990,12 +1987,15 @@ onClick: () => setActiveTab(k)
 style: S.main
 }, activeTab === “shadowing” && renderShadowing(), activeTab === “vocab” && renderVocab(), activeTab === “knowledge” && renderKnowledge(), activeTab === “roleplay” && renderRoleplay(), activeTab === “quiz” && renderQuiz()));
 }
+window.addEventListener(‘DOMContentLoaded’, function() {
 try {
-const root = ReactDOM.createRoot(document.getElementById(‘root’));
+var root = ReactDOM.createRoot(document.getElementById(‘root’));
 root.render(React.createElement(MYKITAEnglishApp));
 } catch(e) {
-document.getElementById(‘error’).textContent = ’Render error: ’ + e.message + ‘\n’ + e.stack;
+document.getElementById(‘root’).innerHTML =
+’<div style="color:red;font-family:monospace;padding:20px;white-space:pre-wrap">Error: ’ + e.message + ‘\n’ + e.stack + ‘</div>’;
 }
+});
 </script>
 
 </body>
