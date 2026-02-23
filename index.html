@@ -6,13 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MYKITA English Training</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
-  <style>* { box-sizing: border-box; margin: 0; padding: 0; } body { background: #0a0a0a; }</style>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0a; }
+    #error { color: red; font-family: monospace; padding: 20px; white-space: pre-wrap; }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root"><div id="error"></div></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script>
+window.onerror = function(msg, src, line, col, err) {
+  document.getElementById('error').textContent = 'Error: ' + msg + '\nLine: ' + line;
+};
 const {
   useState,
   useRef,
@@ -691,7 +698,8 @@ localStorage.setItem(“mykita_vocab_stats”, JSON.stringify(next));
 useEffect(() => {
 if (activeTab === “quiz” && currentQuizIndex === null) pickNextQuestion({});
 }, [activeTab]);
-const pickNextQuestion = (stats = quizStats) => {
+const pickNextQuestion = function () {
+let stats = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : quizStats;
 const statArr = QUIZ_QUESTIONS.map(q => stats[q.id] || {
 attempts: 0,
 correct: 0
@@ -706,7 +714,8 @@ setShowAnswer(false);
 
 // ─── Adaptive Vocab Flashcard ────────────────────────────────────────────
 
-const pickNextFlash = (catIdx, stats = vocabStats) => {
+const pickNextFlash = function (catIdx) {
+let stats = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : vocabStats;
 const words = VOCAB[catIdx].words;
 const statArr = words.map((_, wi) => stats[`${catIdx}-${wi}`] || {
 attempts: 0,
@@ -715,7 +724,8 @@ correct: 0
 return weightedPick(words, statArr);
 };
 useEffect(() => {
-chatEndRef.current?.scrollIntoView({
+var _chatEndRef$current;
+(_chatEndRef$current = chatEndRef.current) === null || _chatEndRef$current === void 0 || _chatEndRef$current.scrollIntoView({
 behavior: “smooth”
 });
 }, [messages]);
@@ -731,7 +741,8 @@ if (f) return f;
 }
 return null;
 }, []);
-const speak = useCallback((text, rate = 1.0) => {
+const speak = useCallback(function (text) {
+let rate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
 if (!window.speechSynthesis) return;
 window.speechSynthesis.cancel();
 const doSpeak = () => {
@@ -814,7 +825,8 @@ setIsRecording(true);
 
 };
 const stopRecording = () => {
-recognitionRef.current?.stop();
+var _recognitionRef$curre;
+(_recognitionRef$curre = recognitionRef.current) === null || _recognitionRef$curre === void 0 || _recognitionRef$curre.stop();
 setIsRecording(false);
 };
 
@@ -827,6 +839,7 @@ objection: “You are a customer hesitant about the price. Push back politely on
 tourist: “You are a tourist in Japan who speaks only English. You need prescription glasses urgently. 1-2 sentences. English only.”
 };
 const callAPI = async (system, msgs) => {
+var _data$content;
 const res = await fetch(“https://api.anthropic.com/v1/messages”, {
 method: “POST”,
 headers: {
@@ -840,7 +853,7 @@ messages: msgs
 })
 });
 const data = await res.json();
-return data.content?.[0]?.text || “”;
+return ((_data$content = data.content) === null || _data$content === void 0 || (_data$content = _data$content[0]) === null || _data$content === void 0 ? void 0 : _data$content.text) || “”;
 };
 const sendMessage = async () => {
 if (!userInput.trim() || isLoading) return;
@@ -902,6 +915,7 @@ setQuizResult({
 loading: true
 });
 try {
+var _quizStats$q$id, _quizStats$q$id2;
 const raw = await callAPI(`あなたはメガネ販売員向け英語教師です。模範解答：「${q.answer}」 意味が同じなら正解とします。以下のJSON形式のみで返答： {"correct": true, "feedback": "日本語フィードバック", "naturalExample": "より自然な表現（なければnull）"}`, [{
 role: “user”,
 content: quizInput
@@ -912,8 +926,8 @@ setQuizResult(parsed);
 const next = {
 …quizStats,
 [q.id]: {
-attempts: (quizStats[q.id]?.attempts || 0) + 1,
-correct: (quizStats[q.id]?.correct || 0) + (parsed.correct ? 1 : 0)
+attempts: (((_quizStats$q$id = quizStats[q.id]) === null || _quizStats$q$id === void 0 ? void 0 : _quizStats$q$id.attempts) || 0) + 1,
+correct: (((_quizStats$q$id2 = quizStats[q.id]) === null || _quizStats$q$id2 === void 0 ? void 0 : _quizStats$q$id2.correct) || 0) + (parsed.correct ? 1 : 0)
 }
 };
 await saveQuizStats(next);
@@ -1020,7 +1034,9 @@ lineHeight: “1.5”,
 color: “#f0ede8”,
 marginBottom: “8px”
 },
-btn: (v = “d”) => ({
+btn: function () {
+let v = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : “d”;
+return {
 padding: “7px 14px”,
 cursor: “pointer”,
 borderRadius: “2px”,
@@ -1032,7 +1048,8 @@ whiteSpace: “nowrap”,
 background: v === “p” ? “#c8b89a” : v === “r” ? “#8b3030” : v === “j” ? “#0d1a0d” : “transparent”,
 border: `1px solid ${v === "p" ? "#c8b89a" : v === "r" ? "#8b3030" : v === "j" ? "#3a6a3a" : "#444"}`,
 color: v === “p” ? “#0a0a0a” : v === “j” ? “#8bc98b” : “#ccc”
-}),
+};
+},
 jpBox: {
 marginTop: “8px”,
 padding: “10px 12px”,
@@ -1298,12 +1315,15 @@ counts[masteryLevel(statsObj[key])]++;
 });
 return /*#**PURE***/React.createElement(“div”, {
 style: S.progressBar
-}, Object.entries(counts).map(([level, count]) => /*#**PURE***/React.createElement(“div”, {
+}, Object.entries(counts).map(_ref => {
+let [level, count] = _ref;
+return /*#**PURE***/React.createElement(“div”, {
 key: level,
 style: S.progressItem
 }, /*#**PURE***/React.createElement(“span”, {
 style: S.dot(level)
-}), MASTERY_LABEL[level], “\uFF1A”, count)));
+}), MASTERY_LABEL[level], “\uFF1A”, count);
+}));
 };
 
 // ─── Tab: Shadowing ─────────────────────────────────────────────────────
@@ -1531,12 +1551,13 @@ marginTop: “12px”
 }, /*#**PURE***/React.createElement(“button”, {
 style: S.btn(“p”),
 onClick: async e => {
+var _vocabStats$key, _vocabStats$key2;
 e.stopPropagation();
 const next = {
 …vocabStats,
 [key]: {
-attempts: (vocabStats[key]?.attempts || 0) + 1,
-correct: (vocabStats[key]?.correct || 0) + 1
+attempts: (((_vocabStats$key = vocabStats[key]) === null || _vocabStats$key === void 0 ? void 0 : _vocabStats$key.attempts) || 0) + 1,
+correct: (((_vocabStats$key2 = vocabStats[key]) === null || _vocabStats$key2 === void 0 ? void 0 : _vocabStats$key2.correct) || 0) + 1
 }
 };
 await saveVocabStats(next);
@@ -1544,12 +1565,13 @@ await saveVocabStats(next);
 }, “\u899A\u3048\u305F”), /*#**PURE***/React.createElement(“button”, {
 style: S.btn(),
 onClick: async e => {
+var _vocabStats$key3, _vocabStats$key4;
 e.stopPropagation();
 const next = {
 …vocabStats,
 [key]: {
-attempts: (vocabStats[key]?.attempts || 0) + 1,
-correct: vocabStats[key]?.correct || 0
+attempts: (((_vocabStats$key3 = vocabStats[key]) === null || _vocabStats$key3 === void 0 ? void 0 : _vocabStats$key3.attempts) || 0) + 1,
+correct: ((_vocabStats$key4 = vocabStats[key]) === null || _vocabStats$key4 === void 0 ? void 0 : _vocabStats$key4.correct) || 0
 }
 };
 await saveVocabStats(next);
@@ -1624,11 +1646,12 @@ onClick: () => speak(w.usage)
 }, “\u25B6 \u7528\u4F8B”), flashRevealed && /*#**PURE***/React.createElement(React.Fragment, null, /*#**PURE***/React.createElement(“button”, {
 style: S.btn(“p”),
 onClick: async () => {
+var _vocabStats$key5, _vocabStats$key6;
 const next = {
 …vocabStats,
 [key]: {
-attempts: (vocabStats[key]?.attempts || 0) + 1,
-correct: (vocabStats[key]?.correct || 0) + 1
+attempts: (((_vocabStats$key5 = vocabStats[key]) === null || _vocabStats$key5 === void 0 ? void 0 : _vocabStats$key5.attempts) || 0) + 1,
+correct: (((_vocabStats$key6 = vocabStats[key]) === null || _vocabStats$key6 === void 0 ? void 0 : _vocabStats$key6.correct) || 0) + 1
 }
 };
 await saveVocabStats(next);
@@ -1638,11 +1661,12 @@ setFlashRevealed(false);
 }, “\u899A\u3048\u305F \u2192 \u6B21\u3078”), /*#**PURE***/React.createElement(“button”, {
 style: S.btn(),
 onClick: async () => {
+var _vocabStats$key7, _vocabStats$key8;
 const next = {
 …vocabStats,
 [key]: {
-attempts: (vocabStats[key]?.attempts || 0) + 1,
-correct: vocabStats[key]?.correct || 0
+attempts: (((_vocabStats$key7 = vocabStats[key]) === null || _vocabStats$key7 === void 0 ? void 0 : _vocabStats$key7.attempts) || 0) + 1,
+correct: ((_vocabStats$key8 = vocabStats[key]) === null || _vocabStats$key8 === void 0 ? void 0 : _vocabStats$key8.correct) || 0
 }
 };
 await saveVocabStats(next);
@@ -1912,7 +1936,7 @@ return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createEl
     ...S.jpBox,
     marginBottom: "12px"
   }
-}, "\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C", q.answer, "\u300D"), quizResult?.loading && /*#__PURE__*/React.createElement("div", {
+}, "\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C", q.answer, "\u300D"), (quizResult === null || quizResult === void 0 ? void 0 : quizResult.loading) && /*#__PURE__*/React.createElement("div", {
   style: S.resultBox(true)
 }, "AI\u304C\u63A1\u70B9\u4E2D\u2026"), quizResult && !quizResult.loading && /*#__PURE__*/React.createElement("div", {
   style: S.resultBox(quizResult.correct)
@@ -1955,16 +1979,23 @@ style: S.logo
 style: S.title
 }, “Eyewear Sales English”), /*#**PURE***/React.createElement(“div”, {
 style: S.tabs
-}, [[“shadowing”, “Shadowing”], [“vocab”, “Vocabulary”], [“knowledge”, “Brand Knowledge”], [“roleplay”, “Roleplay”], [“quiz”, “Adaptive Quiz”]].map(([k, l]) => /*#**PURE***/React.createElement(“button”, {
+}, [[“shadowing”, “Shadowing”], [“vocab”, “Vocabulary”], [“knowledge”, “Brand Knowledge”], [“roleplay”, “Roleplay”], [“quiz”, “Adaptive Quiz”]].map(_ref2 => {
+let [k, l] = _ref2;
+return /*#**PURE***/React.createElement(“button”, {
 key: k,
 style: S.tab(activeTab === k),
 onClick: () => setActiveTab(k)
-}, l)))), /*#**PURE***/React.createElement(“div”, {
+}, l);
+}))), /*#**PURE***/React.createElement(“div”, {
 style: S.main
 }, activeTab === “shadowing” && renderShadowing(), activeTab === “vocab” && renderVocab(), activeTab === “knowledge” && renderKnowledge(), activeTab === “roleplay” && renderRoleplay(), activeTab === “quiz” && renderQuiz()));
 }
+try {
 const root = ReactDOM.createRoot(document.getElementById(‘root’));
 root.render(React.createElement(MYKITAEnglishApp));
+} catch(e) {
+document.getElementById(‘error’).textContent = ’Render error: ’ + e.message + ‘\n’ + e.stack;
+}
 </script>
 
 </body>
