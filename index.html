@@ -10,10 +10,21 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #0a0a0a; color: #f0ede8; }
     #root { min-height: 100vh; }
+    #errmsg { color: #ff6b6b; font-family: monospace; font-size: 12px; padding: 20px; white-space: pre-wrap; }
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root"><div id="errmsg">読み込み中...</div></div>
+  <script>
+  window.onerror = function(msg, src, line, col, err) {
+    document.getElementById('errmsg').textContent =
+      'JS Error: ' + msg + '\nLine: ' + line + '\n' + (err ? err.stack : '');
+  };
+  window.onunhandledrejection = function(e) {
+    document.getElementById('errmsg').textContent =
+      'Promise Error: ' + (e.reason ? e.reason.message || e.reason : e);
+  };
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script>
@@ -2024,9 +2035,14 @@ onClick: () => setActiveTab(k)
 style: S.main
 }, activeTab === “shadowing” && renderShadowing(), activeTab === “vocab” && renderVocab(), activeTab === “knowledge” && renderKnowledge(), activeTab === “roleplay” && renderRoleplay(), activeTab === “quiz” && renderQuiz()));
 }
+try {
+document.getElementById(‘errmsg’).textContent = ‘’;
 ReactDOM.createRoot(document.getElementById(‘root’)).render(
 React.createElement(MYKITAEnglishApp)
 );
+} catch(e) {
+document.getElementById(‘errmsg’).textContent = ’Render Error: ’ + e.message + ‘\n’ + e.stack;
+}
 </script>
 
 </body>
