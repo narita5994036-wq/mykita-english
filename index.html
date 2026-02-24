@@ -14,15 +14,8 @@
 </head>
 <body>
   <div id="root"></div>
-
-  <!-- Reactを同期ロード（bodyの末尾で確実に存在する） -->
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-
-  <!-- アプリ本体（pre-compiled） -->
-
   <script>
 const {
   useState,
@@ -35,1968 +28,2006 @@ const {
 
 // weight: new=3, struggling(<50%)=2~3, learning(<80%)=1, mastered(>=80%)=0.3
 function itemWeight(stat) {
-  if (!stat || stat.attempts === 0) return 3;
-  const acc = stat.correct / stat.attempts;
-  if (acc < 0.5) return 2 + (1 - acc) * 2;
-  if (acc < 0.8) return 1.2;
-  return 0.3;
+if (!stat || stat.attempts === 0) return 3;
+const acc = stat.correct / stat.attempts;
+if (acc < 0.5) return 2 + (1 - acc) * 2;
+if (acc < 0.8) return 1.2;
+return 0.3;
 }
 function weightedPick(items, stats) {
-  const weights = items.map((_, i) => itemWeight(stats[i]));
-  const total = weights.reduce((a, b) => a + b, 0);
-  let r = Math.random() * total;
-  for (let i = 0; i < weights.length; i++) {
-    r -= weights[i];
-    if (r <= 0) return i;
-  }
-  return items.length - 1;
+const weights = items.map((_, i) => itemWeight(stats[i]));
+const total = weights.reduce((a, b) => a + b, 0);
+let r = Math.random() * total;
+for (let i = 0; i < weights.length; i++) {
+r -= weights[i];
+if (r <= 0) return i;
+}
+return items.length - 1;
 }
 function masteryLevel(stat) {
-  if (!stat || stat.attempts === 0) return "new";
-  const acc = stat.correct / stat.attempts;
-  if (acc >= 0.8 && stat.attempts >= 3) return "mastered";
-  if (acc >= 0.5) return "learning";
-  return "struggling";
+if (!stat || stat.attempts === 0) return “new”;
+const acc = stat.correct / stat.attempts;
+if (acc >= 0.8 && stat.attempts >= 3) return “mastered”;
+if (acc >= 0.5) return “learning”;
+return “struggling”;
 }
 const MASTERY_COLOR = {
-  new: "#444",
-  learning: "#c8a040",
-  mastered: "#4a8a4a",
-  struggling: "#8a3030"
+new: “#444”,
+learning: “#c8a040”,
+mastered: “#4a8a4a”,
+struggling: “#8a3030”
 };
 const MASTERY_LABEL = {
-  new: "未学習",
-  learning: "学習中",
-  mastered: "習得済",
-  struggling: "要復習"
+new: “未学習”,
+learning: “学習中”,
+mastered: “習得済”,
+struggling: “要復習”
 };
 
 // ─── Vocab Data ────────────────────────────────────────────────────────────
 
 const VOCAB = [{
-  category: "接客基本",
-  words: [{
-    en: "in particular",
-    jp: "特に／とりわけ",
-    usage: "Are you looking for something in particular?",
-    note: "漠然とした「何かお探しですか」より丁寧で自然な表現"
-  }, {
-    en: "feel free to",
-    jp: "遠慮なく〜してください",
-    usage: "Feel free to try on as many frames as you like.",
-    note: "許可や歓迎を伝える丁寧な表現。命令形でなく柔らかく聞こえる"
-  }, {
-    en: "prescription",
-    jp: "処方箋／度数",
-    usage: "Are you looking for prescription glasses?",
-    note: "「度入り」を指す重要単語。発音: /prɪˈskrɪpʃən/"
-  }, {
-    en: "suit",
-    jp: "似合う",
-    usage: "These frames suit you very well.",
-    note: "外見に合うという意味。fit（サイズが合う）とは別物"
-  }, {
-    en: "complements",
-    jp: "引き立てる／よく合う",
-    usage: "The shape complements your face perfectly.",
-    note: "「補完する・映える」というニュアンス。compliments（褒める）と混同しないよう注意"
-  }, {
-    en: "at no extra charge",
-    jp: "追加料金なしで",
-    usage: "We can make adjustments at no extra charge.",
-    note: "無料サービスを伝える定番フレーズ"
-  }, {
-    en: "browsing",
-    jp: "見て回っている",
-    usage: "Just browsing? That's absolutely fine.",
-    note: "買う気がなさそうな客への自然な声かけ表現"
-  }, {
-    en: "assistance",
-    jp: "サポート／お手伝い",
-    usage: "Please let me know if you need any assistance.",
-    note: "helpより少しフォーマルな接客表現"
-  }, {
-    en: "selection",
-    jp: "品揃え／コレクション",
-    usage: "We have a wide selection of frames.",
-    note: "varietyより商品展開を伝えるのに適した語"
-  }, {
-    en: "recommend",
-    jp: "おすすめする",
-    usage: "I'd highly recommend trying the LITE collection.",
-    note: "I suggestより積極的なおすすめ表現"
-  }]
+category: “接客基本”,
+words: [{
+en: “in particular”,
+jp: “特に／とりわけ”,
+usage: “Are you looking for something in particular?”,
+note: “漠然とした「何かお探しですか」より丁寧で自然な表現”
 }, {
-  category: "MYKITAブランド",
-  words: [{
-    en: "manufactory",
-    jp: "マニュファクトリー（工房兼工場）",
-    usage: "Every frame is hand-assembled at their manufactory in Berlin.",
-    note: "単なるfactoryより職人的なニュアンス。MYKITAがよく使う用語"
-  }, {
-    en: "hand-assembled",
-    jp: "手組みされた",
-    usage: "All frames are hand-assembled by skilled craftsmen.",
-    note: "handmadeより工程を具体的に表す。接客での差別化ポイント"
-  }, {
-    en: "patented",
-    jp: "特許取得済みの",
-    usage: "MYKITA's patented hinge design uses no screws.",
-    note: "発音: /ˈpætəntɪd/。ブランドの技術的優位性を伝える重要語"
-  }, {
-    en: "hingeless",
-    jp: "ヒンジレスの",
-    usage: "The hingeless design means no screws, no welding.",
-    note: "MYKITA Collection No1の最大の特徴を表す語"
-  }, {
-    en: "cutting-edge",
-    jp: "最先端の",
-    usage: "MYKITA combines cutting-edge engineering with handcraft.",
-    note: "技術・革新性を伝える形容詞"
-  }, {
-    en: "craftsmanship",
-    jp: "職人技",
-    usage: "The craftsmanship behind each frame is exceptional.",
-    note: "品質と人の手を強調する重要語。スペルに注意"
-  }, {
-    en: "in-house",
-    jp: "社内一貫／自社製",
-    usage: "Every stage of development is done in-house.",
-    note: "外注なし・一貫生産を意味するキーワード"
-  }, {
-    en: "independent",
-    jp: "独立系の",
-    usage: "MYKITA is an independent eyewear brand.",
-    note: "大手コングロマリットに属さないことをアピールする際に使う"
-  }, {
-    en: "avant-garde",
-    jp: "前衛的な",
-    usage: "The designs are bold and avant-garde.",
-    note: "発音: /ˌævɒ̃ˈɡɑːd/。アート系の感度が高い客への表現として効果的"
-  }, {
-    en: "distinctive",
-    jp: "独特の／個性的な",
-    usage: "MYKITA has a very distinctive aesthetic.",
-    note: "uniqueより「際立った特徴がある」というニュアンス"
-  }]
+en: “feel free to”,
+jp: “遠慮なく〜してください”,
+usage: “Feel free to try on as many frames as you like.”,
+note: “許可や歓迎を伝える丁寧な表現。命令形でなく柔らかく聞こえる”
 }, {
-  category: "素材・技術",
-  words: [{
-    en: "stainless steel",
-    jp: "ステンレス鋼",
-    usage: "Collection No1 is made from stainless steel.",
-    note: "錆びない・軽い・耐久性が高いことも合わせて説明できると良い"
-  }, {
-    en: "acetate",
-    jp: "アセテート（素材）",
-    usage: "The acetate collection features bold colors.",
-    note: "発音: /ˈæsɪteɪt/。プラスチックよりリッチな素材感を伝えられる"
-  }, {
-    en: "laser sintering",
-    jp: "レーザー焼結（造形技術）",
-    usage: "MYLON frames use laser sintering technology.",
-    note: "航空宇宙工学で使われる先端技術。お客様への印象度が高い"
-  }, {
-    en: "thermally adaptive",
-    jp: "熱適応性の",
-    usage: "MYLON is a thermally adaptive material.",
-    note: "体温で少し変形し顔にフィットするという意味"
-  }, {
-    en: "ultra-lightweight",
-    jp: "超軽量の",
-    usage: "The LITE collection is ultra-lightweight.",
-    note: "very lightより接客では印象的"
-  }, {
-    en: "zero-waste",
-    jp: "廃材ゼロの",
-    usage: "The MYLON production process is zero-waste.",
-    note: "サステナビリティを気にするお客様への訴求ポイント"
-  }, {
-    en: "polyamide",
-    jp: "ポリアミド（素材）",
-    usage: "MYLON is made from polyamide powder.",
-    note: "MYLONの原料。ナイロンの一種で軽くて強い"
-  }, {
-    en: "sheet metal",
-    jp: "板金",
-    usage: "Frames are cut from thin sheet metal.",
-    note: "No1コレクションの製法を説明する際の重要語"
-  }, {
-    en: "coil spring hinge",
-    jp: "コイルスプリングヒンジ",
-    usage: "The coil spring hinge is MYKITA's signature detail.",
-    note: "MYKITAのスパイラルヒンジを指す別の言い方"
-  }, {
-    en: "durable",
-    jp: "耐久性が高い",
-    usage: "The frames are incredibly durable.",
-    note: "sturdy（頑丈）よりも上品なニュアンス"
-  }]
+en: “prescription”,
+jp: “処方箋／度数”,
+usage: “Are you looking for prescription glasses?”,
+note: “「度入り」を指す重要単語。発音: /prɪˈskrɪpʃən/”
 }, {
-  category: "フィッティング",
-  words: [{
-    en: "bridge",
-    jp: "鼻梁（鼻の付け根）",
-    usage: "How does that feel on the bridge of your nose?",
-    note: "眼鏡の鼻当て部分。nose padは別のパーツ"
-  }, {
-    en: "temple",
-    jp: "テンプル（つる）",
-    usage: "The spiral hinge is visible on the temple.",
-    note: "フレームの耳にかかる部分。眼鏡専門用語として必須"
-  }, {
-    en: "adjust / adjustments",
-    jp: "調整する／調整",
-    usage: "We can make adjustments to ensure a perfect fit.",
-    note: "フィッティング調整のこと。fixより専門的に聞こえる"
-  }, {
-    en: "fit / a perfect fit",
-    jp: "フィット感／ぴったり合う",
-    usage: "These frames should give you a perfect fit.",
-    note: "名詞としてのfitは「合い具合」"
-  }, {
-    en: "wearer",
-    jp: "装着者／かける人",
-    usage: "The frame adapts to the wearer's face.",
-    note: "三人称でお客様に言及する際に便利"
-  }, {
-    en: "nose pad",
-    jp: "ノーズパッド",
-    usage: "We can adjust the nose pads for comfort.",
-    note: "鼻当てのこと。フィッティング調整で頻出する語"
-  }, {
-    en: "frame width",
-    jp: "フレーム幅",
-    usage: "This frame width suits your face shape well.",
-    note: "顔の幅に合わせたサイズ説明に使う"
-  }, {
-    en: "pupillary distance",
-    jp: "瞳孔間距離（PD値）",
-    usage: "We'll need to measure your pupillary distance.",
-    note: "略してPD。レンズを作る際に必須の測定項目"
-  }]
+en: “suit”,
+jp: “似合う”,
+usage: “These frames suit you very well.”,
+note: “外見に合うという意味。fit（サイズが合う）とは別物”
 }, {
-  category: "価格・価値訴求",
-  words: [{
-    en: "price point",
-    jp: "価格帯",
-    usage: "The price point reflects the handmade quality.",
-    note: "priceより柔らかく聞こえる。値段を直接言わずに話題にするのに便利"
-  }, {
-    en: "reflects",
-    jp: "反映している",
-    usage: "This price reflects the craftsmanship involved.",
-    note: "「価格にはちゃんとした理由がある」というニュアンスを自然に伝える動詞"
-  }, {
-    en: "long-term investment",
-    jp: "長期的な投資",
-    usage: "Many customers see MYKITA as a long-term investment.",
-    note: "高価格帯商品の価値を説明する最重要フレーズ"
-  }, {
-    en: "built to last",
-    jp: "長く使えるように作られている",
-    usage: "These frames are built to last many years.",
-    note: "耐久性と価値を同時に伝える慣用表現"
-  }, {
-    en: "price range",
-    jp: "価格帯",
-    usage: "I can show you something in a different price range.",
-    note: "より低価格の商品へ案内するときの自然な言い回し"
-  }, {
-    en: "worth every penny",
-    jp: "十分な価値がある",
-    usage: "Customers often say these frames are worth every penny.",
-    note: "慣用表現。文字通りには「一円の価値もある」"
-  }, {
-    en: "value for money",
-    jp: "コストパフォーマンス",
-    usage: "The LITE collection offers excellent value for money.",
-    note: "価格に見合った価値があることを伝える英国英語的表現"
-  }, {
-    en: "premium",
-    jp: "プレミアム／高品質",
-    usage: "MYKITA is positioned as a premium eyewear brand.",
-    note: "luxuryより少し親しみやすく、品質の高さを示す形容詞"
-  }]
+en: “complements”,
+jp: “引き立てる／よく合う”,
+usage: “The shape complements your face perfectly.”,
+note: “「補完する・映える」というニュアンス。compliments（褒める）と混同しないよう注意”
+}, {
+en: “at no extra charge”,
+jp: “追加料金なしで”,
+usage: “We can make adjustments at no extra charge.”,
+note: “無料サービスを伝える定番フレーズ”
+}, {
+en: “browsing”,
+jp: “見て回っている”,
+usage: “Just browsing? That’s absolutely fine.”,
+note: “買う気がなさそうな客への自然な声かけ表現”
+}, {
+en: “assistance”,
+jp: “サポート／お手伝い”,
+usage: “Please let me know if you need any assistance.”,
+note: “helpより少しフォーマルな接客表現”
+}, {
+en: “selection”,
+jp: “品揃え／コレクション”,
+usage: “We have a wide selection of frames.”,
+note: “varietyより商品展開を伝えるのに適した語”
+}, {
+en: “recommend”,
+jp: “おすすめする”,
+usage: “I’d highly recommend trying the LITE collection.”,
+note: “I suggestより積極的なおすすめ表現”
+}]
+}, {
+category: “MYKITAブランド”,
+words: [{
+en: “manufactory”,
+jp: “マニュファクトリー（工房兼工場）”,
+usage: “Every frame is hand-assembled at their manufactory in Berlin.”,
+note: “単なるfactoryより職人的なニュアンス。MYKITAがよく使う用語”
+}, {
+en: “hand-assembled”,
+jp: “手組みされた”,
+usage: “All frames are hand-assembled by skilled craftsmen.”,
+note: “handmadeより工程を具体的に表す。接客での差別化ポイント”
+}, {
+en: “patented”,
+jp: “特許取得済みの”,
+usage: “MYKITA’s patented hinge design uses no screws.”,
+note: “発音: /ˈpætəntɪd/。ブランドの技術的優位性を伝える重要語”
+}, {
+en: “hingeless”,
+jp: “ヒンジレスの”,
+usage: “The hingeless design means no screws, no welding.”,
+note: “MYKITA Collection No1の最大の特徴を表す語”
+}, {
+en: “cutting-edge”,
+jp: “最先端の”,
+usage: “MYKITA combines cutting-edge engineering with handcraft.”,
+note: “技術・革新性を伝える形容詞”
+}, {
+en: “craftsmanship”,
+jp: “職人技”,
+usage: “The craftsmanship behind each frame is exceptional.”,
+note: “品質と人の手を強調する重要語。スペルに注意”
+}, {
+en: “in-house”,
+jp: “社内一貫／自社製”,
+usage: “Every stage of development is done in-house.”,
+note: “外注なし・一貫生産を意味するキーワード”
+}, {
+en: “independent”,
+jp: “独立系の”,
+usage: “MYKITA is an independent eyewear brand.”,
+note: “大手コングロマリットに属さないことをアピールする際に使う”
+}, {
+en: “avant-garde”,
+jp: “前衛的な”,
+usage: “The designs are bold and avant-garde.”,
+note: “発音: /ˌævɒ̃ˈɡɑːd/。アート系の感度が高い客への表現として効果的”
+}, {
+en: “distinctive”,
+jp: “独特の／個性的な”,
+usage: “MYKITA has a very distinctive aesthetic.”,
+note: “uniqueより「際立った特徴がある」というニュアンス”
+}]
+}, {
+category: “素材・技術”,
+words: [{
+en: “stainless steel”,
+jp: “ステンレス鋼”,
+usage: “Collection No1 is made from stainless steel.”,
+note: “錆びない・軽い・耐久性が高いことも合わせて説明できると良い”
+}, {
+en: “acetate”,
+jp: “アセテート（素材）”,
+usage: “The acetate collection features bold colors.”,
+note: “発音: /ˈæsɪteɪt/。プラスチックよりリッチな素材感を伝えられる”
+}, {
+en: “laser sintering”,
+jp: “レーザー焼結（造形技術）”,
+usage: “MYLON frames use laser sintering technology.”,
+note: “航空宇宙工学で使われる先端技術。お客様への印象度が高い”
+}, {
+en: “thermally adaptive”,
+jp: “熱適応性の”,
+usage: “MYLON is a thermally adaptive material.”,
+note: “体温で少し変形し顔にフィットするという意味”
+}, {
+en: “ultra-lightweight”,
+jp: “超軽量の”,
+usage: “The LITE collection is ultra-lightweight.”,
+note: “very lightより接客では印象的”
+}, {
+en: “zero-waste”,
+jp: “廃材ゼロの”,
+usage: “The MYLON production process is zero-waste.”,
+note: “サステナビリティを気にするお客様への訴求ポイント”
+}, {
+en: “polyamide”,
+jp: “ポリアミド（素材）”,
+usage: “MYLON is made from polyamide powder.”,
+note: “MYLONの原料。ナイロンの一種で軽くて強い”
+}, {
+en: “sheet metal”,
+jp: “板金”,
+usage: “Frames are cut from thin sheet metal.”,
+note: “No1コレクションの製法を説明する際の重要語”
+}, {
+en: “coil spring hinge”,
+jp: “コイルスプリングヒンジ”,
+usage: “The coil spring hinge is MYKITA’s signature detail.”,
+note: “MYKITAのスパイラルヒンジを指す別の言い方”
+}, {
+en: “durable”,
+jp: “耐久性が高い”,
+usage: “The frames are incredibly durable.”,
+note: “sturdy（頑丈）よりも上品なニュアンス”
+}]
+}, {
+category: “フィッティング”,
+words: [{
+en: “bridge”,
+jp: “鼻梁（鼻の付け根）”,
+usage: “How does that feel on the bridge of your nose?”,
+note: “眼鏡の鼻当て部分。nose padは別のパーツ”
+}, {
+en: “temple”,
+jp: “テンプル（つる）”,
+usage: “The spiral hinge is visible on the temple.”,
+note: “フレームの耳にかかる部分。眼鏡専門用語として必須”
+}, {
+en: “adjust / adjustments”,
+jp: “調整する／調整”,
+usage: “We can make adjustments to ensure a perfect fit.”,
+note: “フィッティング調整のこと。fixより専門的に聞こえる”
+}, {
+en: “fit / a perfect fit”,
+jp: “フィット感／ぴったり合う”,
+usage: “These frames should give you a perfect fit.”,
+note: “名詞としてのfitは「合い具合」”
+}, {
+en: “wearer”,
+jp: “装着者／かける人”,
+usage: “The frame adapts to the wearer’s face.”,
+note: “三人称でお客様に言及する際に便利”
+}, {
+en: “nose pad”,
+jp: “ノーズパッド”,
+usage: “We can adjust the nose pads for comfort.”,
+note: “鼻当てのこと。フィッティング調整で頻出する語”
+}, {
+en: “frame width”,
+jp: “フレーム幅”,
+usage: “This frame width suits your face shape well.”,
+note: “顔の幅に合わせたサイズ説明に使う”
+}, {
+en: “pupillary distance”,
+jp: “瞳孔間距離（PD値）”,
+usage: “We’ll need to measure your pupillary distance.”,
+note: “略してPD。レンズを作る際に必須の測定項目”
+}]
+}, {
+category: “価格・価値訴求”,
+words: [{
+en: “price point”,
+jp: “価格帯”,
+usage: “The price point reflects the handmade quality.”,
+note: “priceより柔らかく聞こえる。値段を直接言わずに話題にするのに便利”
+}, {
+en: “reflects”,
+jp: “反映している”,
+usage: “This price reflects the craftsmanship involved.”,
+note: “「価格にはちゃんとした理由がある」というニュアンスを自然に伝える動詞”
+}, {
+en: “long-term investment”,
+jp: “長期的な投資”,
+usage: “Many customers see MYKITA as a long-term investment.”,
+note: “高価格帯商品の価値を説明する最重要フレーズ”
+}, {
+en: “built to last”,
+jp: “長く使えるように作られている”,
+usage: “These frames are built to last many years.”,
+note: “耐久性と価値を同時に伝える慣用表現”
+}, {
+en: “price range”,
+jp: “価格帯”,
+usage: “I can show you something in a different price range.”,
+note: “より低価格の商品へ案内するときの自然な言い回し”
+}, {
+en: “worth every penny”,
+jp: “十分な価値がある”,
+usage: “Customers often say these frames are worth every penny.”,
+note: “慣用表現。文字通りには「一円の価値もある」”
+}, {
+en: “value for money”,
+jp: “コストパフォーマンス”,
+usage: “The LITE collection offers excellent value for money.”,
+note: “価格に見合った価値があることを伝える英国英語的表現”
+}, {
+en: “premium”,
+jp: “プレミアム／高品質”,
+usage: “MYKITA is positioned as a premium eyewear brand.”,
+note: “luxuryより少し親しみやすく、品質の高さを示す形容詞”
+}]
 }];
 
 // ─── Shadowing Lessons ─────────────────────────────────────────────────────
 
 const SHADOWING_LESSONS = [{
-  category: "Welcome & Opening",
-  phrases: [{
-    en: "Welcome to our store. Are you looking for something in particular today?",
-    jp: "いらっしゃいませ。本日は何かお探しでしょうか？"
-  }, {
-    en: "Feel free to take your time and try on as many frames as you like.",
-    jp: "ごゆっくり、どうぞお好きなだけかけてみてください。"
-  }, {
-    en: "Are you looking for prescription glasses or sunglasses today?",
-    jp: "本日は度入りメガネをお探しですか、それともサングラスですか？"
-  }, {
-    en: "Is this your first time visiting our store?",
-    jp: "当店へのご来店は初めてですか？"
-  }, {
-    en: "Can I help you find something, or would you prefer to browse on your own?",
-    jp: "何かお探しのものがございますか？それともまずご自分でご覧になりますか？"
-  }]
+category: “Welcome & Opening”,
+phrases: [{
+en: “Welcome to our store. Are you looking for something in particular today?”,
+jp: “いらっしゃいませ。本日は何かお探しでしょうか？”
 }, {
-  category: "Introducing MYKITA",
-  phrases: [{
-    en: "These are from MYKITA — a German eyewear brand founded in Berlin in 2003.",
-    jp: "こちらはMYKITAというブランドで、2003年にベルリンで創業したドイツのアイウェアブランドです。"
-  }, {
-    en: "What makes MYKITA special is that every frame is hand-assembled at their manufactory in Berlin.",
-    jp: "MYKITAの特別なところは、全てのフレームがベルリンのマニュファクトリーで手組みされているところです。"
-  }, {
-    en: "MYKITA combines cutting-edge engineering with traditional craftsmanship.",
-    jp: "MYKITAは最先端のエンジニアリングと伝統的な職人技を組み合わせています。"
-  }, {
-    en: "Unlike most eyewear brands, MYKITA does everything in-house — from design to production.",
-    jp: "多くのアイウェアブランドと異なり、MYKITAはデザインから製造まで全てを自社内で行っています。"
-  }, {
-    en: "MYKITA is an independent brand — they're not owned by any of the major eyewear groups.",
-    jp: "MYKITAは独立系ブランドで、大手アイウェアグループには属していません。"
-  }]
+en: “Feel free to take your time and try on as many frames as you like.”,
+jp: “ごゆっくり、どうぞお好きなだけかけてみてください。”
 }, {
-  category: "Explaining the Hinge",
-  phrases: [{
-    en: "Have you noticed the spiral hinge on the temple? That's MYKITA's patented design — no screws, no welding.",
-    jp: "テンプルのスパイラルヒンジにお気づきですか？これがMYKITAの特許デザインで、ネジも溶接も使っていません。"
-  }, {
-    en: "You can actually hear and feel a small click when you close the frame.",
-    jp: "フレームを閉じると小さなクリック感があります。"
-  }, {
-    en: "The frames are incredibly durable — you can flex the temples almost flat without damage.",
-    jp: "フレームは非常に耐久性が高く、テンプルをほぼ平らになるまで曲げても大丈夫です。"
-  }, {
-    en: "The hinge is made from coiled steel — it acts like a spring to keep the temples in place.",
-    jp: "ヒンジは巻いた鋼鉄でできており、バネのようにテンプルを所定の位置に固定します。"
-  }, {
-    en: "Because there are no screws, there's nothing to come loose over time.",
-    jp: "ネジがないので、経年で緩んでくることがありません。"
-  }]
+en: “Are you looking for prescription glasses or sunglasses today?”,
+jp: “本日は度入りメガネをお探しですか、それともサングラスですか？”
 }, {
-  category: "Discussing Materials",
-  phrases: [{
-    en: "This is from the LITE collection — one of the lightest metal frames we carry, made of just three components.",
-    jp: "こちらはLITEコレクションで、当店で最も軽いメタルフレームの一つです。わずか3パーツで構成されています。"
-  }, {
-    en: "The MYLON frames are made using laser sintering — a technology normally used in aerospace engineering.",
-    jp: "MYLONフレームはレーザー焼結という、通常航空宇宙工学で使われる技術で作られています。"
-  }, {
-    en: "The acetate in this collection is particularly rich — you can see the depth in the color.",
-    jp: "このコレクションのアセテートは特に深みがあり、色の奥行きがよく分かります。"
-  }, {
-    en: "MYLON is a thermally adaptive material, so it gently molds to the shape of your face.",
-    jp: "MYLONは熱適応素材なので、顔の形にやさしくなじんでいきます。"
-  }, {
-    en: "The stainless steel is cut from flat sheet metal — almost like origami — then shaped entirely by hand.",
-    jp: "ステンレスは平らな板金から切り出されます。ほとんど折り紙のように、そして全て手で形作られます。"
-  }]
+en: “Is this your first time visiting our store?”,
+jp: “当店へのご来店は初めてですか？”
 }, {
-  category: "Trying On & Fitting",
-  phrases: [{
-    en: "Would you like to try them on? The mirror is right here.",
-    jp: "かけてみますか？鏡はこちらにございます。"
-  }, {
-    en: "How does that feel on the bridge of your nose?",
-    jp: "鼻の上の当たり具合はいかがですか？"
-  }, {
-    en: "These frames suit you very well — the shape complements your face perfectly.",
-    jp: "このフレームはとてもよくお似合いです。形がお顔にぴったりです。"
-  }, {
-    en: "We can make adjustments to ensure a perfect fit — at no extra charge.",
-    jp: "完璧なフィット感になるようにフィッティング調整が可能です。追加料金はかかりません。"
-  }, {
-    en: "Are the temples sitting comfortably behind your ears?",
-    jp: "テンプルは耳の後ろに快適にのっていますか？"
-  }, {
-    en: "We can bend the temples slightly to improve the fit around your ears.",
-    jp: "耳まわりのフィット感を良くするために、テンプルを少し曲げることができます。"
-  }]
+en: “Can I help you find something, or would you prefer to browse on your own?”,
+jp: “何かお探しのものがございますか？それともまずご自分でご覧になりますか？”
+}]
 }, {
-  category: "Handling Objections",
-  phrases: [{
-    en: "I understand — the price point reflects the handmade quality and the engineering behind each frame.",
-    jp: "おっしゃる通りですね。この価格は、各フレームの手作りの品質とエンジニアリングを反映しています。"
-  }, {
-    en: "MYKITA frames are built to last many years — many customers consider them a long-term investment.",
-    jp: "MYKITAフレームは何年も使えるように作られており、多くのお客様が長期的な投資として考えていらっしゃいます。"
-  }, {
-    en: "If you'd like, I can show you something in a similar style at a different price range.",
-    jp: "ご希望でしたら、同じようなスタイルで異なる価格帯のものをご覧いただけます。"
-  }, {
-    en: "Customers who invest in MYKITA tend to come back again and again — the quality really speaks for itself.",
-    jp: "MYKITAに投資されたお客様は何度もご来店されます。品質が自ずと語っていますね。"
-  }, {
-    en: "Because there are no screws, the maintenance cost over time is much lower than with standard frames.",
-    jp: "ネジがないため、長期的なメンテナンスコストは通常のフレームより大幅に低くなります。"
-  }]
+category: “Introducing MYKITA”,
+phrases: [{
+en: “These are from MYKITA — a German eyewear brand founded in Berlin in 2003.”,
+jp: “こちらはMYKITAというブランドで、2003年にベルリンで創業したドイツのアイウェアブランドです。”
+}, {
+en: “What makes MYKITA special is that every frame is hand-assembled at their manufactory in Berlin.”,
+jp: “MYKITAの特別なところは、全てのフレームがベルリンのマニュファクトリーで手組みされているところです。”
+}, {
+en: “MYKITA combines cutting-edge engineering with traditional craftsmanship.”,
+jp: “MYKITAは最先端のエンジニアリングと伝統的な職人技を組み合わせています。”
+}, {
+en: “Unlike most eyewear brands, MYKITA does everything in-house — from design to production.”,
+jp: “多くのアイウェアブランドと異なり、MYKITAはデザインから製造まで全てを自社内で行っています。”
+}, {
+en: “MYKITA is an independent brand — they’re not owned by any of the major eyewear groups.”,
+jp: “MYKITAは独立系ブランドで、大手アイウェアグループには属していません。”
+}]
+}, {
+category: “Explaining the Hinge”,
+phrases: [{
+en: “Have you noticed the spiral hinge on the temple? That’s MYKITA’s patented design — no screws, no welding.”,
+jp: “テンプルのスパイラルヒンジにお気づきですか？これがMYKITAの特許デザインで、ネジも溶接も使っていません。”
+}, {
+en: “You can actually hear and feel a small click when you close the frame.”,
+jp: “フレームを閉じると小さなクリック感があります。”
+}, {
+en: “The frames are incredibly durable — you can flex the temples almost flat without damage.”,
+jp: “フレームは非常に耐久性が高く、テンプルをほぼ平らになるまで曲げても大丈夫です。”
+}, {
+en: “The hinge is made from coiled steel — it acts like a spring to keep the temples in place.”,
+jp: “ヒンジは巻いた鋼鉄でできており、バネのようにテンプルを所定の位置に固定します。”
+}, {
+en: “Because there are no screws, there’s nothing to come loose over time.”,
+jp: “ネジがないので、経年で緩んでくることがありません。”
+}]
+}, {
+category: “Discussing Materials”,
+phrases: [{
+en: “This is from the LITE collection — one of the lightest metal frames we carry, made of just three components.”,
+jp: “こちらはLITEコレクションで、当店で最も軽いメタルフレームの一つです。わずか3パーツで構成されています。”
+}, {
+en: “The MYLON frames are made using laser sintering — a technology normally used in aerospace engineering.”,
+jp: “MYLONフレームはレーザー焼結という、通常航空宇宙工学で使われる技術で作られています。”
+}, {
+en: “The acetate in this collection is particularly rich — you can see the depth in the color.”,
+jp: “このコレクションのアセテートは特に深みがあり、色の奥行きがよく分かります。”
+}, {
+en: “MYLON is a thermally adaptive material, so it gently molds to the shape of your face.”,
+jp: “MYLONは熱適応素材なので、顔の形にやさしくなじんでいきます。”
+}, {
+en: “The stainless steel is cut from flat sheet metal — almost like origami — then shaped entirely by hand.”,
+jp: “ステンレスは平らな板金から切り出されます。ほとんど折り紙のように、そして全て手で形作られます。”
+}]
+}, {
+category: “Trying On & Fitting”,
+phrases: [{
+en: “Would you like to try them on? The mirror is right here.”,
+jp: “かけてみますか？鏡はこちらにございます。”
+}, {
+en: “How does that feel on the bridge of your nose?”,
+jp: “鼻の上の当たり具合はいかがですか？”
+}, {
+en: “These frames suit you very well — the shape complements your face perfectly.”,
+jp: “このフレームはとてもよくお似合いです。形がお顔にぴったりです。”
+}, {
+en: “We can make adjustments to ensure a perfect fit — at no extra charge.”,
+jp: “完璧なフィット感になるようにフィッティング調整が可能です。追加料金はかかりません。”
+}, {
+en: “Are the temples sitting comfortably behind your ears?”,
+jp: “テンプルは耳の後ろに快適にのっていますか？”
+}, {
+en: “We can bend the temples slightly to improve the fit around your ears.”,
+jp: “耳まわりのフィット感を良くするために、テンプルを少し曲げることができます。”
+}]
+}, {
+category: “Handling Objections”,
+phrases: [{
+en: “I understand — the price point reflects the handmade quality and the engineering behind each frame.”,
+jp: “おっしゃる通りですね。この価格は、各フレームの手作りの品質とエンジニアリングを反映しています。”
+}, {
+en: “MYKITA frames are built to last many years — many customers consider them a long-term investment.”,
+jp: “MYKITAフレームは何年も使えるように作られており、多くのお客様が長期的な投資として考えていらっしゃいます。”
+}, {
+en: “If you’d like, I can show you something in a similar style at a different price range.”,
+jp: “ご希望でしたら、同じようなスタイルで異なる価格帯のものをご覧いただけます。”
+}, {
+en: “Customers who invest in MYKITA tend to come back again and again — the quality really speaks for itself.”,
+jp: “MYKITAに投資されたお客様は何度もご来店されます。品質が自ずと語っていますね。”
+}, {
+en: “Because there are no screws, the maintenance cost over time is much lower than with standard frames.”,
+jp: “ネジがないため、長期的なメンテナンスコストは通常のフレームより大幅に低くなります。”
+}]
 }];
 
 // ─── Quiz Questions ────────────────────────────────────────────────────────
 
 const QUIZ_QUESTIONS = [{
-  id: "q0",
-  jp: "いらっしゃいませ。本日は何かお探しでしょうか？",
-  answer: "Welcome to our store. Are you looking for something in particular today?",
-  hint: "Welcome / Are you looking for..."
+id: “q0”,
+jp: “いらっしゃいませ。本日は何かお探しでしょうか？”,
+answer: “Welcome to our store. Are you looking for something in particular today?”,
+hint: “Welcome / Are you looking for…”
 }, {
-  id: "q1",
-  jp: "かけてみますか？鏡はこちらにございます。",
-  answer: "Would you like to try them on? The mirror is right here.",
-  hint: "Would you like to try..."
+id: “q1”,
+jp: “かけてみますか？鏡はこちらにございます。”,
+answer: “Would you like to try them on? The mirror is right here.”,
+hint: “Would you like to try…”
 }, {
-  id: "q2",
-  jp: "このフレームはとてもよくお似合いです。",
-  answer: "These frames suit you very well.",
-  hint: "These frames suit you..."
+id: “q2”,
+jp: “このフレームはとてもよくお似合いです。”,
+answer: “These frames suit you very well.”,
+hint: “These frames suit you…”
 }, {
-  id: "q3",
-  jp: "ネジも溶接も使っていません。",
-  answer: "No screws, no welding.",
-  hint: "No screws..."
+id: “q3”,
+jp: “ネジも溶接も使っていません。”,
+answer: “No screws, no welding.”,
+hint: “No screws…”
 }, {
-  id: "q4",
-  jp: "全てのフレームがベルリンで手組みされています。",
-  answer: "Every frame is hand-assembled in Berlin.",
-  hint: "Every frame is hand-assembled..."
+id: “q4”,
+jp: “全てのフレームがベルリンで手組みされています。”,
+answer: “Every frame is hand-assembled in Berlin.”,
+hint: “Every frame is hand-assembled…”
 }, {
-  id: "q5",
-  jp: "鼻の上の当たり具合はいかがですか？",
-  answer: "How does that feel on the bridge of your nose?",
-  hint: "How does that feel on the bridge..."
+id: “q5”,
+jp: “鼻の上の当たり具合はいかがですか？”,
+answer: “How does that feel on the bridge of your nose?”,
+hint: “How does that feel on the bridge…”
 }, {
-  id: "q6",
-  jp: "追加料金はかかりません。",
-  answer: "At no extra charge.",
-  hint: "At no extra..."
+id: “q6”,
+jp: “追加料金はかかりません。”,
+answer: “At no extra charge.”,
+hint: “At no extra…”
 }, {
-  id: "q7",
-  jp: "長期的な投資として考えていらっしゃるお客様が多いです。",
-  answer: "Many customers consider them a long-term investment.",
-  hint: "Many customers consider..."
+id: “q7”,
+jp: “長期的な投資として考えていらっしゃるお客様が多いです。”,
+answer: “Many customers consider them a long-term investment.”,
+hint: “Many customers consider…”
 }, {
-  id: "q8",
-  jp: "MYKITAは最先端のエンジニアリングと職人技を組み合わせています。",
-  answer: "MYKITA combines cutting-edge engineering with traditional craftsmanship.",
-  hint: "MYKITA combines cutting-edge..."
+id: “q8”,
+jp: “MYKITAは最先端のエンジニアリングと職人技を組み合わせています。”,
+answer: “MYKITA combines cutting-edge engineering with traditional craftsmanship.”,
+hint: “MYKITA combines cutting-edge…”
 }, {
-  id: "q9",
-  jp: "2003年にベルリンで創業したドイツのアイウェアブランドです。",
-  answer: "It's a German eyewear brand founded in Berlin in 2003.",
-  hint: "It's a German eyewear brand..."
+id: “q9”,
+jp: “2003年にベルリンで創業したドイツのアイウェアブランドです。”,
+answer: “It’s a German eyewear brand founded in Berlin in 2003.”,
+hint: “It’s a German eyewear brand…”
 }, {
-  id: "q10",
-  jp: "このフレームは耐久性が非常に高いです。",
-  answer: "These frames are incredibly durable.",
-  hint: "These frames are incredibly..."
+id: “q10”,
+jp: “このフレームは耐久性が非常に高いです。”,
+answer: “These frames are incredibly durable.”,
+hint: “These frames are incredibly…”
 }, {
-  id: "q11",
-  jp: "MYLONは熱適応性素材で、顔の形にやさしくなじみます。",
-  answer: "MYLON is a thermally adaptive material that gently molds to your face.",
-  hint: "MYLON is a thermally adaptive..."
+id: “q11”,
+jp: “MYLONは熱適応性素材で、顔の形にやさしくなじみます。”,
+answer: “MYLON is a thermally adaptive material that gently molds to your face.”,
+hint: “MYLON is a thermally adaptive…”
 }, {
-  id: "q12",
-  jp: "テンプルは耳の後ろに快適にのっていますか？",
-  answer: "Are the temples sitting comfortably behind your ears?",
-  hint: "Are the temples sitting..."
+id: “q12”,
+jp: “テンプルは耳の後ろに快適にのっていますか？”,
+answer: “Are the temples sitting comfortably behind your ears?”,
+hint: “Are the temples sitting…”
 }, {
-  id: "q13",
-  jp: "ご遠慮なくお好きなだけかけてみてください。",
-  answer: "Feel free to try on as many frames as you like.",
-  hint: "Feel free to try on..."
+id: “q13”,
+jp: “ご遠慮なくお好きなだけかけてみてください。”,
+answer: “Feel free to try on as many frames as you like.”,
+hint: “Feel free to try on…”
 }, {
-  id: "q14",
-  jp: "デザインから製造まで全てを自社内で行っています。",
-  answer: "Everything is done in-house, from design to production.",
-  hint: "Everything is done in-house..."
+id: “q14”,
+jp: “デザインから製造まで全てを自社内で行っています。”,
+answer: “Everything is done in-house, from design to production.”,
+hint: “Everything is done in-house…”
 }, {
-  id: "q15",
-  jp: "この価格は手作りの品質を反映しています。",
-  answer: "The price reflects the handmade quality.",
-  hint: "The price reflects..."
+id: “q15”,
+jp: “この価格は手作りの品質を反映しています。”,
+answer: “The price reflects the handmade quality.”,
+hint: “The price reflects…”
 }, {
-  id: "q16",
-  jp: "ネジがないので、経年で緩んでくることがありません。",
-  answer: "Because there are no screws, there's nothing to come loose over time.",
-  hint: "Because there are no screws..."
+id: “q16”,
+jp: “ネジがないので、経年で緩んでくることがありません。”,
+answer: “Because there are no screws, there’s nothing to come loose over time.”,
+hint: “Because there are no screws…”
 }, {
-  id: "q17",
-  jp: "何かご不明な点がありましたらお声がけください。",
-  answer: "Please let me know if you need any assistance.",
-  hint: "Please let me know if you need..."
+id: “q17”,
+jp: “何かご不明な点がありましたらお声がけください。”,
+answer: “Please let me know if you need any assistance.”,
+hint: “Please let me know if you need…”
 }, {
-  id: "q18",
-  jp: "LITEコレクションはわずか3パーツで構成されています。",
-  answer: "The LITE collection is made of just three components.",
-  hint: "The LITE collection is made of..."
+id: “q18”,
+jp: “LITEコレクションはわずか3パーツで構成されています。”,
+answer: “The LITE collection is made of just three components.”,
+hint: “The LITE collection is made of…”
 }, {
-  id: "q19",
-  jp: "フォルムがお顔をとても引き立てていますね。",
-  answer: "The shape complements your face perfectly.",
-  hint: "The shape complements..."
+id: “q19”,
+jp: “フォルムがお顔をとても引き立てていますね。”,
+answer: “The shape complements your face perfectly.”,
+hint: “The shape complements…”
 }, {
-  id: "q20",
-  jp: "MYKITAは独立系ブランドで、大手グループには属していません。",
-  answer: "MYKITA is an independent brand — not owned by any of the major eyewear groups.",
-  hint: "MYKITA is an independent brand..."
+id: “q20”,
+jp: “MYKITAは独立系ブランドで、大手グループには属していません。”,
+answer: “MYKITA is an independent brand — not owned by any of the major eyewear groups.”,
+hint: “MYKITA is an independent brand…”
 }, {
-  id: "q21",
-  jp: "より低い価格帯のものをご覧いただけますよ。",
-  answer: "I can show you something in a different price range.",
-  hint: "I can show you something in a different..."
+id: “q21”,
+jp: “より低い価格帯のものをご覧いただけますよ。”,
+answer: “I can show you something in a different price range.”,
+hint: “I can show you something in a different…”
 }, {
-  id: "q22",
-  jp: "このアセテートは特に深みのある色合いです。",
-  answer: "The acetate in this collection is particularly rich — you can see the depth in the color.",
-  hint: "The acetate is particularly rich..."
+id: “q22”,
+jp: “このアセテートは特に深みのある色合いです。”,
+answer: “The acetate in this collection is particularly rich — you can see the depth in the color.”,
+hint: “The acetate is particularly rich…”
 }, {
-  id: "q23",
-  jp: "テンプルをほぼ平らになるまで曲げても大丈夫です。",
-  answer: "You can flex the temples almost flat without damage.",
-  hint: "You can flex the temples..."
+id: “q23”,
+jp: “テンプルをほぼ平らになるまで曲げても大丈夫です。”,
+answer: “You can flex the temples almost flat without damage.”,
+hint: “You can flex the temples…”
 }];
 
 // ─── Brand Knowledge ───────────────────────────────────────────────────────
 
 const BRAND_KNOWLEDGE = {
-  origin: {
-    title: "Brand Origin",
-    content: "MYKITA was founded in Berlin, Germany in 2003. The name comes from 'Kita' — a German abbreviation for Kindertagesstätte (day nursery), referencing the brand's first premises in a former day care center. Founder Moritz Krüger has described the name as reflecting a spirit of curiosity and playfulness.",
-    keyPhrases: [{
-      en: "Founded in Berlin in 2003",
-      jp: "2003年にベルリンで創業"
-    }, {
-      en: "All frames are hand-assembled at MYKITA HAUS",
-      jp: "全フレームはMYKITA HAUSで手組み"
-    }, {
-      en: "Named after a former day nursery — Kita means day care in German",
-      jp: "旧保育所にちなんだ名前 — KitaはドイツでKindertagesstätte（保育所）の略"
-    }]
-  },
-  philosophy: {
-    title: "Design Philosophy",
-    content: "MYKITA brings together cutting-edge engineering and traditional craftsmanship under one roof. Every product goes through every stage of development in-house — from concept to shop floor — ensuring uncompromising quality. MYKITA describes itself as a 'modern manufactory' driven by a collective impulse to challenge the status quo.",
-    keyPhrases: [{
-      en: "A marriage of high technology and handcraft",
-      jp: "ハイテクと職人技の融合"
-    }, {
-      en: "Everything is designed and made in Berlin",
-      jp: "すべてベルリンでデザイン・製造"
-    }, {
-      en: "A spirit of innovation and a commitment to quality",
-      jp: "革新の精神と品質へのこだわり"
-    }]
-  },
-  collections: [{
-    name: "Collection No1 (Metal)",
-    description: "Stainless steel frames with MYKITA's patented hingeless design — no screws, no welding. Cut from flat sheet metal like origami, then shaped by hand.",
-    salesPoint: "The patented hinge you can see on the temple is MYKITA's signature. It creates a distinctive click when you close the frame.",
-    salesPointJp: "テンプルに見える特許ヒンジがMYKITAのトレードマークです。フレームを閉じると独特のクリック感があります。"
-  }, {
-    name: "Collection No2 (Acetate)",
-    description: "Voluminous acetate frames with a patented Metal Injection Molding hinge. Bold colors and sculptural forms.",
-    salesPoint: "The acetate collection offers a richer, more colorful expression — perfect for customers who want a bold statement.",
-    salesPointJp: "アセテートコレクションはより豊かで色彩豊かな表現を提供します。大胆な印象を求めるお客様に最適です。"
-  }, {
-    name: "MYKITA LITE",
-    description: "Ultra-lightweight metal frames comprising just three parts. The most minimal and refined expression of MYKITA's engineering.",
-    salesPoint: "These are MYKITA's lightest frames — some customers say they forget they're wearing glasses.",
-    salesPointJp: "MYKITAで最も軽いフレームです。かけていることを忘れると言うお客様もいらっしゃいます。"
-  }, {
-    name: "MYKITA MYLON",
-    description: "Frames produced using selective laser sintering (SLS) with polyamide powder. Zero-waste production — any unused powder is recycled.",
-    salesPoint: "MYLON is a thermally adaptive material — the frames adjust gently to the wearer's face shape for exceptional comfort.",
-    salesPointJp: "MYLONは熱適応素材で、フレームが装着者の顔の形にやさしくフィットし、抜群の快適さを提供します。"
-  }, {
-    name: "MYKITA DECADES",
-    description: "Interprets classic spectacle forms from the 20th century using ultra-thin stainless steel. Retro silhouettes with contemporary precision.",
-    salesPoint: "If you love vintage-inspired shapes but want modern quality, DECADES is the perfect blend.",
-    salesPointJp: "ヴィンテージ感のある形が好きで、現代的な品質を求める方には、DECADESが完璧な選択です。"
-  }]
+origin: {
+title: “Brand Origin”,
+content: “MYKITA was founded in Berlin, Germany in 2003. The name comes from ‘Kita’ — a German abbreviation for Kindertagesstätte (day nursery), referencing the brand’s first premises in a former day care center. Founder Moritz Krüger has described the name as reflecting a spirit of curiosity and playfulness.”,
+keyPhrases: [{
+en: “Founded in Berlin in 2003”,
+jp: “2003年にベルリンで創業”
+}, {
+en: “All frames are hand-assembled at MYKITA HAUS”,
+jp: “全フレームはMYKITA HAUSで手組み”
+}, {
+en: “Named after a former day nursery — Kita means day care in German”,
+jp: “旧保育所にちなんだ名前 — KitaはドイツでKindertagesstätte（保育所）の略”
+}]
+},
+philosophy: {
+title: “Design Philosophy”,
+content: “MYKITA brings together cutting-edge engineering and traditional craftsmanship under one roof. Every product goes through every stage of development in-house — from concept to shop floor — ensuring uncompromising quality. MYKITA describes itself as a ‘modern manufactory’ driven by a collective impulse to challenge the status quo.”,
+keyPhrases: [{
+en: “A marriage of high technology and handcraft”,
+jp: “ハイテクと職人技の融合”
+}, {
+en: “Everything is designed and made in Berlin”,
+jp: “すべてベルリンでデザイン・製造”
+}, {
+en: “A spirit of innovation and a commitment to quality”,
+jp: “革新の精神と品質へのこだわり”
+}]
+},
+collections: [{
+name: “Collection No1 (Metal)”,
+description: “Stainless steel frames with MYKITA’s patented hingeless design — no screws, no welding. Cut from flat sheet metal like origami, then shaped by hand.”,
+salesPoint: “The patented hinge you can see on the temple is MYKITA’s signature. It creates a distinctive click when you close the frame.”,
+salesPointJp: “テンプルに見える特許ヒンジがMYKITAのトレードマークです。フレームを閉じると独特のクリック感があります。”
+}, {
+name: “Collection No2 (Acetate)”,
+description: “Voluminous acetate frames with a patented Metal Injection Molding hinge. Bold colors and sculptural forms.”,
+salesPoint: “The acetate collection offers a richer, more colorful expression — perfect for customers who want a bold statement.”,
+salesPointJp: “アセテートコレクションはより豊かで色彩豊かな表現を提供します。大胆な印象を求めるお客様に最適です。”
+}, {
+name: “MYKITA LITE”,
+description: “Ultra-lightweight metal frames comprising just three parts. The most minimal and refined expression of MYKITA’s engineering.”,
+salesPoint: “These are MYKITA’s lightest frames — some customers say they forget they’re wearing glasses.”,
+salesPointJp: “MYKITAで最も軽いフレームです。かけていることを忘れると言うお客様もいらっしゃいます。”
+}, {
+name: “MYKITA MYLON”,
+description: “Frames produced using selective laser sintering (SLS) with polyamide powder. Zero-waste production — any unused powder is recycled.”,
+salesPoint: “MYLON is a thermally adaptive material — the frames adjust gently to the wearer’s face shape for exceptional comfort.”,
+salesPointJp: “MYLONは熱適応素材で、フレームが装着者の顔の形にやさしくフィットし、抜群の快適さを提供します。”
+}, {
+name: “MYKITA DECADES”,
+description: “Interprets classic spectacle forms from the 20th century using ultra-thin stainless steel. Retro silhouettes with contemporary precision.”,
+salesPoint: “If you love vintage-inspired shapes but want modern quality, DECADES is the perfect blend.”,
+salesPointJp: “ヴィンテージ感のある形が好きで、現代的な品質を求める方には、DECADESが完璧な選択です。”
+}]
 };
 
 // ─── App ───────────────────────────────────────────────────────────────────
 
 function MYKITAEnglishApp() {
-  const [activeTab, setActiveTab] = useState("shadowing");
+const [activeTab, setActiveTab] = useState(“shadowing”);
 
-  // Shadowing
-  const [selectedCategory, setSelectedCategory] = useState(0);
-  const [selectedPhrase, setSelectedPhrase] = useState(null);
-  const [showJp, setShowJp] = useState({});
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [transcript, setTranscript] = useState("");
-  const [interimTranscript, setInterimTranscript] = useState("");
-  const [jpWarning, setJpWarning] = useState(false);
+// Shadowing
+const [selectedCategory, setSelectedCategory] = useState(0);
+const [selectedPhrase, setSelectedPhrase] = useState(null);
+const [showJp, setShowJp] = useState({});
+const [isSpeaking, setIsSpeaking] = useState(false);
+const [isRecording, setIsRecording] = useState(false);
+const [transcript, setTranscript] = useState(””);
+const [interimTranscript, setInterimTranscript] = useState(””);
+const [jpWarning, setJpWarning] = useState(false);
 
-  // Knowledge
-  const [knowledgeSection, setKnowledgeSection] = useState("collections");
-  const [showSalesJp, setShowSalesJp] = useState({});
-  const [showKpJp, setShowKpJp] = useState({});
+// Knowledge
+const [knowledgeSection, setKnowledgeSection] = useState(“collections”);
+const [showSalesJp, setShowSalesJp] = useState({});
+const [showKpJp, setShowKpJp] = useState({});
 
-  // Vocab
-  const [vocabCategory, setVocabCategory] = useState(0);
-  const [expandedWord, setExpandedWord] = useState(null);
-  const [vocabFlipMode, setVocabFlipMode] = useState(false);
-  const [flashIndex, setFlashIndex] = useState(0);
-  const [flashRevealed, setFlashRevealed] = useState(false);
+// Vocab
+const [vocabCategory, setVocabCategory] = useState(0);
+const [expandedWord, setExpandedWord] = useState(null);
+const [vocabFlipMode, setVocabFlipMode] = useState(false);
+const [flashIndex, setFlashIndex] = useState(0);
+const [flashRevealed, setFlashRevealed] = useState(false);
 
-  // Roleplay
-  const [messages, setMessages] = useState([{
-    role: "assistant",
-    content: "Hello! Welcome to your store. I'm looking for some new glasses today. Can you help me?"
-  }]);
-  const [userInput, setUserInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [scenario, setScenario] = useState("general");
-  const [jpFeedback, setJpFeedback] = useState({});
-  const [loadingFeedback, setLoadingFeedback] = useState(null);
+// Roleplay
+const [messages, setMessages] = useState([{
+role: “assistant”,
+content: “Hello! Welcome to your store. I’m looking for some new glasses today. Can you help me?”
+}]);
+const [userInput, setUserInput] = useState(””);
+const [isLoading, setIsLoading] = useState(false);
+const [scenario, setScenario] = useState(“general”);
+const [jpFeedback, setJpFeedback] = useState({});
+const [loadingFeedback, setLoadingFeedback] = useState(null);
 
-  // Quiz — adaptive
-  const [quizStats, setQuizStats] = useState({}); // { qId: { attempts, correct } }
-  const [currentQuizIndex, setCurrentQuizIndex] = useState(null);
-  const [quizInput, setQuizInput] = useState("");
-  const [quizResult, setQuizResult] = useState(null);
-  const [showHint, setShowHint] = useState(false);
-  const [showAnswer, setShowAnswer] = useState(false);
+// Quiz — adaptive
+const [quizStats, setQuizStats] = useState({}); // { qId: { attempts, correct } }
+const [currentQuizIndex, setCurrentQuizIndex] = useState(null);
+const [quizInput, setQuizInput] = useState(””);
+const [quizResult, setQuizResult] = useState(null);
+const [showHint, setShowHint] = useState(false);
+const [showAnswer, setShowAnswer] = useState(false);
 
-  // Vocab stats for adaptive flashcard
-  const [vocabStats, setVocabStats] = useState({}); // { "catIdx-wordIdx": { attempts, correct } }
+// Vocab stats for adaptive flashcard
+const [vocabStats, setVocabStats] = useState({}); // { “catIdx-wordIdx”: { attempts, correct } }
 
-  const chatEndRef = useRef(null);
-  const recognitionRef = useRef(null);
+const [audioURL, setAudioURL] = useState(null);
+const chatEndRef = useRef(null);
+const recognitionRef = useRef(null);
+const mediaRecorderRef = useRef(null);
+const audioChunksRef = useRef([]);
 
-  // ─── Load/Save Progress ─────────────────────────────────────────────────
+// ─── Load/Save Progress ─────────────────────────────────────────────────
 
-  useEffect(() => {
-    try {
-      const q = localStorage.getItem("mykita_quiz_stats");
-      if (q) setQuizStats(JSON.parse(q));
-    } catch (e) {}
-    try {
-      const v = localStorage.getItem("mykita_vocab_stats");
-      if (v) setVocabStats(JSON.parse(v));
-    } catch (e) {}
-  }, []);
-  const saveQuizStats = next => {
-    setQuizStats(next);
-    try {
-      localStorage.setItem("mykita_quiz_stats", JSON.stringify(next));
-    } catch (e) {}
-  };
-  const saveVocabStats = next => {
-    setVocabStats(next);
-    try {
-      localStorage.setItem("mykita_vocab_stats", JSON.stringify(next));
-    } catch (e) {}
-  };
+useEffect(() => {
+try {
+const q = localStorage.getItem(“mykita_quiz_stats”);
+if (q) setQuizStats(JSON.parse(q));
+} catch (e) {}
+try {
+const v = localStorage.getItem(“mykita_vocab_stats”);
+if (v) setVocabStats(JSON.parse(v));
+} catch (e) {}
+;
+}, []);
+const saveQuizStats = next => {
+setQuizStats(next);
+try {
+localStorage.setItem(“mykita_quiz_stats”, JSON.stringify(next));
+} catch (e) {}
+};
+const saveVocabStats = next => {
+setVocabStats(next);
+try {
+localStorage.setItem(“mykita_vocab_stats”, JSON.stringify(next));
+} catch (e) {}
+};
 
-  // ─── Init quiz ──────────────────────────────────────────────────────────
+// ─── Init quiz ──────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    if (activeTab === "quiz" && currentQuizIndex === null) pickNextQuestion({});
-  }, [activeTab]);
-  const pickNextQuestion = function () {
-    let stats = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : quizStats;
-    const statArr = QUIZ_QUESTIONS.map(q => stats[q.id] || {
-      attempts: 0,
-      correct: 0
-    });
-    const idx = weightedPick(QUIZ_QUESTIONS, statArr);
-    setCurrentQuizIndex(idx);
-    setQuizInput("");
-    setQuizResult(null);
-    setShowHint(false);
-    setShowAnswer(false);
-  };
+useEffect(() => {
+if (activeTab === “quiz” && currentQuizIndex === null) pickNextQuestion({});
+}, [activeTab]);
+const pickNextQuestion = function () {
+let stats = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : quizStats;
+const statArr = QUIZ_QUESTIONS.map(q => stats[q.id] || {
+attempts: 0,
+correct: 0
+});
+const idx = weightedPick(QUIZ_QUESTIONS, statArr);
+setCurrentQuizIndex(idx);
+setQuizInput(””);
+setQuizResult(null);
+setShowHint(false);
+setShowAnswer(false);
+};
 
-  // ─── Adaptive Vocab Flashcard ────────────────────────────────────────────
+// ─── Adaptive Vocab Flashcard ────────────────────────────────────────────
 
-  const pickNextFlash = function (catIdx) {
-    let stats = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : vocabStats;
-    const words = VOCAB[catIdx].words;
-    const statArr = words.map((_, wi) => stats[`${catIdx}-${wi}`] || {
-      attempts: 0,
-      correct: 0
-    });
-    return weightedPick(words, statArr);
-  };
-  useEffect(() => {
-    var _chatEndRef$current;
-    (_chatEndRef$current = chatEndRef.current) === null || _chatEndRef$current === void 0 || _chatEndRef$current.scrollIntoView({
-      behavior: "smooth"
-    });
-  }, [messages]);
+const pickNextFlash = function (catIdx) {
+let stats = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : vocabStats;
+const words = VOCAB[catIdx].words;
+const statArr = words.map((_, wi) => stats[`${catIdx}-${wi}`] || {
+attempts: 0,
+correct: 0
+});
+return weightedPick(words, statArr);
+};
+useEffect(() => {
+var _chatEndRef$current;
+(_chatEndRef$current = chatEndRef.current) === null || _chatEndRef$current === void 0 || _chatEndRef$current.scrollIntoView({
+behavior: “smooth”
+});
+}, [messages]);
 
-  // ─── Voice ──────────────────────────────────────────────────────────────
+// ─── Voice ──────────────────────────────────────────────────────────────
 
-  const getBestVoice = useCallback(() => {
-    const voices = window.speechSynthesis.getVoices();
-    const priority = [v => /en.US/i.test(v.lang) && /neural|premium|enhanced/i.test(v.name), v => /en.US/i.test(v.lang) && /google/i.test(v.name), v => /en.US/i.test(v.lang) && /microsoft/i.test(v.name) && /natural|aria|jenny|guy/i.test(v.name), v => /en.US/i.test(v.lang) && /microsoft/i.test(v.name), v => /en.US/i.test(v.lang) && /samantha|alex|zira/i.test(v.name), v => /en.US/i.test(v.lang), v => /en/i.test(v.lang)];
-    for (const test of priority) {
-      const f = voices.find(test);
-      if (f) return f;
-    }
-    return null;
-  }, []);
-  const speak = useCallback(function (text) {
-    let rate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
-    if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
-    const doSpeak = () => {
-      const utt = new SpeechSynthesisUtterance(text);
-      utt.lang = "en-US";
-      utt.rate = rate;
-      utt.pitch = 1.0;
-      const voice = getBestVoice();
-      if (voice) utt.voice = voice;
-      utt.onstart = () => setIsSpeaking(true);
-      utt.onend = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utt);
-    };
-    if (window.speechSynthesis.getVoices().length > 0) doSpeak();else {
-      window.speechSynthesis.onvoiceschanged = () => {
-        doSpeak();
-        window.speechSynthesis.onvoiceschanged = null;
-      };
-    }
-  }, [getBestVoice]);
-
-  // ─── Recording ──────────────────────────────────────────────────────────
-
-  const hasJapanese = text => /[\u3040-\u30FF\u4E00-\u9FFF]/.test(text);
-  const stripJapanese = text => text.replace(/[\u3040-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]+/g, "").replace(/\s+/g, " ").trim();
-  const startRecording = () => {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) {
-      setTranscript("⚠️ このブラウザ・環境では音声認識に対応していません。Chrome（PC版）をお試しくださいな。");
-      return;
-    }
-    const rec = new SR();
-    rec.lang = "en-US";
-    rec.continuous = false;
-    rec.interimResults = true; // リアルタイム表示を有効化
-    rec.maxAlternatives = 5; // 複数候補から英語優先で選ぶ
-
-    setTranscript("");
-    setInterimTranscript("");
-    setJpWarning(false);
-    rec.onresult = e => {
-      let interim = "";
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) {
-          // 複数候補から日本語が混じっていない最良のものを選ぶ
-          let best = e.results[i][0].transcript;
-          for (let j = 0; j < e.results[i].length; j++) {
-            const alt = e.results[i][j].transcript;
-            if (!hasJapanese(alt)) {
-              best = alt;
-              break;
-            }
-          }
-          if (hasJapanese(best)) {
-            setJpWarning(true);
-            best = stripJapanese(best);
-          }
-          setTranscript(best);
-          setInterimTranscript("");
-        } else {
-          interim += e.results[i][0].transcript;
-          if (hasJapanese(interim)) setJpWarning(true);
-          setInterimTranscript(interim);
-        }
-      }
-    };
-    rec.onend = () => {
-      setIsRecording(false);
-      setInterimTranscript("");
-    };
-    rec.onerror = () => {
-      setIsRecording(false);
-      setInterimTranscript("");
-    };
-    rec.start();
-    recognitionRef.current = rec;
-    setIsRecording(true);
-  };
-  const stopRecording = () => {
-    var _recognitionRef$curre;
-    (_recognitionRef$curre = recognitionRef.current) === null || _recognitionRef$curre === void 0 || _recognitionRef$curre.stop();
-    setIsRecording(false);
-  };
-
-  // ─── API ────────────────────────────────────────────────────────────────
-
-  const SCENARIOS = {
-    general: "You are a customer at a high-end eyewear boutique. You're browsing and open to suggestions. Respond naturally, 1-2 sentences. English only.",
-    mykita: "You are a customer interested in MYKITA frames. Ask detailed questions about the brand, hinge design, and materials. 1-2 sentences. English only.",
-    objection: "You are a customer hesitant about the price. Push back politely on value claims. 1-2 sentences. English only.",
-    tourist: "You are a tourist in Japan who speaks only English. You need prescription glasses urgently. 1-2 sentences. English only."
-  };
-  const callAPI = async (system, msgs) => {
-    var _data$content;
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        system,
-        messages: msgs
-      })
-    });
-    const data = await res.json();
-    return ((_data$content = data.content) === null || _data$content === void 0 || (_data$content = _data$content[0]) === null || _data$content === void 0 ? void 0 : _data$content.text) || "";
-  };
-  const sendMessage = async () => {
-    if (!userInput.trim() || isLoading) return;
-    const newMsgs = [...messages, {
-      role: "user",
-      content: userInput
-    }];
-    setMessages(newMsgs);
-    setUserInput("");
-    setIsLoading(true);
-    try {
-      const reply = await callAPI(SCENARIOS[scenario], newMsgs.map(m => ({
-        role: m.role,
-        content: m.content
-      })));
-      setMessages(prev => [...prev, {
-        role: "assistant",
-        content: reply
-      }]);
-      speak(reply, 0.9);
-    } catch {
-      setMessages(prev => [...prev, {
-        role: "assistant",
-        content: "Sorry, there was an error."
-      }]);
-    }
-    setIsLoading(false);
-  };
-  const getFeedback = async (idx, text) => {
-    setLoadingFeedback(idx);
-    try {
-      const fb = await callAPI(`あなたはメガネ販売員向け英語トレーナーです。以下の形式で返答してください：
-【自然さ】★★★☆☆（5段階）
-【意味】（日本語訳）
-【改善ポイント】（あれば簡潔に）
-【より自然な表現】（あれば）`, [{
-        role: "user",
-        content: `このフレーズを評価してください：「${text}」`
-      }]);
-      setJpFeedback(prev => ({
-        ...prev,
-        [idx]: fb
-      }));
-    } catch {
-      setJpFeedback(prev => ({
-        ...prev,
-        [idx]: "フィードバックの取得に失敗しました。"
-      }));
-    }
-    setLoadingFeedback(null);
-  };
-  const resetChat = () => {
-    setMessages([{
-      role: "assistant",
-      content: "Hello! Welcome to your store. I'm looking for some new glasses today. Can you help me?"
-    }]);
-    setUserInput("");
-    setJpFeedback({});
-  };
-  const checkQuiz = async () => {
-    const q = QUIZ_QUESTIONS[currentQuizIndex];
-    setQuizResult({
-      loading: true
-    });
-    try {
-      var _quizStats$q$id, _quizStats$q$id2;
-      const raw = await callAPI(`あなたはメガネ販売員向け英語教師です。模範解答：「${q.answer}」
-意味が同じなら正解とします。以下のJSON形式のみで返答：
-{"correct": true, "feedback": "日本語フィードバック", "naturalExample": "より自然な表現（なければnull）"}`, [{
-        role: "user",
-        content: quizInput
-      }]);
-      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setQuizResult(parsed);
-      // Update stats
-      const next = {
-        ...quizStats,
-        [q.id]: {
-          attempts: (((_quizStats$q$id = quizStats[q.id]) === null || _quizStats$q$id === void 0 ? void 0 : _quizStats$q$id.attempts) || 0) + 1,
-          correct: (((_quizStats$q$id2 = quizStats[q.id]) === null || _quizStats$q$id2 === void 0 ? void 0 : _quizStats$q$id2.correct) || 0) + (parsed.correct ? 1 : 0)
-        }
-      };
-      saveQuizStats(next);
-    } catch {
-      setQuizResult({
-        correct: false,
-        feedback: "採点に失敗しました。もう一度お試しください。"
-      });
-    }
-  };
-  const toggleJp = (key, setter) => setter(prev => ({
-    ...prev,
-    [key]: !prev[key]
-  }));
-
-  // ─── Styles ─────────────────────────────────────────────────────────────
-
-  const S = {
-    app: {
-      minHeight: "100vh",
-      background: "#0a0a0a",
-      color: "#f0ede8",
-      fontFamily: "'DM Serif Display', Georgia, serif",
-      display: "flex",
-      flexDirection: "column"
-    },
-    header: {
-      borderBottom: "1px solid #222",
-      padding: "20px 28px 0",
-      background: "#0f0f0f"
-    },
-    logo: {
-      fontSize: "10px",
-      letterSpacing: "0.3em",
-      color: "#c8b89a",
-      fontFamily: "monospace",
-      marginBottom: "4px"
-    },
-    title: {
-      fontSize: "20px",
-      letterSpacing: "0.05em",
-      margin: "0 0 14px",
-      fontWeight: "400"
-    },
-    tabs: {
-      display: "flex",
-      flexWrap: "wrap"
-    },
-    tab: a => ({
-      padding: "10px 16px",
-      background: "transparent",
-      border: "none",
-      color: a ? "#c8b89a" : "#555",
-      borderBottom: a ? "2px solid #c8b89a" : "2px solid transparent",
-      cursor: "pointer",
-      fontFamily: "monospace",
-      fontSize: "10px",
-      letterSpacing: "0.12em",
-      textTransform: "uppercase"
-    }),
-    main: {
-      flex: 1,
-      padding: "24px 28px",
-      maxWidth: "900px",
-      width: "100%",
-      margin: "0 auto",
-      boxSizing: "border-box"
-    },
-    label: {
-      fontSize: "10px",
-      letterSpacing: "0.25em",
-      color: "#c8b89a",
-      textTransform: "uppercase",
-      fontFamily: "monospace",
-      marginBottom: "14px",
-      display: "block"
-    },
-    row: {
-      display: "flex",
-      gap: "8px",
-      flexWrap: "wrap",
-      marginBottom: "14px"
-    },
-    catBtn: a => ({
-      padding: "5px 12px",
-      background: a ? "#c8b89a" : "transparent",
-      border: `1px solid ${a ? "#c8b89a" : "#333"}`,
-      color: a ? "#0a0a0a" : "#888",
-      borderRadius: "2px",
-      cursor: "pointer",
-      fontFamily: "monospace",
-      fontSize: "10px"
-    }),
-    phraseCard: sel => ({
-      border: `1px solid ${sel ? "#c8b89a" : "#222"}`,
-      borderRadius: "3px",
-      padding: "16px",
-      marginBottom: "10px",
-      background: sel ? "#161410" : "#111"
-    }),
-    phraseEn: {
-      fontSize: "15px",
-      lineHeight: "1.5",
-      color: "#f0ede8",
-      marginBottom: "8px"
-    },
-    btn: function () {
-      let v = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "d";
-      return {
-        padding: "7px 14px",
-        cursor: "pointer",
-        borderRadius: "2px",
-        fontFamily: "monospace",
-        fontSize: "10px",
-        letterSpacing: "0.1em",
-        textTransform: "uppercase",
-        whiteSpace: "nowrap",
-        background: v === "p" ? "#c8b89a" : v === "r" ? "#8b3030" : v === "j" ? "#0d1a0d" : "transparent",
-        border: `1px solid ${v === "p" ? "#c8b89a" : v === "r" ? "#8b3030" : v === "j" ? "#3a6a3a" : "#444"}`,
-        color: v === "p" ? "#0a0a0a" : v === "j" ? "#8bc98b" : "#ccc"
-      };
-    },
-    jpBox: {
-      marginTop: "8px",
-      padding: "10px 12px",
-      background: "#0d1a0d",
-      border: "1px solid #2a4a2a",
-      borderRadius: "3px",
-      fontFamily: "monospace",
-      fontSize: "11px",
-      color: "#8bc98b",
-      lineHeight: "1.6"
-    },
-    card: {
-      padding: "16px",
-      background: "#111",
-      border: "1px solid #222",
-      borderRadius: "3px",
-      marginBottom: "10px"
-    },
-    collectionGrid: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
-      gap: "12px"
-    },
-    cName: {
-      fontSize: "10px",
-      letterSpacing: "0.15em",
-      color: "#c8b89a",
-      fontFamily: "monospace",
-      marginBottom: "8px"
-    },
-    cDesc: {
-      fontSize: "13px",
-      lineHeight: "1.6",
-      color: "#ccc",
-      marginBottom: "10px"
-    },
-    salesPt: {
-      fontSize: "11px",
-      fontFamily: "monospace",
-      color: "#888",
-      borderLeft: "2px solid #c8b89a",
-      paddingLeft: "10px",
-      lineHeight: "1.5"
-    },
-    chatBox: {
-      background: "#0d0d0d",
-      border: "1px solid #222",
-      borderRadius: "3px",
-      height: "300px",
-      overflowY: "auto",
-      padding: "16px",
-      marginBottom: "12px"
-    },
-    bubble: r => ({
-      display: "flex",
-      justifyContent: r === "user" ? "flex-end" : "flex-start",
-      marginBottom: "8px"
-    }),
-    bubbleIn: r => ({
-      maxWidth: "75%",
-      padding: "10px 14px",
-      borderRadius: "3px",
-      background: r === "user" ? "#c8b89a" : "#1a1a1a",
-      color: r === "user" ? "#0a0a0a" : "#e0ddd8",
-      fontSize: "13px",
-      lineHeight: "1.5",
-      border: `1px solid ${r === "user" ? "#c8b89a" : "#2a2a2a"}`
-    }),
-    roleLabel: r => ({
-      fontSize: "9px",
-      letterSpacing: "0.2em",
-      color: "#555",
-      fontFamily: "monospace",
-      textTransform: "uppercase",
-      marginBottom: "2px",
-      textAlign: r === "user" ? "right" : "left"
-    }),
-    inputRow: {
-      display: "flex",
-      gap: "8px"
-    },
-    input: {
-      flex: 1,
-      padding: "10px 14px",
-      background: "#111",
-      border: "1px solid #333",
-      borderRadius: "2px",
-      color: "#f0ede8",
-      fontFamily: "monospace",
-      fontSize: "13px",
-      outline: "none"
-    },
-    fbBox: {
-      marginTop: "6px",
-      padding: "10px 12px",
-      background: "#0d1a0d",
-      border: "1px solid #2a4a2a",
-      borderRadius: "3px",
-      fontFamily: "monospace",
-      fontSize: "11px",
-      color: "#8bc98b",
-      lineHeight: "1.7",
-      whiteSpace: "pre-wrap"
-    },
-    quizJp: {
-      fontSize: "20px",
-      textAlign: "center",
-      padding: "24px",
-      background: "#111",
-      border: "1px solid #333",
-      borderRadius: "3px",
-      marginBottom: "16px",
-      lineHeight: "1.6"
-    },
-    quizInput: {
-      width: "100%",
-      padding: "12px 16px",
-      background: "#111",
-      border: "1px solid #444",
-      borderRadius: "2px",
-      color: "#f0ede8",
-      fontFamily: "monospace",
-      fontSize: "14px",
-      outline: "none",
-      boxSizing: "border-box",
-      marginBottom: "12px",
-      height: "60px",
-      resize: "none"
-    },
-    resultBox: ok => ({
-      padding: "16px",
-      background: ok ? "#0d1a0d" : "#1a0d0d",
-      border: `1px solid ${ok ? "#3a6a3a" : "#6a3a3a"}`,
-      borderRadius: "3px",
-      fontFamily: "monospace",
-      fontSize: "12px",
-      color: ok ? "#8bc98b" : "#c98b8b",
-      lineHeight: "1.7"
-    }),
-    transcriptBox: {
-      marginTop: "10px",
-      padding: "12px 14px",
-      background: "#111",
-      border: "1px solid #222",
-      borderRadius: "3px",
-      fontFamily: "monospace",
-      fontSize: "12px",
-      color: "#aaa"
-    },
-    wordCard: exp => ({
-      border: `1px solid ${exp ? "#c8b89a" : "#222"}`,
-      borderRadius: "3px",
-      marginBottom: "8px",
-      overflow: "hidden",
-      cursor: "pointer",
-      background: exp ? "#161410" : "#111"
-    }),
-    wordHeader: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: "14px 16px"
-    },
-    wordEn: {
-      fontSize: "16px",
-      color: "#f0ede8"
-    },
-    wordBody: {
-      padding: "0 16px 16px"
-    },
-    wordJp: {
-      fontSize: "18px",
-      color: "#c8b89a",
-      marginBottom: "12px"
-    },
-    wordUsage: {
-      fontSize: "12px",
-      fontFamily: "monospace",
-      color: "#888",
-      borderLeft: "2px solid #333",
-      paddingLeft: "10px",
-      lineHeight: "1.6",
-      marginBottom: "10px"
-    },
-    wordNote: {
-      fontSize: "11px",
-      fontFamily: "monospace",
-      color: "#6a8a6a",
-      lineHeight: "1.6"
-    },
-    flashCard: {
-      minHeight: "200px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "#111",
-      border: "1px solid #333",
-      borderRadius: "3px",
-      padding: "32px",
-      marginBottom: "16px",
-      textAlign: "center",
-      cursor: "pointer"
-    },
-    flashWord: {
-      fontSize: "26px",
-      letterSpacing: "0.03em",
-      marginBottom: "8px"
-    },
-    flashSub: {
-      fontSize: "11px",
-      fontFamily: "monospace",
-      color: "#555",
-      letterSpacing: "0.15em"
-    },
-    dot: level => ({
-      display: "inline-block",
-      width: "7px",
-      height: "7px",
-      borderRadius: "50%",
-      background: MASTERY_COLOR[level],
-      marginRight: "6px",
-      flexShrink: 0
-    }),
-    masteryBadge: level => ({
-      fontSize: "9px",
-      fontFamily: "monospace",
-      color: MASTERY_COLOR[level],
-      letterSpacing: "0.1em",
-      textTransform: "uppercase"
-    }),
-    progressBar: {
-      display: "flex",
-      gap: "12px",
-      flexWrap: "wrap",
-      marginBottom: "20px",
-      padding: "14px 16px",
-      background: "#111",
-      border: "1px solid #222",
-      borderRadius: "3px"
-    },
-    progressItem: {
-      display: "flex",
-      alignItems: "center",
-      fontSize: "10px",
-      fontFamily: "monospace",
-      color: "#888"
-    }
-  };
-
-  // ─── Progress Summary ───────────────────────────────────────────────────
-
-  const renderProgressBar = (items, statsObj, keyFn) => {
-    const counts = {
-      new: 0,
-      learning: 0,
-      mastered: 0,
-      struggling: 0
-    };
-    items.forEach((_, i) => {
-      const key = keyFn(i);
-      counts[masteryLevel(statsObj[key])]++;
-    });
-    return /*#__PURE__*/React.createElement("div", {
-      style: S.progressBar
-    }, Object.entries(counts).map(_ref => {
-      let [level, count] = _ref;
-      return /*#__PURE__*/React.createElement("div", {
-        key: level,
-        style: S.progressItem
-      }, /*#__PURE__*/React.createElement("span", {
-        style: S.dot(level)
-      }), MASTERY_LABEL[level], "\uFF1A", count);
-    }));
-  };
-
-  // ─── Tab: Shadowing ─────────────────────────────────────────────────────
-
-  const renderShadowing = () => {
-    const cat = SHADOWING_LESSONS[selectedCategory];
-    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-      style: S.label
-    }, "\u30EA\u30B9\u30CB\u30F3\u30B0 & \u30B7\u30E3\u30C9\u30FC\u30A4\u30F3\u30B0\u7DF4\u7FD2"), /*#__PURE__*/React.createElement("div", {
-      style: S.row
-    }, SHADOWING_LESSONS.map((c, i) => /*#__PURE__*/React.createElement("button", {
-      key: i,
-      style: S.catBtn(selectedCategory === i),
-      onClick: () => {
-        setSelectedCategory(i);
-        setSelectedPhrase(null);
-        setTranscript("");
-        setShowJp({});
-      }
-    }, c.category))), cat.phrases.map((p, i) => /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: S.phraseCard(selectedPhrase === i)
-    }, /*#__PURE__*/React.createElement("div", {
-      style: S.phraseEn
-    }, "\"", p.en, "\""), /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: "8px",
-        flexWrap: "wrap"
-      }
-    }, /*#__PURE__*/React.createElement("button", {
-      style: S.btn("j"),
-      onClick: () => toggleJp(i, setShowJp)
-    }, showJp[i] ? "日本語を隠す" : "日本語で確認"), /*#__PURE__*/React.createElement("button", {
-      style: S.btn("p"),
-      onClick: () => {
-        setSelectedPhrase(i);
-        speak(p.en);
-      }
-    }, "\u25B6 \u518D\u751F"), /*#__PURE__*/React.createElement("button", {
-      style: S.btn(),
-      onClick: () => {
-        setSelectedPhrase(i);
-        speak(p.en, 0.65);
-      }
-    }, "\u25B6 \u30B9\u30ED\u30FC")), showJp[i] && /*#__PURE__*/React.createElement("div", {
-      style: S.jpBox
-    }, p.jp), selectedPhrase === i && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: "12px"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: "8px",
-        flexWrap: "wrap"
-      }
-    }, !isRecording ? /*#__PURE__*/React.createElement("button", {
-      style: S.btn("p"),
-      onClick: () => {
-        setJpWarning(false);
-        startRecording();
-      }
-    }, "\u9332\u97F3\u3057\u3066\u30B7\u30E3\u30C9\u30FC\u30A4\u30F3\u30B0") : /*#__PURE__*/React.createElement("button", {
-      style: S.btn("r"),
-      onClick: stopRecording
-    }, "\u25A0 \u505C\u6B62"), transcript && /*#__PURE__*/React.createElement("button", {
-      style: S.btn(),
-      onClick: () => speak(transcript)
-    }, "\u25B6 \u81EA\u5206\u306E\u58F0\u3092\u518D\u751F"), isSpeaking && /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#c8b89a",
-        alignSelf: "center"
-      }
-    }, "\u25CF \u518D\u751F\u4E2D")), isRecording && interimTranscript && /*#__PURE__*/React.createElement("div", {
-      style: {
-        ...S.transcriptBox,
-        marginTop: "8px",
-        color: "#666",
-        fontStyle: "italic"
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: "9px",
-        color: "#555",
-        marginBottom: "4px",
-        letterSpacing: "0.15em"
-      }
-    }, "\u8A8D\u8B58\u4E2D\u2026"), interimTranscript), jpWarning && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: "8px",
-        padding: "8px 12px",
-        background: "#1a1000",
-        border: "1px solid #6a4a00",
-        borderRadius: "3px",
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#c8a040",
-        lineHeight: "1.5"
-      }
-    }, "\u65E5\u672C\u8A9E\u304C\u691C\u51FA\u3055\u308C\u305F\u305F\u3081\u3001\u9664\u53BB\u3057\u3066\u8868\u793A\u3057\u3066\u3044\u307E\u3059\u3002\u82F1\u8A9E\u306E\u307F\u3067\u767A\u97F3\u3057\u3066\u307F\u3066\u304F\u3060\u3055\u3044\u3002"), transcript && /*#__PURE__*/React.createElement("div", {
-      style: S.transcriptBox
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: "9px",
-        color: "#555",
-        marginBottom: "4px",
-        letterSpacing: "0.15em"
-      }
-    }, "YOUR RECORDING"), /*#__PURE__*/React.createElement("div", null, transcript), /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: "6px",
-        fontSize: "10px",
-        color: "#444"
-      }
-    }, "\u6A21\u7BC4\uFF1A", p.en))))));
-  };
-
-  // ─── Tab: Vocab ─────────────────────────────────────────────────────────
-
-  const renderVocab = () => {
-    const cat = VOCAB[vocabCategory];
-    const words = cat.words;
-    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-      style: S.label
-    }, "\u5358\u8A9E\u30FB\u719F\u8A9E\u306E\u610F\u5473\u78BA\u8A8D"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: "8px",
-        marginBottom: "16px"
-      }
-    }, /*#__PURE__*/React.createElement("button", {
-      style: S.catBtn(!vocabFlipMode),
-      onClick: () => {
-        setVocabFlipMode(false);
-        setExpandedWord(null);
-      }
-    }, "\u4E00\u89A7"), /*#__PURE__*/React.createElement("button", {
-      style: S.catBtn(vocabFlipMode),
-      onClick: () => {
-        setVocabFlipMode(true);
-        setFlashIndex(pickNextFlash(vocabCategory));
-        setFlashRevealed(false);
-      }
-    }, "\u30D5\u30E9\u30C3\u30B7\u30E5\u30AB\u30FC\u30C9\uFF08\u9069\u5FDC\u578B\uFF09")), /*#__PURE__*/React.createElement("div", {
-      style: S.row
-    }, VOCAB.map((v, i) => /*#__PURE__*/React.createElement("button", {
-      key: i,
-      style: S.catBtn(vocabCategory === i),
-      onClick: () => {
-        setVocabCategory(i);
-        setExpandedWord(null);
-        setFlashIndex(pickNextFlash(i));
-        setFlashRevealed(false);
-      }
-    }, v.category))), renderProgressBar(words, vocabStats, wi => `${vocabCategory}-${wi}`), !vocabFlipMode ? /*#__PURE__*/React.createElement("div", null, words.map((w, i) => {
-      const key = `${vocabCategory}-${i}`;
-      const level = masteryLevel(vocabStats[key]);
-      return /*#__PURE__*/React.createElement("div", {
-        key: i,
-        style: S.wordCard(expandedWord === i),
-        onClick: () => setExpandedWord(expandedWord === i ? null : i)
-      }, /*#__PURE__*/React.createElement("div", {
-        style: S.wordHeader
-      }, /*#__PURE__*/React.createElement("div", {
-        style: {
-          display: "flex",
-          alignItems: "center",
-          gap: "10px"
-        }
-      }, /*#__PURE__*/React.createElement("span", {
-        style: S.dot(level)
-      }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-        style: S.wordEn
-      }, w.en), /*#__PURE__*/React.createElement("div", {
-        style: S.masteryBadge(level)
-      }, MASTERY_LABEL[level]))), /*#__PURE__*/React.createElement("button", {
-        style: {
-          ...S.btn("p"),
-          padding: "5px 10px"
-        },
-        onClick: e => {
-          e.stopPropagation();
-          speak(w.en);
-        }
-      }, "\u25B6")), expandedWord === i && /*#__PURE__*/React.createElement("div", {
-        style: S.wordBody
-      }, /*#__PURE__*/React.createElement("div", {
-        style: S.wordJp
-      }, w.jp), /*#__PURE__*/React.createElement("div", {
-        style: S.wordUsage
-      }, /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontSize: "9px",
-          color: "#555",
-          letterSpacing: "0.15em",
-          marginBottom: "4px"
-        }
-      }, "\u7528\u4F8B"), "\"", w.usage, "\"", /*#__PURE__*/React.createElement("button", {
-        style: {
-          ...S.btn("p"),
-          marginLeft: "10px",
-          padding: "3px 8px",
-          fontSize: "9px"
-        },
-        onClick: e => {
-          e.stopPropagation();
-          speak(w.usage);
-        }
-      }, "\u25B6")), /*#__PURE__*/React.createElement("div", {
-        style: S.wordNote
-      }, /*#__PURE__*/React.createElement("span", {
-        style: {
-          color: "#c8b89a",
-          marginRight: "6px"
-        }
-      }, "Point \u2014"), w.note), /*#__PURE__*/React.createElement("div", {
-        style: {
-          display: "flex",
-          gap: "8px",
-          marginTop: "12px"
-        }
-      }, /*#__PURE__*/React.createElement("button", {
-        style: S.btn("p"),
-        onClick: async e => {
-          var _vocabStats$key, _vocabStats$key2;
-          e.stopPropagation();
-          const next = {
-            ...vocabStats,
-            [key]: {
-              attempts: (((_vocabStats$key = vocabStats[key]) === null || _vocabStats$key === void 0 ? void 0 : _vocabStats$key.attempts) || 0) + 1,
-              correct: (((_vocabStats$key2 = vocabStats[key]) === null || _vocabStats$key2 === void 0 ? void 0 : _vocabStats$key2.correct) || 0) + 1
-            }
-          };
-          saveVocabStats(next);
-        }
-      }, "\u899A\u3048\u305F"), /*#__PURE__*/React.createElement("button", {
-        style: S.btn(),
-        onClick: async e => {
-          var _vocabStats$key3, _vocabStats$key4;
-          e.stopPropagation();
-          const next = {
-            ...vocabStats,
-            [key]: {
-              attempts: (((_vocabStats$key3 = vocabStats[key]) === null || _vocabStats$key3 === void 0 ? void 0 : _vocabStats$key3.attempts) || 0) + 1,
-              correct: ((_vocabStats$key4 = vocabStats[key]) === null || _vocabStats$key4 === void 0 ? void 0 : _vocabStats$key4.correct) || 0
-            }
-          };
-          saveVocabStats(next);
-        }
-      }, "\u8981\u5FA9\u7FD2"))));
-    })) : /*#__PURE__*/React.createElement("div", null, (() => {
-      const w = words[flashIndex];
-      const key = `${vocabCategory}-${flashIndex}`;
-      const level = masteryLevel(vocabStats[key]);
-      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-        style: {
-          ...S.masteryBadge(level),
-          marginBottom: "8px",
-          display: "block"
-        }
-      }, /*#__PURE__*/React.createElement("span", {
-        style: S.dot(level)
-      }), MASTERY_LABEL[level], " \u2014 \u512A\u5148\u5EA6\u304C\u9AD8\u3044\u9806\u306B\u51FA\u984C\u3055\u308C\u3066\u3044\u307E\u3059"), /*#__PURE__*/React.createElement("div", {
-        style: S.flashCard,
-        onClick: () => setFlashRevealed(r => !r)
-      }, /*#__PURE__*/React.createElement("div", {
-        style: S.flashWord
-      }, w.en), !flashRevealed ? /*#__PURE__*/React.createElement("div", {
-        style: S.flashSub
-      }, "\u30AF\u30EA\u30C3\u30AF\u3057\u3066\u610F\u5473\u3092\u8868\u793A") : /*#__PURE__*/React.createElement("div", {
-        style: {
-          marginTop: "20px",
-          textAlign: "center"
-        }
-      }, /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontSize: "20px",
-          color: "#c8b89a",
-          marginBottom: "10px"
-        }
-      }, w.jp), /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontSize: "11px",
-          fontFamily: "monospace",
-          color: "#6a8a6a",
-          lineHeight: "1.6",
-          maxWidth: "480px"
-        }
-      }, /*#__PURE__*/React.createElement("span", {
-        style: {
-          color: "#c8b89a"
-        }
-      }, "Point \u2014 "), w.note))), flashRevealed && /*#__PURE__*/React.createElement("div", {
-        style: {
-          ...S.wordUsage,
-          marginBottom: "16px"
-        }
-      }, /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontSize: "9px",
-          color: "#555",
-          letterSpacing: "0.15em",
-          marginBottom: "4px"
-        }
-      }, "\u7528\u4F8B"), "\"", w.usage, "\""), /*#__PURE__*/React.createElement("div", {
-        style: {
-          display: "flex",
-          gap: "10px",
-          flexWrap: "wrap"
-        }
-      }, /*#__PURE__*/React.createElement("button", {
-        style: S.btn("p"),
-        onClick: () => speak(w.en)
-      }, "\u25B6 \u5358\u8A9E"), flashRevealed && /*#__PURE__*/React.createElement("button", {
-        style: S.btn(),
-        onClick: () => speak(w.usage)
-      }, "\u25B6 \u7528\u4F8B"), flashRevealed && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
-        style: S.btn("p"),
-        onClick: async () => {
-          var _vocabStats$key5, _vocabStats$key6;
-          const next = {
-            ...vocabStats,
-            [key]: {
-              attempts: (((_vocabStats$key5 = vocabStats[key]) === null || _vocabStats$key5 === void 0 ? void 0 : _vocabStats$key5.attempts) || 0) + 1,
-              correct: (((_vocabStats$key6 = vocabStats[key]) === null || _vocabStats$key6 === void 0 ? void 0 : _vocabStats$key6.correct) || 0) + 1
-            }
-          };
-          saveVocabStats(next);
-          setFlashIndex(pickNextFlash(vocabCategory, next));
-          setFlashRevealed(false);
-        }
-      }, "\u899A\u3048\u305F \u2192 \u6B21\u3078"), /*#__PURE__*/React.createElement("button", {
-        style: S.btn(),
-        onClick: async () => {
-          var _vocabStats$key7, _vocabStats$key8;
-          const next = {
-            ...vocabStats,
-            [key]: {
-              attempts: (((_vocabStats$key7 = vocabStats[key]) === null || _vocabStats$key7 === void 0 ? void 0 : _vocabStats$key7.attempts) || 0) + 1,
-              correct: ((_vocabStats$key8 = vocabStats[key]) === null || _vocabStats$key8 === void 0 ? void 0 : _vocabStats$key8.correct) || 0
-            }
-          };
-          saveVocabStats(next);
-          setFlashIndex(pickNextFlash(vocabCategory, next));
-          setFlashRevealed(false);
-        }
-      }, "\u8981\u5FA9\u7FD2 \u2192 \u6B21\u3078")), !flashRevealed && /*#__PURE__*/React.createElement("button", {
-        style: S.btn(),
-        onClick: () => {
-          setFlashIndex(pickNextFlash(vocabCategory));
-          setFlashRevealed(false);
-        }
-      }, "\u30B9\u30AD\u30C3\u30D7 \u2192")));
-    })()));
-  };
-
-  // ─── Tab: Knowledge ─────────────────────────────────────────────────────
-
-  const renderKnowledge = () => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-    style: S.label
-  }, "MYKITA\u30D6\u30E9\u30F3\u30C9\u30CA\u30EC\u30C3\u30B8"), /*#__PURE__*/React.createElement("div", {
-    style: S.row
-  }, ["collections", "origin", "philosophy"].map(sec => /*#__PURE__*/React.createElement("button", {
-    key: sec,
-    style: S.catBtn(knowledgeSection === sec),
-    onClick: () => setKnowledgeSection(sec)
-  }, sec))), knowledgeSection !== "collections" && (() => {
-    const data = BRAND_KNOWLEDGE[knowledgeSection];
-    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-      style: S.card
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        ...S.cName,
-        marginBottom: "10px"
-      }
-    }, data.title), /*#__PURE__*/React.createElement("p", {
-      style: {
-        fontSize: "13px",
-        lineHeight: "1.7",
-        color: "#bbb",
-        margin: 0
-      }
-    }, data.content)), /*#__PURE__*/React.createElement("div", {
-      style: S.card
-    }, /*#__PURE__*/React.createElement("div", {
-      style: S.cName
-    }, "\u63A5\u5BA2\u82F1\u8A9E\u30D5\u30EC\u30FC\u30BA"), data.keyPhrases.map((kp, i) => {
-      const k = `${knowledgeSection}-${i}`;
-      return /*#__PURE__*/React.createElement("div", {
-        key: i,
-        style: {
-          borderBottom: "1px solid #1a1a1a",
-          paddingBottom: "12px",
-          marginBottom: "12px"
-        }
-      }, /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontSize: "14px",
-          color: "#c8b89a",
-          fontFamily: "monospace",
-          marginBottom: "6px"
-        }
-      }, "\"", kp.en, "\""), /*#__PURE__*/React.createElement("div", {
-        style: {
-          display: "flex",
-          gap: "8px"
-        }
-      }, /*#__PURE__*/React.createElement("button", {
-        style: S.btn("p"),
-        onClick: () => speak(kp.en)
-      }, "\u25B6 \u518D\u751F"), /*#__PURE__*/React.createElement("button", {
-        style: S.btn("j"),
-        onClick: () => toggleJp(k, setShowKpJp)
-      }, showKpJp[k] ? "日本語を隠す" : "日本語で確認")), showKpJp[k] && /*#__PURE__*/React.createElement("div", {
-        style: S.jpBox
-      }, kp.jp));
-    })));
-  })(), knowledgeSection === "collections" && /*#__PURE__*/React.createElement("div", {
-    style: S.collectionGrid
-  }, BRAND_KNOWLEDGE.collections.map((c, i) => /*#__PURE__*/React.createElement("div", {
-    key: i,
-    style: S.card
-  }, /*#__PURE__*/React.createElement("div", {
-    style: S.cName
-  }, c.name), /*#__PURE__*/React.createElement("div", {
-    style: S.cDesc
-  }, c.description), /*#__PURE__*/React.createElement("div", {
-    style: S.salesPt
-  }, c.salesPoint), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: "8px",
-      marginTop: "12px",
-      flexWrap: "wrap"
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    style: S.btn("p"),
-    onClick: () => speak(c.salesPoint)
-  }, "\u25B6 \u30BB\u30FC\u30EB\u30B9\u30C8\u30FC\u30AF"), /*#__PURE__*/React.createElement("button", {
-    style: S.btn("j"),
-    onClick: () => toggleJp(i, setShowSalesJp)
-  }, showSalesJp[i] ? "日本語を隠す" : "日本語で確認")), showSalesJp[i] && /*#__PURE__*/React.createElement("div", {
-    style: S.jpBox
-  }, c.salesPointJp)))));
-
-  // ─── Tab: Roleplay ───────────────────────────────────────────────────────
-
-  const renderRoleplay = () => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-    style: S.label
-  }, "AI\u30ED\u30FC\u30EB\u30D7\u30EC\u30A4 \u2014 \u3042\u306A\u305F\u304C\u8CA9\u58F2\u54E1"), /*#__PURE__*/React.createElement("div", {
-    style: S.row
-  }, [{
-    key: "general",
-    label: "一般客"
-  }, {
-    key: "mykita",
-    label: "MYKITAファン"
-  }, {
-    key: "objection",
-    label: "価格交渉客"
-  }, {
-    key: "tourist",
-    label: "英語観光客"
-  }].map(sc => /*#__PURE__*/React.createElement("button", {
-    key: sc.key,
-    style: S.catBtn(scenario === sc.key),
-    onClick: () => {
-      setScenario(sc.key);
-      resetChat();
-    }
-  }, sc.label))), /*#__PURE__*/React.createElement("div", {
-    style: S.chatBox
-  }, messages.map((m, i) => /*#__PURE__*/React.createElement("div", {
-    key: i
-  }, /*#__PURE__*/React.createElement("div", {
-    style: S.roleLabel(m.role)
-  }, m.role === "user" ? "あなた（販売員）" : "Customer"), /*#__PURE__*/React.createElement("div", {
-    style: S.bubble(m.role)
-  }, /*#__PURE__*/React.createElement("div", {
-    style: S.bubbleIn(m.role)
-  }, m.content)), m.role === "user" && /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "right",
-      marginTop: "-4px",
-      marginBottom: "10px"
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    style: S.btn("j"),
-    onClick: () => getFeedback(i, m.content),
-    disabled: loadingFeedback === i
-  }, loadingFeedback === i ? "評価中…" : "日本語で評価する"), jpFeedback[i] && /*#__PURE__*/React.createElement("div", {
-    style: S.fbBox
-  }, jpFeedback[i])))), isLoading && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    style: S.roleLabel("assistant")
-  }, "Customer"), /*#__PURE__*/React.createElement("div", {
-    style: S.bubble("assistant")
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      ...S.bubbleIn("assistant"),
-      color: "#555"
-    }
-  }, "typing\u2026"))), /*#__PURE__*/React.createElement("div", {
-    ref: chatEndRef
-  })), /*#__PURE__*/React.createElement("div", {
-    style: S.inputRow
-  }, /*#__PURE__*/React.createElement("input", {
-    style: S.input,
-    value: userInput,
-    onChange: e => setUserInput(e.target.value),
-    onKeyDown: e => e.key === "Enter" && sendMessage(),
-    placeholder: "\u82F1\u8A9E\u3067\u8FD4\u7B54\u3057\u3066\u304F\u3060\u3055\u3044\u2026"
-  }), /*#__PURE__*/React.createElement("button", {
-    style: S.btn("p"),
-    onClick: sendMessage,
-    disabled: isLoading
-  }, "\u9001\u4FE1"), /*#__PURE__*/React.createElement("button", {
-    style: S.btn(),
-    onClick: resetChat
-  }, "\u30EA\u30BB\u30C3\u30C8")));
-
-  // ─── Tab: Quiz (Adaptive) ────────────────────────────────────────────────
-
-  const renderQuiz = () => {
-    if (currentQuizIndex === null) return /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontFamily: "monospace",
-        color: "#555"
-      }
-    }, "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026");
-    const q = QUIZ_QUESTIONS[currentQuizIndex];
-    const stat = quizStats[q.id] || {
-      attempts: 0,
-      correct: 0
-    };
-    const level = masteryLevel(stat);
-
-    // Overall stats
-    const masteredCount = QUIZ_QUESTIONS.filter(q2 => masteryLevel(quizStats[q2.id] || {
-      attempts: 0,
-      correct: 0
-    }) === "mastered").length;
-    const learningCount = QUIZ_QUESTIONS.filter(q2 => masteryLevel(quizStats[q2.id] || {
-      attempts: 0,
-      correct: 0
-    }) === "learning").length;
-    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-      style: S.label
-    }, "\u65E5\u672C\u8A9E \u2192 \u82F1\u8A9E \u5909\u63DB\u30AF\u30A4\u30BA\uFF08\u9069\u5FDC\u578B\uFF09"), renderProgressBar(QUIZ_QUESTIONS, quizStats, i => QUIZ_QUESTIONS[i].id), /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: "12px",
-        alignItems: "center",
-        marginBottom: "14px",
-        fontFamily: "monospace",
-        fontSize: "10px",
-        color: "#666"
-      }
-    }, /*#__PURE__*/React.createElement("span", null, "\u5168", QUIZ_QUESTIONS.length, "\u554F"), /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: MASTERY_COLOR[level]
-      }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: S.dot(level)
-    }), "\u3053\u306E\u554F\u984C\uFF1A", MASTERY_LABEL[level], stat.attempts > 0 && ` (${stat.correct}/${stat.attempts})`), /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: "#4a8a4a"
-      }
-    }, "\u7FD2\u5F97\u6E08\uFF1A", masteredCount)), /*#__PURE__*/React.createElement("div", {
-      style: S.quizJp
-    }, q.jp), /*#__PURE__*/React.createElement("textarea", {
-      style: S.quizInput,
-      value: quizInput,
-      onChange: e => setQuizInput(e.target.value),
-      placeholder: "\u82F1\u8A9E\u306B\u8A33\u3057\u3066\u304F\u3060\u3055\u3044\u2026",
-      disabled: !!quizResult && !quizResult.loading
-    }), /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        gap: "10px",
-        flexWrap: "wrap",
-        marginBottom: "14px"
-      }
-    }, !quizResult ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
-      style: S.btn("p"),
-      onClick: checkQuiz,
-      disabled: !quizInput.trim()
-    }, "AI\u306B\u63A1\u70B9\u3057\u3066\u3082\u3089\u3046"), /*#__PURE__*/React.createElement("button", {
-      style: S.btn("j"),
-      onClick: () => setShowHint(!showHint)
-    }, showHint ? "ヒントを隠す" : "ヒントを見る"), /*#__PURE__*/React.createElement("button", {
-      style: S.btn(),
-      onClick: () => setShowAnswer(!showAnswer)
-    }, showAnswer ? "答えを隠す" : "答えを見る")) : !quizResult.loading && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
-      style: S.btn("p"),
-      onClick: () => pickNextQuestion()
-    }, "\u6B21\u306E\u554F\u984C \u2192"), /*#__PURE__*/React.createElement("button", {
-      style: S.btn(),
-      onClick: () => speak(q.answer)
-    }, "\u25B6 \u6A21\u7BC4\u89E3\u7B54\u3092\u805E\u304F"))), showHint && !quizResult && /*#__PURE__*/React.createElement("div", {
-      style: {
-        ...S.jpBox,
-        marginBottom: "12px"
-      }
-    }, "\u30D2\u30F3\u30C8\uFF1A\u300C", q.hint, "\u300D"), showAnswer && !quizResult && /*#__PURE__*/React.createElement("div", {
-      style: {
-        ...S.jpBox,
-        marginBottom: "12px"
-      }
-    }, "\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C", q.answer, "\u300D"), (quizResult === null || quizResult === void 0 ? void 0 : quizResult.loading) && /*#__PURE__*/React.createElement("div", {
-      style: S.resultBox(true)
-    }, "AI\u304C\u63A1\u70B9\u4E2D\u2026"), quizResult && !quizResult.loading && /*#__PURE__*/React.createElement("div", {
-      style: S.resultBox(quizResult.correct)
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: "14px",
-        marginBottom: "8px"
-      }
-    }, quizResult.correct ? "正解" : "惜しい"), /*#__PURE__*/React.createElement("div", null, quizResult.feedback), quizResult.naturalExample && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: "10px",
-        color: "#c8b89a"
-      }
-    }, "\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE\uFF1A\u300C", quizResult.naturalExample, "\u300D", /*#__PURE__*/React.createElement("button", {
-      style: {
-        ...S.btn("p"),
-        marginLeft: "10px",
-        padding: "4px 10px"
-      },
-      onClick: () => speak(quizResult.naturalExample)
-    }, "\u25B6")), /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: "10px",
-        color: "#666"
-      }
-    }, "\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C", q.answer, "\u300D")));
-  };
-
-  // ─── Render ──────────────────────────────────────────────────────────────
-
-  return /*#__PURE__*/React.createElement("div", {
-    style: S.app
-  }, /*#__PURE__*/React.createElement("div", {
-    style: S.header
-  }, /*#__PURE__*/React.createElement("div", {
-    style: S.logo
-  }, "MYKITA \xD7 ENGLISH TRAINING"), /*#__PURE__*/React.createElement("h1", {
-    style: S.title
-  }, "Eyewear Sales English"), /*#__PURE__*/React.createElement("div", {
-    style: S.tabs
-  }, [["shadowing", "Shadowing"], ["vocab", "Vocabulary"], ["knowledge", "Brand Knowledge"], ["roleplay", "Roleplay"], ["quiz", "Adaptive Quiz"]].map(_ref2 => {
-    let [k, l] = _ref2;
-    return /*#__PURE__*/React.createElement("button", {
-      key: k,
-      style: S.tab(activeTab === k),
-      onClick: () => setActiveTab(k)
-    }, l);
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: S.main
-  }, activeTab === "shadowing" && renderShadowing(), activeTab === "vocab" && renderVocab(), activeTab === "knowledge" && renderKnowledge(), activeTab === "roleplay" && renderRoleplay(), activeTab === "quiz" && renderQuiz()));
+const getBestVoice = useCallback(() => {
+const voices = window.speechSynthesis.getVoices();
+const priority = [v => /en.US/i.test(v.lang) && /neural|premium|enhanced/i.test(v.name), v => /en.US/i.test(v.lang) && /google/i.test(v.name), v => /en.US/i.test(v.lang) && /microsoft/i.test(v.name) && /natural|aria|jenny|guy/i.test(v.name), v => /en.US/i.test(v.lang) && /microsoft/i.test(v.name), v => /en.US/i.test(v.lang) && /samantha|alex|zira/i.test(v.name), v => /en.US/i.test(v.lang), v => /en/i.test(v.lang)];
+for (const test of priority) {
+const f = voices.find(test);
+if (f) return f;
 }
-// マウント
-ReactDOM.createRoot(document.getElementById('root')).render(
-  React.createElement(MYKITAEnglishApp)
+return null;
+}, []);
+const speak = useCallback(function (text) {
+let rate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
+if (!window.speechSynthesis) return;
+window.speechSynthesis.cancel();
+const doSpeak = () => {
+const utt = new SpeechSynthesisUtterance(text);
+utt.lang = “en-US”;
+utt.rate = rate;
+utt.pitch = 1.0;
+const voice = getBestVoice();
+if (voice) utt.voice = voice;
+utt.onstart = () => setIsSpeaking(true);
+utt.onend = () => setIsSpeaking(false);
+window.speechSynthesis.speak(utt);
+};
+if (window.speechSynthesis.getVoices().length > 0) doSpeak();else {
+window.speechSynthesis.onvoiceschanged = () => {
+doSpeak();
+window.speechSynthesis.onvoiceschanged = null;
+};
+}
+}, [getBestVoice]);
+
+// ─── Recording ──────────────────────────────────────────────────────────
+
+const hasJapanese = text => /[\u3040-\u30FF\u4E00-\u9FFF]/.test(text);
+const stripJapanese = text => text.replace(/[\u3040-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]+/g, “”).replace(/\s+/g, “ “).trim();
+const startRecording = async () => {
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!SR) {
+setTranscript(“⚠️ Chrome（PC版）をお使いくださいな。”);
+return;
+}
+setTranscript(””);
+setInterimTranscript(””);
+setJpWarning(false);
+setAudioURL(null);
+
+```
+// ── MediaRecorder で実音声を録音 ──
+try {
+  const stream = await navigator.mediaDevices.getUserMedia({
+    audio: true
+  });
+  audioChunksRef.current = [];
+  const mr = new MediaRecorder(stream);
+  mr.ondataavailable = e => {
+    if (e.data.size > 0) audioChunksRef.current.push(e.data);
+  };
+  mr.onstop = () => {
+    const blob = new Blob(audioChunksRef.current, {
+      type: "audio/webm"
+    });
+    setAudioURL(URL.createObjectURL(blob));
+    stream.getTracks().forEach(t => t.stop());
+  };
+  mr.start();
+  mediaRecorderRef.current = mr;
+} catch (e) {
+  setTranscript("⚠️ マイクへのアクセスが拒否されました。");
+  return;
+}
+
+// ── SpeechRecognition で文字起こし ──
+const rec = new SR();
+rec.lang = "en-US";
+rec.continuous = false;
+rec.interimResults = true;
+rec.maxAlternatives = 5;
+rec.onresult = e => {
+  let interim = "";
+  for (let i = e.resultIndex; i < e.results.length; i++) {
+    if (e.results[i].isFinal) {
+      let best = e.results[i][0].transcript;
+      for (let j = 0; j < e.results[i].length; j++) {
+        const alt = e.results[i][j].transcript;
+        if (!hasJapanese(alt)) {
+          best = alt;
+          break;
+        }
+      }
+      if (hasJapanese(best)) {
+        setJpWarning(true);
+        best = stripJapanese(best);
+      }
+      setTranscript(best);
+      setInterimTranscript("");
+    } else {
+      interim += e.results[i][0].transcript;
+      if (hasJapanese(interim)) setJpWarning(true);
+      setInterimTranscript(interim);
+    }
+  }
+};
+rec.onend = () => {
+  var _mediaRecorderRef$cur;
+  setIsRecording(false);
+  setInterimTranscript("");
+  (_mediaRecorderRef$cur = mediaRecorderRef.current) === null || _mediaRecorderRef$cur === void 0 || _mediaRecorderRef$cur.stop();
+};
+rec.onerror = () => {
+  var _mediaRecorderRef$cur2;
+  setIsRecording(false);
+  setInterimTranscript("");
+  (_mediaRecorderRef$cur2 = mediaRecorderRef.current) === null || _mediaRecorderRef$cur2 === void 0 || _mediaRecorderRef$cur2.stop();
+};
+rec.start();
+recognitionRef.current = rec;
+setIsRecording(true);
+```
+
+};
+const stopRecording = () => {
+var _recognitionRef$curre, _mediaRecorderRef$cur3;
+(_recognitionRef$curre = recognitionRef.current) === null || _recognitionRef$curre === void 0 || _recognitionRef$curre.stop();
+(_mediaRecorderRef$cur3 = mediaRecorderRef.current) === null || _mediaRecorderRef$cur3 === void 0 || _mediaRecorderRef$cur3.stop();
+setIsRecording(false);
+};
+
+// ─── API ────────────────────────────────────────────────────────────────
+
+const SCENARIOS = {
+general: “You are a customer at a high-end eyewear boutique. You’re browsing and open to suggestions. Respond naturally, 1-2 sentences. English only.”,
+mykita: “You are a customer interested in MYKITA frames. Ask detailed questions about the brand, hinge design, and materials. 1-2 sentences. English only.”,
+objection: “You are a customer hesitant about the price. Push back politely on value claims. 1-2 sentences. English only.”,
+tourist: “You are a tourist in Japan who speaks only English. You need prescription glasses urgently. 1-2 sentences. English only.”
+};
+const callAPI = async (system, msgs) => {
+var _data$content;
+const res = await fetch(“https://api.anthropic.com/v1/messages”, {
+method: “POST”,
+headers: {
+“Content-Type”: “application/json”
+},
+body: JSON.stringify({
+model: “claude-sonnet-4-20250514”,
+max_tokens: 1000,
+system,
+messages: msgs
+})
+});
+const data = await res.json();
+return ((_data$content = data.content) === null || _data$content === void 0 || (_data$content = _data$content[0]) === null || _data$content === void 0 ? void 0 : _data$content.text) || “”;
+};
+const sendMessage = async () => {
+if (!userInput.trim() || isLoading) return;
+const newMsgs = […messages, {
+role: “user”,
+content: userInput
+}];
+setMessages(newMsgs);
+setUserInput(””);
+setIsLoading(true);
+try {
+const reply = await callAPI(SCENARIOS[scenario], newMsgs.map(m => ({
+role: m.role,
+content: m.content
+})));
+setMessages(prev => […prev, {
+role: “assistant”,
+content: reply
+}]);
+speak(reply, 0.9);
+} catch {
+setMessages(prev => […prev, {
+role: “assistant”,
+content: “Sorry, there was an error.”
+}]);
+}
+setIsLoading(false);
+};
+const getFeedback = async (idx, text) => {
+setLoadingFeedback(idx);
+try {
+const fb = await callAPI(`あなたはメガネ販売員向け英語トレーナーです。以下の形式で返答してください： 【自然さ】★★★☆☆（5段階） 【意味】（日本語訳） 【改善ポイント】（あれば簡潔に） 【より自然な表現】（あれば）`, [{
+role: “user”,
+content: `このフレーズを評価してください：「${text}」`
+}]);
+setJpFeedback(prev => ({
+…prev,
+[idx]: fb
+}));
+} catch {
+setJpFeedback(prev => ({
+…prev,
+[idx]: “フィードバックの取得に失敗しました。”
+}));
+}
+setLoadingFeedback(null);
+};
+const resetChat = () => {
+setMessages([{
+role: “assistant”,
+content: “Hello! Welcome to your store. I’m looking for some new glasses today. Can you help me?”
+}]);
+setUserInput(””);
+setJpFeedback({});
+};
+const checkQuiz = async () => {
+const q = QUIZ_QUESTIONS[currentQuizIndex];
+setQuizResult({
+loading: true
+});
+try {
+var _quizStats$q$id, _quizStats$q$id2;
+const raw = await callAPI(`あなたはメガネ販売員向け英語教師です。模範解答：「${q.answer}」 意味が同じなら正解とします。以下のJSON形式のみで返答： {"correct": true, "feedback": "日本語フィードバック", "naturalExample": "より自然な表現（なければnull）"}`, [{
+role: “user”,
+content: quizInput
+}]);
+const parsed = JSON.parse(raw.replace(/`json|`/g, “”).trim());
+setQuizResult(parsed);
+// Update stats
+const next = {
+…quizStats,
+[q.id]: {
+attempts: (((_quizStats$q$id = quizStats[q.id]) === null || _quizStats$q$id === void 0 ? void 0 : _quizStats$q$id.attempts) || 0) + 1,
+correct: (((_quizStats$q$id2 = quizStats[q.id]) === null || _quizStats$q$id2 === void 0 ? void 0 : _quizStats$q$id2.correct) || 0) + (parsed.correct ? 1 : 0)
+}
+};
+saveQuizStats(next);
+} catch {
+setQuizResult({
+correct: false,
+feedback: “採点に失敗しました。もう一度お試しください。”
+});
+}
+};
+const toggleJp = (key, setter) => setter(prev => ({
+…prev,
+[key]: !prev[key]
+}));
+
+// ─── Styles ─────────────────────────────────────────────────────────────
+
+const S = {
+app: {
+minHeight: “100vh”,
+background: “#0a0a0a”,
+color: “#f0ede8”,
+fontFamily: “‘DM Serif Display’, Georgia, serif”,
+display: “flex”,
+flexDirection: “column”
+},
+header: {
+borderBottom: “1px solid #222”,
+padding: “20px 28px 0”,
+background: “#0f0f0f”
+},
+logo: {
+fontSize: “10px”,
+letterSpacing: “0.3em”,
+color: “#c8b89a”,
+fontFamily: “monospace”,
+marginBottom: “4px”
+},
+title: {
+fontSize: “20px”,
+letterSpacing: “0.05em”,
+margin: “0 0 14px”,
+fontWeight: “400”
+},
+tabs: {
+display: “flex”,
+flexWrap: “wrap”
+},
+tab: a => ({
+padding: “10px 16px”,
+background: “transparent”,
+border: “none”,
+color: a ? “#c8b89a” : “#555”,
+borderBottom: a ? “2px solid #c8b89a” : “2px solid transparent”,
+cursor: “pointer”,
+fontFamily: “monospace”,
+fontSize: “10px”,
+letterSpacing: “0.12em”,
+textTransform: “uppercase”
+}),
+main: {
+flex: 1,
+padding: “24px 28px”,
+maxWidth: “900px”,
+width: “100%”,
+margin: “0 auto”,
+boxSizing: “border-box”
+},
+label: {
+fontSize: “10px”,
+letterSpacing: “0.25em”,
+color: “#c8b89a”,
+textTransform: “uppercase”,
+fontFamily: “monospace”,
+marginBottom: “14px”,
+display: “block”
+},
+row: {
+display: “flex”,
+gap: “8px”,
+flexWrap: “wrap”,
+marginBottom: “14px”
+},
+catBtn: a => ({
+padding: “5px 12px”,
+background: a ? “#c8b89a” : “transparent”,
+border: `1px solid ${a ? "#c8b89a" : "#333"}`,
+color: a ? “#0a0a0a” : “#888”,
+borderRadius: “2px”,
+cursor: “pointer”,
+fontFamily: “monospace”,
+fontSize: “10px”
+}),
+phraseCard: sel => ({
+border: `1px solid ${sel ? "#c8b89a" : "#222"}`,
+borderRadius: “3px”,
+padding: “16px”,
+marginBottom: “10px”,
+background: sel ? “#161410” : “#111”
+}),
+phraseEn: {
+fontSize: “15px”,
+lineHeight: “1.5”,
+color: “#f0ede8”,
+marginBottom: “8px”
+},
+btn: function () {
+let v = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : “d”;
+return {
+padding: “7px 14px”,
+cursor: “pointer”,
+borderRadius: “2px”,
+fontFamily: “monospace”,
+fontSize: “10px”,
+letterSpacing: “0.1em”,
+textTransform: “uppercase”,
+whiteSpace: “nowrap”,
+background: v === “p” ? “#c8b89a” : v === “r” ? “#8b3030” : v === “j” ? “#0d1a0d” : “transparent”,
+border: `1px solid ${v === "p" ? "#c8b89a" : v === "r" ? "#8b3030" : v === "j" ? "#3a6a3a" : "#444"}`,
+color: v === “p” ? “#0a0a0a” : v === “j” ? “#8bc98b” : “#ccc”
+};
+},
+jpBox: {
+marginTop: “8px”,
+padding: “10px 12px”,
+background: “#0d1a0d”,
+border: “1px solid #2a4a2a”,
+borderRadius: “3px”,
+fontFamily: “monospace”,
+fontSize: “11px”,
+color: “#8bc98b”,
+lineHeight: “1.6”
+},
+card: {
+padding: “16px”,
+background: “#111”,
+border: “1px solid #222”,
+borderRadius: “3px”,
+marginBottom: “10px”
+},
+collectionGrid: {
+display: “grid”,
+gridTemplateColumns: “repeat(auto-fill, minmax(240px, 1fr))”,
+gap: “12px”
+},
+cName: {
+fontSize: “10px”,
+letterSpacing: “0.15em”,
+color: “#c8b89a”,
+fontFamily: “monospace”,
+marginBottom: “8px”
+},
+cDesc: {
+fontSize: “13px”,
+lineHeight: “1.6”,
+color: “#ccc”,
+marginBottom: “10px”
+},
+salesPt: {
+fontSize: “11px”,
+fontFamily: “monospace”,
+color: “#888”,
+borderLeft: “2px solid #c8b89a”,
+paddingLeft: “10px”,
+lineHeight: “1.5”
+},
+chatBox: {
+background: “#0d0d0d”,
+border: “1px solid #222”,
+borderRadius: “3px”,
+height: “300px”,
+overflowY: “auto”,
+padding: “16px”,
+marginBottom: “12px”
+},
+bubble: r => ({
+display: “flex”,
+justifyContent: r === “user” ? “flex-end” : “flex-start”,
+marginBottom: “8px”
+}),
+bubbleIn: r => ({
+maxWidth: “75%”,
+padding: “10px 14px”,
+borderRadius: “3px”,
+background: r === “user” ? “#c8b89a” : “#1a1a1a”,
+color: r === “user” ? “#0a0a0a” : “#e0ddd8”,
+fontSize: “13px”,
+lineHeight: “1.5”,
+border: `1px solid ${r === "user" ? "#c8b89a" : "#2a2a2a"}`
+}),
+roleLabel: r => ({
+fontSize: “9px”,
+letterSpacing: “0.2em”,
+color: “#555”,
+fontFamily: “monospace”,
+textTransform: “uppercase”,
+marginBottom: “2px”,
+textAlign: r === “user” ? “right” : “left”
+}),
+inputRow: {
+display: “flex”,
+gap: “8px”
+},
+input: {
+flex: 1,
+padding: “10px 14px”,
+background: “#111”,
+border: “1px solid #333”,
+borderRadius: “2px”,
+color: “#f0ede8”,
+fontFamily: “monospace”,
+fontSize: “13px”,
+outline: “none”
+},
+fbBox: {
+marginTop: “6px”,
+padding: “10px 12px”,
+background: “#0d1a0d”,
+border: “1px solid #2a4a2a”,
+borderRadius: “3px”,
+fontFamily: “monospace”,
+fontSize: “11px”,
+color: “#8bc98b”,
+lineHeight: “1.7”,
+whiteSpace: “pre-wrap”
+},
+quizJp: {
+fontSize: “20px”,
+textAlign: “center”,
+padding: “24px”,
+background: “#111”,
+border: “1px solid #333”,
+borderRadius: “3px”,
+marginBottom: “16px”,
+lineHeight: “1.6”
+},
+quizInput: {
+width: “100%”,
+padding: “12px 16px”,
+background: “#111”,
+border: “1px solid #444”,
+borderRadius: “2px”,
+color: “#f0ede8”,
+fontFamily: “monospace”,
+fontSize: “14px”,
+outline: “none”,
+boxSizing: “border-box”,
+marginBottom: “12px”,
+height: “60px”,
+resize: “none”
+},
+resultBox: ok => ({
+padding: “16px”,
+background: ok ? “#0d1a0d” : “#1a0d0d”,
+border: `1px solid ${ok ? "#3a6a3a" : "#6a3a3a"}`,
+borderRadius: “3px”,
+fontFamily: “monospace”,
+fontSize: “12px”,
+color: ok ? “#8bc98b” : “#c98b8b”,
+lineHeight: “1.7”
+}),
+transcriptBox: {
+marginTop: “10px”,
+padding: “12px 14px”,
+background: “#111”,
+border: “1px solid #222”,
+borderRadius: “3px”,
+fontFamily: “monospace”,
+fontSize: “12px”,
+color: “#aaa”
+},
+wordCard: exp => ({
+border: `1px solid ${exp ? "#c8b89a" : "#222"}`,
+borderRadius: “3px”,
+marginBottom: “8px”,
+overflow: “hidden”,
+cursor: “pointer”,
+background: exp ? “#161410” : “#111”
+}),
+wordHeader: {
+display: “flex”,
+alignItems: “center”,
+justifyContent: “space-between”,
+padding: “14px 16px”
+},
+wordEn: {
+fontSize: “16px”,
+color: “#f0ede8”
+},
+wordBody: {
+padding: “0 16px 16px”
+},
+wordJp: {
+fontSize: “18px”,
+color: “#c8b89a”,
+marginBottom: “12px”
+},
+wordUsage: {
+fontSize: “12px”,
+fontFamily: “monospace”,
+color: “#888”,
+borderLeft: “2px solid #333”,
+paddingLeft: “10px”,
+lineHeight: “1.6”,
+marginBottom: “10px”
+},
+wordNote: {
+fontSize: “11px”,
+fontFamily: “monospace”,
+color: “#6a8a6a”,
+lineHeight: “1.6”
+},
+flashCard: {
+minHeight: “200px”,
+display: “flex”,
+flexDirection: “column”,
+alignItems: “center”,
+justifyContent: “center”,
+background: “#111”,
+border: “1px solid #333”,
+borderRadius: “3px”,
+padding: “32px”,
+marginBottom: “16px”,
+textAlign: “center”,
+cursor: “pointer”
+},
+flashWord: {
+fontSize: “26px”,
+letterSpacing: “0.03em”,
+marginBottom: “8px”
+},
+flashSub: {
+fontSize: “11px”,
+fontFamily: “monospace”,
+color: “#555”,
+letterSpacing: “0.15em”
+},
+dot: level => ({
+display: “inline-block”,
+width: “7px”,
+height: “7px”,
+borderRadius: “50%”,
+background: MASTERY_COLOR[level],
+marginRight: “6px”,
+flexShrink: 0
+}),
+masteryBadge: level => ({
+fontSize: “9px”,
+fontFamily: “monospace”,
+color: MASTERY_COLOR[level],
+letterSpacing: “0.1em”,
+textTransform: “uppercase”
+}),
+progressBar: {
+display: “flex”,
+gap: “12px”,
+flexWrap: “wrap”,
+marginBottom: “20px”,
+padding: “14px 16px”,
+background: “#111”,
+border: “1px solid #222”,
+borderRadius: “3px”
+},
+progressItem: {
+display: “flex”,
+alignItems: “center”,
+fontSize: “10px”,
+fontFamily: “monospace”,
+color: “#888”
+}
+};
+
+// ─── Progress Summary ───────────────────────────────────────────────────
+
+const renderProgressBar = (items, statsObj, keyFn) => {
+const counts = {
+new: 0,
+learning: 0,
+mastered: 0,
+struggling: 0
+};
+items.forEach((_, i) => {
+const key = keyFn(i);
+counts[masteryLevel(statsObj[key])]++;
+});
+return /*#**PURE***/React.createElement(“div”, {
+style: S.progressBar
+}, Object.entries(counts).map(_ref => {
+let [level, count] = _ref;
+return /*#**PURE***/React.createElement(“div”, {
+key: level,
+style: S.progressItem
+}, /*#**PURE***/React.createElement(“span”, {
+style: S.dot(level)
+}), MASTERY_LABEL[level], “\uFF1A”, count);
+}));
+};
+
+// ─── Tab: Shadowing ─────────────────────────────────────────────────────
+
+const renderShadowing = () => {
+const cat = SHADOWING_LESSONS[selectedCategory];
+return /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“span”, {
+style: S.label
+}, “\u30EA\u30B9\u30CB\u30F3\u30B0 & \u30B7\u30E3\u30C9\u30FC\u30A4\u30F3\u30B0\u7DF4\u7FD2”), /*#**PURE***/React.createElement(“div”, {
+style: S.row
+}, SHADOWING_LESSONS.map((c, i) => /*#**PURE***/React.createElement(“button”, {
+key: i,
+style: S.catBtn(selectedCategory === i),
+onClick: () => {
+setSelectedCategory(i);
+setSelectedPhrase(null);
+setTranscript(””);
+setShowJp({});
+}
+}, c.category))), cat.phrases.map((p, i) => /*#**PURE***/React.createElement(“div”, {
+key: i,
+style: S.phraseCard(selectedPhrase === i)
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.phraseEn
+}, “"”, p.en, “"”), /*#**PURE***/React.createElement(“div”, {
+style: {
+display: “flex”,
+gap: “8px”,
+flexWrap: “wrap”
+}
+}, /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“j”),
+onClick: () => toggleJp(i, setShowJp)
+}, showJp[i] ? “日本語を隠す” : “日本語で確認”), /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“p”),
+onClick: () => {
+setSelectedPhrase(i);
+speak(p.en);
+}
+}, “\u25B6 \u518D\u751F”), /*#**PURE***/React.createElement(“button”, {
+style: S.btn(),
+onClick: () => {
+setSelectedPhrase(i);
+speak(p.en, 0.65);
+}
+}, “\u25B6 \u30B9\u30ED\u30FC”)), showJp[i] && /*#**PURE***/React.createElement(“div”, {
+style: S.jpBox
+}, p.jp), selectedPhrase === i && /*#**PURE***/React.createElement(“div”, {
+style: {
+marginTop: “12px”
+}
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+display: “flex”,
+gap: “8px”,
+flexWrap: “wrap”
+}
+}, !isRecording ? /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“p”),
+onClick: () => {
+setJpWarning(false);
+startRecording();
+}
+}, “\u9332\u97F3\u3057\u3066\u30B7\u30E3\u30C9\u30FC\u30A4\u30F3\u30B0”) : /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“r”),
+onClick: stopRecording
+}, “\u25A0 \u505C\u6B62”), audioURL && /*#**PURE***/React.createElement(“audio”, {
+controls: true,
+src: audioURL,
+style: {
+marginTop: “8px”,
+width: “100%”,
+filter: “invert(1)”
+}
+}), isSpeaking && /*#**PURE***/React.createElement(“span”, {
+style: {
+fontFamily: “monospace”,
+fontSize: “10px”,
+color: “#c8b89a”,
+alignSelf: “center”
+}
+}, “\u25CF \u518D\u751F\u4E2D”)), isRecording && interimTranscript && /*#**PURE***/React.createElement(“div”, {
+style: {
+…S.transcriptBox,
+marginTop: “8px”,
+color: “#666”,
+fontStyle: “italic”
+}
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+fontSize: “9px”,
+color: “#555”,
+marginBottom: “4px”,
+letterSpacing: “0.15em”
+}
+}, “\u8A8D\u8B58\u4E2D\u2026”), interimTranscript), jpWarning && /*#**PURE***/React.createElement(“div”, {
+style: {
+marginTop: “8px”,
+padding: “8px 12px”,
+background: “#1a1000”,
+border: “1px solid #6a4a00”,
+borderRadius: “3px”,
+fontFamily: “monospace”,
+fontSize: “11px”,
+color: “#c8a040”,
+lineHeight: “1.5”
+}
+}, “\u65E5\u672C\u8A9E\u304C\u691C\u51FA\u3055\u308C\u305F\u305F\u3081\u3001\u9664\u53BB\u3057\u3066\u8868\u793A\u3057\u3066\u3044\u307E\u3059\u3002\u82F1\u8A9E\u306E\u307F\u3067\u767A\u97F3\u3057\u3066\u307F\u3066\u304F\u3060\u3055\u3044\u3002”), transcript && /*#**PURE***/React.createElement(“div”, {
+style: S.transcriptBox
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+fontSize: “9px”,
+color: “#555”,
+marginBottom: “4px”,
+letterSpacing: “0.15em”
+}
+}, “YOUR RECORDING”), /*#**PURE***/React.createElement(“div”, null, transcript), /*#**PURE***/React.createElement(“div”, {
+style: {
+marginTop: “6px”,
+fontSize: “10px”,
+color: “#444”
+}
+}, “\u6A21\u7BC4\uFF1A”, p.en))))));
+};
+
+// ─── Tab: Vocab ─────────────────────────────────────────────────────────
+
+const renderVocab = () => {
+const cat = VOCAB[vocabCategory];
+const words = cat.words;
+return /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“span”, {
+style: S.label
+}, “\u5358\u8A9E\u30FB\u719F\u8A9E\u306E\u610F\u5473\u78BA\u8A8D”), /*#**PURE***/React.createElement(“div”, {
+style: {
+display: “flex”,
+gap: “8px”,
+marginBottom: “16px”
+}
+}, /*#**PURE***/React.createElement(“button”, {
+style: S.catBtn(!vocabFlipMode),
+onClick: () => {
+setVocabFlipMode(false);
+setExpandedWord(null);
+}
+}, “\u4E00\u89A7”), /*#**PURE***/React.createElement(“button”, {
+style: S.catBtn(vocabFlipMode),
+onClick: () => {
+setVocabFlipMode(true);
+setFlashIndex(pickNextFlash(vocabCategory));
+setFlashRevealed(false);
+}
+}, “\u30D5\u30E9\u30C3\u30B7\u30E5\u30AB\u30FC\u30C9\uFF08\u9069\u5FDC\u578B\uFF09”)), /*#**PURE***/React.createElement(“div”, {
+style: S.row
+}, VOCAB.map((v, i) => /*#**PURE***/React.createElement(“button”, {
+key: i,
+style: S.catBtn(vocabCategory === i),
+onClick: () => {
+setVocabCategory(i);
+setExpandedWord(null);
+setFlashIndex(pickNextFlash(i));
+setFlashRevealed(false);
+}
+}, v.category))), renderProgressBar(words, vocabStats, wi => `${vocabCategory}-${wi}`), !vocabFlipMode ? /*#**PURE***/React.createElement(“div”, null, words.map((w, i) => {
+const key = `${vocabCategory}-${i}`;
+const level = masteryLevel(vocabStats[key]);
+return /*#**PURE***/React.createElement(“div”, {
+key: i,
+style: S.wordCard(expandedWord === i),
+onClick: () => setExpandedWord(expandedWord === i ? null : i)
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.wordHeader
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+display: “flex”,
+alignItems: “center”,
+gap: “10px”
+}
+}, /*#**PURE***/React.createElement(“span”, {
+style: S.dot(level)
+}), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
+style: S.wordEn
+}, w.en), /*#**PURE***/React.createElement(“div”, {
+style: S.masteryBadge(level)
+}, MASTERY_LABEL[level]))), /*#**PURE***/React.createElement(“button”, {
+style: {
+…S.btn(“p”),
+padding: “5px 10px”
+},
+onClick: e => {
+e.stopPropagation();
+speak(w.en);
+}
+}, “\u25B6”)), expandedWord === i && /*#**PURE***/React.createElement(“div”, {
+style: S.wordBody
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.wordJp
+}, w.jp), /*#**PURE***/React.createElement(“div”, {
+style: S.wordUsage
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+fontSize: “9px”,
+color: “#555”,
+letterSpacing: “0.15em”,
+marginBottom: “4px”
+}
+}, “\u7528\u4F8B”), “"”, w.usage, “"”, /*#**PURE***/React.createElement(“button”, {
+style: {
+…S.btn(“p”),
+marginLeft: “10px”,
+padding: “3px 8px”,
+fontSize: “9px”
+},
+onClick: e => {
+e.stopPropagation();
+speak(w.usage);
+}
+}, “\u25B6”)), /*#**PURE***/React.createElement(“div”, {
+style: S.wordNote
+}, /*#**PURE***/React.createElement(“span”, {
+style: {
+color: “#c8b89a”,
+marginRight: “6px”
+}
+}, “Point \u2014”), w.note), /*#**PURE***/React.createElement(“div”, {
+style: {
+display: “flex”,
+gap: “8px”,
+marginTop: “12px”
+}
+}, /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“p”),
+onClick: async e => {
+var _vocabStats$key, _vocabStats$key2;
+e.stopPropagation();
+const next = {
+…vocabStats,
+[key]: {
+attempts: (((_vocabStats$key = vocabStats[key]) === null || _vocabStats$key === void 0 ? void 0 : _vocabStats$key.attempts) || 0) + 1,
+correct: (((_vocabStats$key2 = vocabStats[key]) === null || _vocabStats$key2 === void 0 ? void 0 : _vocabStats$key2.correct) || 0) + 1
+}
+};
+saveVocabStats(next);
+}
+}, “\u899A\u3048\u305F”), /*#**PURE***/React.createElement(“button”, {
+style: S.btn(),
+onClick: async e => {
+var _vocabStats$key3, _vocabStats$key4;
+e.stopPropagation();
+const next = {
+…vocabStats,
+[key]: {
+attempts: (((_vocabStats$key3 = vocabStats[key]) === null || _vocabStats$key3 === void 0 ? void 0 : _vocabStats$key3.attempts) || 0) + 1,
+correct: ((_vocabStats$key4 = vocabStats[key]) === null || _vocabStats$key4 === void 0 ? void 0 : _vocabStats$key4.correct) || 0
+}
+};
+saveVocabStats(next);
+}
+}, “\u8981\u5FA9\u7FD2”))));
+})) : /*#**PURE***/React.createElement(“div”, null, (() => {
+const w = words[flashIndex];
+const key = `${vocabCategory}-${flashIndex}`;
+const level = masteryLevel(vocabStats[key]);
+return /*#**PURE***/React.createElement(React.Fragment, null, /*#**PURE***/React.createElement(“div”, {
+style: {
+…S.masteryBadge(level),
+marginBottom: “8px”,
+display: “block”
+}
+}, /*#**PURE***/React.createElement(“span”, {
+style: S.dot(level)
+}), MASTERY_LABEL[level], “ \u2014 \u512A\u5148\u5EA6\u304C\u9AD8\u3044\u9806\u306B\u51FA\u984C\u3055\u308C\u3066\u3044\u307E\u3059”), /*#**PURE***/React.createElement(“div”, {
+style: S.flashCard,
+onClick: () => setFlashRevealed(r => !r)
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.flashWord
+}, w.en), !flashRevealed ? /*#**PURE***/React.createElement(“div”, {
+style: S.flashSub
+}, “\u30AF\u30EA\u30C3\u30AF\u3057\u3066\u610F\u5473\u3092\u8868\u793A”) : /*#**PURE***/React.createElement(“div”, {
+style: {
+marginTop: “20px”,
+textAlign: “center”
+}
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+fontSize: “20px”,
+color: “#c8b89a”,
+marginBottom: “10px”
+}
+}, w.jp), /*#**PURE***/React.createElement(“div”, {
+style: {
+fontSize: “11px”,
+fontFamily: “monospace”,
+color: “#6a8a6a”,
+lineHeight: “1.6”,
+maxWidth: “480px”
+}
+}, /*#**PURE***/React.createElement(“span”, {
+style: {
+color: “#c8b89a”
+}
+}, “Point \u2014 “), w.note))), flashRevealed && /*#**PURE***/React.createElement(“div”, {
+style: {
+…S.wordUsage,
+marginBottom: “16px”
+}
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+fontSize: “9px”,
+color: “#555”,
+letterSpacing: “0.15em”,
+marginBottom: “4px”
+}
+}, “\u7528\u4F8B”), “"”, w.usage, “"”), /*#**PURE***/React.createElement(“div”, {
+style: {
+display: “flex”,
+gap: “10px”,
+flexWrap: “wrap”
+}
+}, /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“p”),
+onClick: () => speak(w.en)
+}, “\u25B6 \u5358\u8A9E”), flashRevealed && /*#**PURE***/React.createElement(“button”, {
+style: S.btn(),
+onClick: () => speak(w.usage)
+}, “\u25B6 \u7528\u4F8B”), flashRevealed && /*#**PURE***/React.createElement(React.Fragment, null, /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“p”),
+onClick: async () => {
+var _vocabStats$key5, _vocabStats$key6;
+const next = {
+…vocabStats,
+[key]: {
+attempts: (((_vocabStats$key5 = vocabStats[key]) === null || _vocabStats$key5 === void 0 ? void 0 : _vocabStats$key5.attempts) || 0) + 1,
+correct: (((_vocabStats$key6 = vocabStats[key]) === null || _vocabStats$key6 === void 0 ? void 0 : _vocabStats$key6.correct) || 0) + 1
+}
+};
+saveVocabStats(next);
+setFlashIndex(pickNextFlash(vocabCategory, next));
+setFlashRevealed(false);
+}
+}, “\u899A\u3048\u305F \u2192 \u6B21\u3078”), /*#**PURE***/React.createElement(“button”, {
+style: S.btn(),
+onClick: async () => {
+var _vocabStats$key7, _vocabStats$key8;
+const next = {
+…vocabStats,
+[key]: {
+attempts: (((_vocabStats$key7 = vocabStats[key]) === null || _vocabStats$key7 === void 0 ? void 0 : _vocabStats$key7.attempts) || 0) + 1,
+correct: ((_vocabStats$key8 = vocabStats[key]) === null || _vocabStats$key8 === void 0 ? void 0 : _vocabStats$key8.correct) || 0
+}
+};
+saveVocabStats(next);
+setFlashIndex(pickNextFlash(vocabCategory, next));
+setFlashRevealed(false);
+}
+}, “\u8981\u5FA9\u7FD2 \u2192 \u6B21\u3078”)), !flashRevealed && /*#**PURE***/React.createElement(“button”, {
+style: S.btn(),
+onClick: () => {
+setFlashIndex(pickNextFlash(vocabCategory));
+setFlashRevealed(false);
+}
+}, “\u30B9\u30AD\u30C3\u30D7 \u2192”)));
+})()));
+};
+
+// ─── Tab: Knowledge ─────────────────────────────────────────────────────
+
+const renderKnowledge = () => /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“span”, {
+style: S.label
+}, “MYKITA\u30D6\u30E9\u30F3\u30C9\u30CA\u30EC\u30C3\u30B8”), /*#**PURE***/React.createElement(“div”, {
+style: S.row
+}, [“collections”, “origin”, “philosophy”].map(sec => /*#**PURE***/React.createElement(“button”, {
+key: sec,
+style: S.catBtn(knowledgeSection === sec),
+onClick: () => setKnowledgeSection(sec)
+}, sec))), knowledgeSection !== “collections” && (() => {
+const data = BRAND_KNOWLEDGE[knowledgeSection];
+return /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
+style: S.card
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+…S.cName,
+marginBottom: “10px”
+}
+}, data.title), /*#**PURE***/React.createElement(“p”, {
+style: {
+fontSize: “13px”,
+lineHeight: “1.7”,
+color: “#bbb”,
+margin: 0
+}
+}, data.content)), /*#**PURE***/React.createElement(“div”, {
+style: S.card
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.cName
+}, “\u63A5\u5BA2\u82F1\u8A9E\u30D5\u30EC\u30FC\u30BA”), data.keyPhrases.map((kp, i) => {
+const k = `${knowledgeSection}-${i}`;
+return /*#**PURE***/React.createElement(“div”, {
+key: i,
+style: {
+borderBottom: “1px solid #1a1a1a”,
+paddingBottom: “12px”,
+marginBottom: “12px”
+}
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+fontSize: “14px”,
+color: “#c8b89a”,
+fontFamily: “monospace”,
+marginBottom: “6px”
+}
+}, “"”, kp.en, “"”), /*#**PURE***/React.createElement(“div”, {
+style: {
+display: “flex”,
+gap: “8px”
+}
+}, /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“p”),
+onClick: () => speak(kp.en)
+}, “\u25B6 \u518D\u751F”), /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“j”),
+onClick: () => toggleJp(k, setShowKpJp)
+}, showKpJp[k] ? “日本語を隠す” : “日本語で確認”)), showKpJp[k] && /*#**PURE***/React.createElement(“div”, {
+style: S.jpBox
+}, kp.jp));
+})));
+})(), knowledgeSection === “collections” && /*#**PURE***/React.createElement(“div”, {
+style: S.collectionGrid
+}, BRAND_KNOWLEDGE.collections.map((c, i) => /*#**PURE***/React.createElement(“div”, {
+key: i,
+style: S.card
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.cName
+}, c.name), /*#**PURE***/React.createElement(“div”, {
+style: S.cDesc
+}, c.description), /*#**PURE***/React.createElement(“div”, {
+style: S.salesPt
+}, c.salesPoint), /*#**PURE***/React.createElement(“div”, {
+style: {
+display: “flex”,
+gap: “8px”,
+marginTop: “12px”,
+flexWrap: “wrap”
+}
+}, /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“p”),
+onClick: () => speak(c.salesPoint)
+}, “\u25B6 \u30BB\u30FC\u30EB\u30B9\u30C8\u30FC\u30AF”), /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“j”),
+onClick: () => toggleJp(i, setShowSalesJp)
+}, showSalesJp[i] ? “日本語を隠す” : “日本語で確認”)), showSalesJp[i] && /*#**PURE***/React.createElement(“div”, {
+style: S.jpBox
+}, c.salesPointJp)))));
+
+// ─── Tab: Roleplay ───────────────────────────────────────────────────────
+
+const renderRoleplay = () => /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“span”, {
+style: S.label
+}, “AI\u30ED\u30FC\u30EB\u30D7\u30EC\u30A4 \u2014 \u3042\u306A\u305F\u304C\u8CA9\u58F2\u54E1”), /*#**PURE***/React.createElement(“div”, {
+style: S.row
+}, [{
+key: “general”,
+label: “一般客”
+}, {
+key: “mykita”,
+label: “MYKITAファン”
+}, {
+key: “objection”,
+label: “価格交渉客”
+}, {
+key: “tourist”,
+label: “英語観光客”
+}].map(sc => /*#**PURE***/React.createElement(“button”, {
+key: sc.key,
+style: S.catBtn(scenario === sc.key),
+onClick: () => {
+setScenario(sc.key);
+resetChat();
+}
+}, sc.label))), /*#**PURE***/React.createElement(“div”, {
+style: S.chatBox
+}, messages.map((m, i) => /*#**PURE***/React.createElement(“div”, {
+key: i
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.roleLabel(m.role)
+}, m.role === “user” ? “あなた（販売員）” : “Customer”), /*#**PURE***/React.createElement(“div”, {
+style: S.bubble(m.role)
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.bubbleIn(m.role)
+}, m.content)), m.role === “user” && /*#**PURE***/React.createElement(“div”, {
+style: {
+textAlign: “right”,
+marginTop: “-4px”,
+marginBottom: “10px”
+}
+}, /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“j”),
+onClick: () => getFeedback(i, m.content),
+disabled: loadingFeedback === i
+}, loadingFeedback === i ? “評価中…” : “日本語で評価する”), jpFeedback[i] && /*#**PURE***/React.createElement(“div”, {
+style: S.fbBox
+}, jpFeedback[i])))), isLoading && /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
+style: S.roleLabel(“assistant”)
+}, “Customer”), /*#**PURE***/React.createElement(“div”, {
+style: S.bubble(“assistant”)
+}, /*#**PURE***/React.createElement(“div”, {
+style: {
+…S.bubbleIn(“assistant”),
+color: “#555”
+}
+}, “typing\u2026”))), /*#**PURE***/React.createElement(“div”, {
+ref: chatEndRef
+})), /*#**PURE***/React.createElement(“div”, {
+style: S.inputRow
+}, /*#**PURE***/React.createElement(“input”, {
+style: S.input,
+value: userInput,
+onChange: e => setUserInput(e.target.value),
+onKeyDown: e => e.key === “Enter” && sendMessage(),
+placeholder: “\u82F1\u8A9E\u3067\u8FD4\u7B54\u3057\u3066\u304F\u3060\u3055\u3044\u2026”
+}), /*#**PURE***/React.createElement(“button”, {
+style: S.btn(“p”),
+onClick: sendMessage,
+disabled: isLoading
+}, “\u9001\u4FE1”), /*#**PURE***/React.createElement(“button”, {
+style: S.btn(),
+onClick: resetChat
+}, “\u30EA\u30BB\u30C3\u30C8”)));
+
+// ─── Tab: Quiz (Adaptive) ────────────────────────────────────────────────
+
+const renderQuiz = () => {
+if (currentQuizIndex === null) return /*#**PURE***/React.createElement(“div”, {
+style: {
+fontFamily: “monospace”,
+color: “#555”
+}
+}, “\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026”);
+const q = QUIZ_QUESTIONS[currentQuizIndex];
+const stat = quizStats[q.id] || {
+attempts: 0,
+correct: 0
+};
+const level = masteryLevel(stat);
+
+```
+// Overall stats
+const masteredCount = QUIZ_QUESTIONS.filter(q2 => masteryLevel(quizStats[q2.id] || {
+  attempts: 0,
+  correct: 0
+}) === "mastered").length;
+const learningCount = QUIZ_QUESTIONS.filter(q2 => masteryLevel(quizStats[q2.id] || {
+  attempts: 0,
+  correct: 0
+}) === "learning").length;
+return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+  style: S.label
+}, "\u65E5\u672C\u8A9E \u2192 \u82F1\u8A9E \u5909\u63DB\u30AF\u30A4\u30BA\uFF08\u9069\u5FDC\u578B\uFF09"), renderProgressBar(QUIZ_QUESTIONS, quizStats, i => QUIZ_QUESTIONS[i].id), /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    gap: "12px",
+    alignItems: "center",
+    marginBottom: "14px",
+    fontFamily: "monospace",
+    fontSize: "10px",
+    color: "#666"
+  }
+}, /*#__PURE__*/React.createElement("span", null, "\u5168", QUIZ_QUESTIONS.length, "\u554F"), /*#__PURE__*/React.createElement("span", {
+  style: {
+    color: MASTERY_COLOR[level]
+  }
+}, /*#__PURE__*/React.createElement("span", {
+  style: S.dot(level)
+}), "\u3053\u306E\u554F\u984C\uFF1A", MASTERY_LABEL[level], stat.attempts > 0 && ` (${stat.correct}/${stat.attempts})`), /*#__PURE__*/React.createElement("span", {
+  style: {
+    color: "#4a8a4a"
+  }
+}, "\u7FD2\u5F97\u6E08\uFF1A", masteredCount)), /*#__PURE__*/React.createElement("div", {
+  style: S.quizJp
+}, q.jp), /*#__PURE__*/React.createElement("textarea", {
+  style: S.quizInput,
+  value: quizInput,
+  onChange: e => setQuizInput(e.target.value),
+  placeholder: "\u82F1\u8A9E\u306B\u8A33\u3057\u3066\u304F\u3060\u3055\u3044\u2026",
+  disabled: !!quizResult && !quizResult.loading
+}), /*#__PURE__*/React.createElement("div", {
+  style: {
+    display: "flex",
+    gap: "10px",
+    flexWrap: "wrap",
+    marginBottom: "14px"
+  }
+}, !quizResult ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+  style: S.btn("p"),
+  onClick: checkQuiz,
+  disabled: !quizInput.trim()
+}, "AI\u306B\u63A1\u70B9\u3057\u3066\u3082\u3089\u3046"), /*#__PURE__*/React.createElement("button", {
+  style: S.btn("j"),
+  onClick: () => setShowHint(!showHint)
+}, showHint ? "ヒントを隠す" : "ヒントを見る"), /*#__PURE__*/React.createElement("button", {
+  style: S.btn(),
+  onClick: () => setShowAnswer(!showAnswer)
+}, showAnswer ? "答えを隠す" : "答えを見る")) : !quizResult.loading && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+  style: S.btn("p"),
+  onClick: () => pickNextQuestion()
+}, "\u6B21\u306E\u554F\u984C \u2192"), /*#__PURE__*/React.createElement("button", {
+  style: S.btn(),
+  onClick: () => speak(q.answer)
+}, "\u25B6 \u6A21\u7BC4\u89E3\u7B54\u3092\u805E\u304F"))), showHint && !quizResult && /*#__PURE__*/React.createElement("div", {
+  style: {
+    ...S.jpBox,
+    marginBottom: "12px"
+  }
+}, "\u30D2\u30F3\u30C8\uFF1A\u300C", q.hint, "\u300D"), showAnswer && !quizResult && /*#__PURE__*/React.createElement("div", {
+  style: {
+    ...S.jpBox,
+    marginBottom: "12px"
+  }
+}, "\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C", q.answer, "\u300D"), (quizResult === null || quizResult === void 0 ? void 0 : quizResult.loading) && /*#__PURE__*/React.createElement("div", {
+  style: S.resultBox(true)
+}, "AI\u304C\u63A1\u70B9\u4E2D\u2026"), quizResult && !quizResult.loading && /*#__PURE__*/React.createElement("div", {
+  style: S.resultBox(quizResult.correct)
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontSize: "14px",
+    marginBottom: "8px"
+  }
+}, quizResult.correct ? "正解" : "惜しい"), /*#__PURE__*/React.createElement("div", null, quizResult.feedback), quizResult.naturalExample && /*#__PURE__*/React.createElement("div", {
+  style: {
+    marginTop: "10px",
+    color: "#c8b89a"
+  }
+}, "\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE\uFF1A\u300C", quizResult.naturalExample, "\u300D", /*#__PURE__*/React.createElement("button", {
+  style: {
+    ...S.btn("p"),
+    marginLeft: "10px",
+    padding: "4px 10px"
+  },
+  onClick: () => speak(quizResult.naturalExample)
+}, "\u25B6")), /*#__PURE__*/React.createElement("div", {
+  style: {
+    marginTop: "10px",
+    color: "#666"
+  }
+}, "\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C", q.answer, "\u300D")));
+```
+
+};
+
+// ─── Render ──────────────────────────────────────────────────────────────
+
+return /*#**PURE***/React.createElement(“div”, {
+style: S.app
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.header
+}, /*#**PURE***/React.createElement(“div”, {
+style: S.logo
+}, “MYKITA \xD7 ENGLISH TRAINING”), /*#**PURE***/React.createElement(“h1”, {
+style: S.title
+}, “Eyewear Sales English”), /*#**PURE***/React.createElement(“div”, {
+style: S.tabs
+}, [[“shadowing”, “Shadowing”], [“vocab”, “Vocabulary”], [“knowledge”, “Brand Knowledge”], [“roleplay”, “Roleplay”], [“quiz”, “Adaptive Quiz”]].map(_ref2 => {
+let [k, l] = _ref2;
+return /*#**PURE***/React.createElement(“button”, {
+key: k,
+style: S.tab(activeTab === k),
+onClick: () => setActiveTab(k)
+}, l);
+}))), /*#**PURE***/React.createElement(“div”, {
+style: S.main
+}, activeTab === “shadowing” && renderShadowing(), activeTab === “vocab” && renderVocab(), activeTab === “knowledge” && renderKnowledge(), activeTab === “roleplay” && renderRoleplay(), activeTab === “quiz” && renderQuiz()));
+}
+ReactDOM.createRoot(document.getElementById(‘root’)).render(
+React.createElement(MYKITAEnglishApp)
 );
-  </script>
+</script>
 
 </body>
 </html>
