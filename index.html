@@ -721,34 +721,52 @@ function MYKITAEnglishApp() {
   }, [getBestVoice]);
   const hasJapanese = text => /[\u3040-\u30FF\u4E00-\u9FFF]/.test(text);
   const stripJapanese = text => text.replace(/[\u3040-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]+/g, "").replace(/\s+/g, " ").trim();
+  const streamRef = useRef(null);
+  const cleanupRecording = () => {
+    try {
+      var _recognitionRef$curre;
+      (_recognitionRef$curre = recognitionRef.current) === null || _recognitionRef$curre === void 0 || _recognitionRef$curre.abort();
+    } catch (e) {}
+    recognitionRef.current = null;
+    try {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
+      }
+    } catch (e) {}
+    mediaRecorderRef.current = null;
+    try {
+      var _streamRef$current;
+      (_streamRef$current = streamRef.current) === null || _streamRef$current === void 0 || _streamRef$current.getTracks().forEach(t => t.stop());
+    } catch (e) {}
+    streamRef.current = null;
+    audioChunksRef.current = [];
+  };
   const startRecording = async () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
-      setTranscript("\u26a0\ufe0f Chrome\uff08PC\u7248\uff09\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u306a\u3002");
+      setTranscript("\u26a0\ufe0f iPhone Safari\u306fSpeechRecognition\u306b\u975e\u5bfe\u5fdc\u3067\u3059\u3002PC\u7248Chrome\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u306a\u3002");
       return;
     }
+    cleanupRecording();
     if (audioURL) {
       URL.revokeObjectURL(audioURL);
     }
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-      mediaRecorderRef.current.stop();
-    }
-    if (recognitionRef.current) {
-      try {
-        recognitionRef.current.abort();
-      } catch (e) {}
-    }
-    mediaRecorderRef.current = null;
-    recognitionRef.current = null;
-    audioChunksRef.current = [];
     setTranscript("");
     setInterimTranscript("");
     setJpWarning(false);
     setAudioURL(null);
+    await new Promise(r => setTimeout(r, 300));
+    let stream;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      stream = await navigator.mediaDevices.getUserMedia({
         audio: true
       });
+      streamRef.current = stream;
+    } catch (e) {
+      setTranscript("\u26a0\ufe0f \u30de\u30a4\u30af\u3078\u306e\u30a2\u30af\u30bb\u30b9\u304c\u62d2\u5426\u3055\u308c\u307e\u3057\u305f\u3002\u8a2d\u5b9a\u304b\u3089\u30de\u30a4\u30af\u3092\u8a31\u53ef\u3057\u3066\u304f\u3060\u3055\u3044\u306a\u3002");
+      return;
+    }
+    try {
       audioChunksRef.current = [];
       const mimeType = ["audio/mp4", "audio/aac", "audio/webm", ""].find(m => m === "" || MediaRecorder.isTypeSupported(m));
       const mr = mimeType ? new MediaRecorder(stream, {
@@ -758,16 +776,20 @@ function MYKITAEnglishApp() {
         if (e.data.size > 0) audioChunksRef.current.push(e.data);
       };
       mr.onstop = () => {
-        const blob = new Blob(audioChunksRef.current, {
-          type: mr.mimeType || "audio/mp4"
-        });
-        setAudioURL(URL.createObjectURL(blob));
+        if (audioChunksRef.current.length > 0) {
+          const blob = new Blob(audioChunksRef.current, {
+            type: mr.mimeType || "audio/mp4"
+          });
+          setAudioURL(URL.createObjectURL(blob));
+        }
         stream.getTracks().forEach(t => t.stop());
+        streamRef.current = null;
       };
-      mr.start();
+      mr.start(100);
       mediaRecorderRef.current = mr;
     } catch (e) {
-      setTranscript("\u26a0\ufe0f \u30de\u30a4\u30af\u3078\u306e\u30a2\u30af\u30bb\u30b9\u304c\u62d2\u5426\u3055\u308c\u307e\u3057\u305f\u3002");
+      stream.getTracks().forEach(t => t.stop());
+      setTranscript("\u26a0\ufe0f \u9332\u97f3\u306e\u958b\u59cb\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002");
       return;
     }
     const rec = new SR();
@@ -800,7 +822,7 @@ function MYKITAEnglishApp() {
         }
       }
     };
-    rec.onend = () => {
+    const finishRecording = () => {
       setIsRecording(false);
       setInterimTranscript("");
       try {
@@ -809,24 +831,18 @@ function MYKITAEnglishApp() {
         }
       } catch (e) {}
     };
-    rec.onerror = () => {
-      setIsRecording(false);
-      setInterimTranscript("");
-      try {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
-          mediaRecorderRef.current.stop();
-        }
-      } catch (e) {}
-    };
+    rec.onend = finishRecording;
+    rec.onerror = finishRecording;
     rec.start();
     recognitionRef.current = rec;
     setIsRecording(true);
   };
   const stopRecording = () => {
     setIsRecording(false);
+    setInterimTranscript("");
     try {
-      var _recognitionRef$curre;
-      (_recognitionRef$curre = recognitionRef.current) === null || _recognitionRef$curre === void 0 || _recognitionRef$curre.stop();
+      var _recognitionRef$curre2;
+      (_recognitionRef$curre2 = recognitionRef.current) === null || _recognitionRef$curre2 === void 0 || _recognitionRef$curre2.stop();
     } catch (e) {}
     try {
       if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
