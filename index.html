@@ -752,6 +752,7 @@ function MYKITAEnglishApp() {
       audioRef.current.pause();
       audioRef.current.src = "";
     }
+    setAudioURL(null);
     cleanupRecording();
     if (audioURL) {
       URL.revokeObjectURL(audioURL);
@@ -759,8 +760,7 @@ function MYKITAEnglishApp() {
     setTranscript("");
     setInterimTranscript("");
     setJpWarning(false);
-    setAudioURL(null);
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 600));
     let stream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -787,8 +787,6 @@ function MYKITAEnglishApp() {
           });
           setAudioURL(URL.createObjectURL(blob));
         }
-        stream.getTracks().forEach(t => t.stop());
-        streamRef.current = null;
       };
       mr.start(100);
       mediaRecorderRef.current = mr;
