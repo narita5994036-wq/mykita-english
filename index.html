@@ -722,6 +722,7 @@ function MYKITAEnglishApp() {
   const hasJapanese = text => /[\u3040-\u30FF\u4E00-\u9FFF]/.test(text);
   const stripJapanese = text => text.replace(/[\u3040-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]+/g, "").replace(/\s+/g, " ").trim();
   const streamRef = useRef(null);
+  const audioRef = useRef(null);
   const cleanupRecording = () => {
     try {
       var _recognitionRef$curre;
@@ -746,6 +747,10 @@ function MYKITAEnglishApp() {
     if (!SR) {
       setTranscript("\u26a0\ufe0f iPhone Safari\u306fSpeechRecognition\u306b\u975e\u5bfe\u5fdc\u3067\u3059\u3002PC\u7248Chrome\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u306a\u3002");
       return;
+    }
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
     }
     cleanupRecording();
     if (audioURL) {
@@ -830,6 +835,11 @@ function MYKITAEnglishApp() {
           mediaRecorderRef.current.stop();
         }
       } catch (e) {}
+      try {
+        var _streamRef$current2;
+        (_streamRef$current2 = streamRef.current) === null || _streamRef$current2 === void 0 || _streamRef$current2.getTracks().forEach(t => t.stop());
+        streamRef.current = null;
+      } catch (e) {}
     };
     rec.onend = finishRecording;
     rec.onerror = finishRecording;
@@ -848,6 +858,11 @@ function MYKITAEnglishApp() {
       if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
         mediaRecorderRef.current.stop();
       }
+    } catch (e) {}
+    try {
+      var _streamRef$current3;
+      (_streamRef$current3 = streamRef.current) === null || _streamRef$current3 === void 0 || _streamRef$current3.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
     } catch (e) {}
   };
   const SCENARIOS = {
@@ -1405,6 +1420,7 @@ function MYKITAEnglishApp() {
       style: S.btn("r"),
       onClick: stopRecording
     }, "\u25A0 \u505C\u6B62"), audioURL && React.createElement("audio", {
+      ref: audioRef,
       controls: true,
       src: audioURL,
       style: {
