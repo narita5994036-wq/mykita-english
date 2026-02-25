@@ -727,6 +727,20 @@ function MYKITAEnglishApp() {
       setTranscript("\u26a0\ufe0f Chrome\uff08PC\u7248\uff09\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u306a\u3002");
       return;
     }
+    if (audioURL) {
+      URL.revokeObjectURL(audioURL);
+    }
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (e) {}
+    }
+    mediaRecorderRef.current = null;
+    recognitionRef.current = null;
+    audioChunksRef.current = [];
     setTranscript("");
     setInterimTranscript("");
     setJpWarning(false);
@@ -787,26 +801,38 @@ function MYKITAEnglishApp() {
       }
     };
     rec.onend = () => {
-      var _mediaRecorderRef$cur;
       setIsRecording(false);
       setInterimTranscript("");
-      (_mediaRecorderRef$cur = mediaRecorderRef.current) === null || _mediaRecorderRef$cur === void 0 || _mediaRecorderRef$cur.stop();
+      try {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+          mediaRecorderRef.current.stop();
+        }
+      } catch (e) {}
     };
     rec.onerror = () => {
-      var _mediaRecorderRef$cur2;
       setIsRecording(false);
       setInterimTranscript("");
-      (_mediaRecorderRef$cur2 = mediaRecorderRef.current) === null || _mediaRecorderRef$cur2 === void 0 || _mediaRecorderRef$cur2.stop();
+      try {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+          mediaRecorderRef.current.stop();
+        }
+      } catch (e) {}
     };
     rec.start();
     recognitionRef.current = rec;
     setIsRecording(true);
   };
   const stopRecording = () => {
-    var _recognitionRef$curre, _mediaRecorderRef$cur3;
-    (_recognitionRef$curre = recognitionRef.current) === null || _recognitionRef$curre === void 0 || _recognitionRef$curre.stop();
-    (_mediaRecorderRef$cur3 = mediaRecorderRef.current) === null || _mediaRecorderRef$cur3 === void 0 || _mediaRecorderRef$cur3.stop();
     setIsRecording(false);
+    try {
+      var _recognitionRef$curre;
+      (_recognitionRef$curre = recognitionRef.current) === null || _recognitionRef$curre === void 0 || _recognitionRef$curre.stop();
+    } catch (e) {}
+    try {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+        mediaRecorderRef.current.stop();
+      }
+    } catch (e) {}
   };
   const SCENARIOS = {
     general: "You are a customer at a high-end eyewear boutique. You're browsing and open to suggestions. Respond naturally, 1-2 sentences. English only.",
