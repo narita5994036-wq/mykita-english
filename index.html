@@ -736,13 +736,16 @@ function MYKITAEnglishApp() {
         audio: true
       });
       audioChunksRef.current = [];
-      const mr = new MediaRecorder(stream);
+      const mimeType = ["audio/mp4", "audio/aac", "audio/webm", ""].find(m => m === "" || MediaRecorder.isTypeSupported(m));
+      const mr = mimeType ? new MediaRecorder(stream, {
+        mimeType
+      }) : new MediaRecorder(stream);
       mr.ondataavailable = e => {
         if (e.data.size > 0) audioChunksRef.current.push(e.data);
       };
       mr.onstop = () => {
         const blob = new Blob(audioChunksRef.current, {
-          type: "audio/webm"
+          type: mr.mimeType || "audio/mp4"
         });
         setAudioURL(URL.createObjectURL(blob));
         stream.getTracks().forEach(t => t.stop());
