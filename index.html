@@ -881,9 +881,8 @@ function MYKITAEnglishApp() {
         setIsRecording(false);
         setInterimTranscript("");
         try {
-          if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
-            mediaRecorderRef.current.stop();
-          }
+          var _mediaRecorderRef$cur;
+          (_mediaRecorderRef$cur = mediaRecorderRef.current) === null || _mediaRecorderRef$cur === void 0 || _mediaRecorderRef$cur.stop();
         } catch (e) {}
         try {
           var _streamRef$current2;
@@ -1483,6 +1482,11 @@ function MYKITAEnglishApp() {
       ref: audioRef,
       controls: true,
       src: audioURL,
+      onEnded: () => {
+        if (audioRef.current) {
+          audioRef.current.src = "";
+        }
+      },
       style: {
         marginTop: "8px",
         width: "100%",
