@@ -630,6 +630,7 @@ function MYKITAEnglishApp() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [vocabStats, setVocabStats] = useState({});
   const [audioURL, setAudioURL] = useState(null);
+  const [pendingRecord, setPendingRecord] = useState(false);
   const chatEndRef = useRef(null);
   const recognitionRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -742,7 +743,7 @@ function MYKITAEnglishApp() {
     streamRef.current = null;
     audioChunksRef.current = [];
   };
-  const startRecording = async () => {
+  const startRecording = () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
       setTranscript("\u26a0\ufe0f iPhone Safari\u306fSpeechRecognition\u306b\u975e\u5bfe\u5fdc\u3067\u3059\u3002PC\u7248Chrome\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u306a\u3002");
@@ -752,99 +753,109 @@ function MYKITAEnglishApp() {
       audioRef.current.pause();
       audioRef.current.src = "";
     }
-    setAudioURL(null);
     cleanupRecording();
     if (audioURL) {
       URL.revokeObjectURL(audioURL);
     }
+    setAudioURL(null);
     setTranscript("");
     setInterimTranscript("");
     setJpWarning(false);
-    await new Promise(r => setTimeout(r, 600));
-    let stream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        audio: true
-      });
-      streamRef.current = stream;
-    } catch (e) {
-      setTranscript("\u26a0\ufe0f \u30de\u30a4\u30af\u3078\u306e\u30a2\u30af\u30bb\u30b9\u304c\u62d2\u5426\u3055\u308c\u307e\u3057\u305f\u3002\u8a2d\u5b9a\u304b\u3089\u30de\u30a4\u30af\u3092\u8a31\u53ef\u3057\u3066\u304f\u3060\u3055\u3044\u306a\u3002");
-      return;
-    }
-    try {
-      audioChunksRef.current = [];
-      const mimeType = ["audio/mp4", "audio/aac", "audio/webm", ""].find(m => m === "" || MediaRecorder.isTypeSupported(m));
-      const mr = mimeType ? new MediaRecorder(stream, {
-        mimeType
-      }) : new MediaRecorder(stream);
-      mr.ondataavailable = e => {
-        if (e.data.size > 0) audioChunksRef.current.push(e.data);
-      };
-      mr.onstop = () => {
-        if (audioChunksRef.current.length > 0) {
-          const blob = new Blob(audioChunksRef.current, {
-            type: mr.mimeType || "audio/mp4"
-          });
-          setAudioURL(URL.createObjectURL(blob));
-        }
-      };
-      mr.start(100);
-      mediaRecorderRef.current = mr;
-    } catch (e) {
-      stream.getTracks().forEach(t => t.stop());
-      setTranscript("\u26a0\ufe0f \u9332\u97f3\u306e\u958b\u59cb\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002");
-      return;
-    }
-    const rec = new SR();
-    rec.lang = "en-US";
-    rec.continuous = false;
-    rec.interimResults = true;
-    rec.maxAlternatives = 5;
-    rec.onresult = e => {
-      let interim = "";
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) {
-          let best = e.results[i][0].transcript;
-          for (let j = 0; j < e.results[i].length; j++) {
-            const alt = e.results[i][j].transcript;
-            if (!hasJapanese(alt)) {
-              best = alt;
-              break;
-            }
-          }
-          if (hasJapanese(best)) {
-            setJpWarning(true);
-            best = stripJapanese(best);
-          }
-          setTranscript(best);
-          setInterimTranscript("");
-        } else {
-          interim += e.results[i][0].transcript;
-          if (hasJapanese(interim)) setJpWarning(true);
-          setInterimTranscript(interim);
-        }
-      }
-    };
-    const finishRecording = () => {
-      setIsRecording(false);
-      setInterimTranscript("");
-      try {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
-          mediaRecorderRef.current.stop();
-        }
-      } catch (e) {}
-      try {
-        var _streamRef$current2;
-        (_streamRef$current2 = streamRef.current) === null || _streamRef$current2 === void 0 || _streamRef$current2.getTracks().forEach(t => t.stop());
-        streamRef.current = null;
-      } catch (e) {}
-    };
-    rec.onend = finishRecording;
-    rec.onerror = finishRecording;
-    rec.start();
-    recognitionRef.current = rec;
-    setIsRecording(true);
+    setPendingRecord(true);
   };
+  useEffect(() => {
+    if (!pendingRecord) return;
+    setPendingRecord(false);
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const doRecord = async () => {
+      await new Promise(r => setTimeout(r, 500));
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+        streamRef.current = stream;
+      } catch (e) {
+        setTranscript("\u26a0\ufe0f \u30de\u30a4\u30af\u3078\u306e\u30a2\u30af\u30bb\u30b9\u304c\u62d2\u5426\u3055\u308c\u307e\u3057\u305f\u3002\u8a2d\u5b9a\u304b\u3089\u30de\u30a4\u30af\u3092\u8a31\u53ef\u3057\u3066\u304f\u3060\u3055\u3044\u306a\u3002");
+        return;
+      }
+      try {
+        audioChunksRef.current = [];
+        const mimeType = ["audio/mp4", "audio/aac", "audio/webm", ""].find(m => m === "" || MediaRecorder.isTypeSupported(m));
+        const mr = mimeType ? new MediaRecorder(stream, {
+          mimeType
+        }) : new MediaRecorder(stream);
+        mr.ondataavailable = e => {
+          if (e.data.size > 0) audioChunksRef.current.push(e.data);
+        };
+        mr.onstop = () => {
+          if (audioChunksRef.current.length > 0) {
+            const blob = new Blob(audioChunksRef.current, {
+              type: mr.mimeType || "audio/mp4"
+            });
+            setAudioURL(URL.createObjectURL(blob));
+          }
+        };
+        mr.start(100);
+        mediaRecorderRef.current = mr;
+      } catch (e) {
+        stream.getTracks().forEach(t => t.stop());
+        streamRef.current = null;
+        setTranscript("\u26a0\ufe0f \u9332\u97f3\u306e\u958b\u59cb\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002");
+        return;
+      }
+      const rec = new SR();
+      rec.lang = "en-US";
+      rec.continuous = false;
+      rec.interimResults = true;
+      rec.maxAlternatives = 5;
+      rec.onresult = e => {
+        let interim = "";
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          if (e.results[i].isFinal) {
+            let best = e.results[i][0].transcript;
+            for (let j = 0; j < e.results[i].length; j++) {
+              const alt = e.results[i][j].transcript;
+              if (!hasJapanese(alt)) {
+                best = alt;
+                break;
+              }
+            }
+            if (hasJapanese(best)) {
+              setJpWarning(true);
+              best = stripJapanese(best);
+            }
+            setTranscript(best);
+            setInterimTranscript("");
+          } else {
+            interim += e.results[i][0].transcript;
+            if (hasJapanese(interim)) setJpWarning(true);
+            setInterimTranscript(interim);
+          }
+        }
+      };
+      const finishRecording = () => {
+        setIsRecording(false);
+        setInterimTranscript("");
+        try {
+          if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+            mediaRecorderRef.current.stop();
+          }
+        } catch (e) {}
+        try {
+          var _streamRef$current2;
+          (_streamRef$current2 = streamRef.current) === null || _streamRef$current2 === void 0 || _streamRef$current2.getTracks().forEach(t => t.stop());
+          streamRef.current = null;
+        } catch (e) {}
+      };
+      rec.onend = finishRecording;
+      rec.onerror = finishRecording;
+      rec.start();
+      recognitionRef.current = rec;
+      setIsRecording(true);
+    };
+    doRecord();
+  }, [pendingRecord]);
   const stopRecording = () => {
     setIsRecording(false);
     setInterimTranscript("");
