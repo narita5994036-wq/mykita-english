@@ -877,42 +877,73 @@ function MYKITAEnglishApp() {
           }
         }
       };
-      const finishRecording = () => {
-        setIsRecording(false);
-        setInterimTranscript("");
-        try {
-          var _mediaRecorderRef$cur;
-          (_mediaRecorderRef$cur = mediaRecorderRef.current) === null || _mediaRecorderRef$cur === void 0 || _mediaRecorderRef$cur.stop();
-        } catch (e) {}
-        try {
-          var _streamRef$current2;
-          (_streamRef$current2 = streamRef.current) === null || _streamRef$current2 === void 0 || _streamRef$current2.getTracks().forEach(t => t.stop());
-          streamRef.current = null;
-        } catch (e) {}
+      const stoppedByUser = {
+        current: false
       };
-      rec.onend = finishRecording;
-      rec.onerror = finishRecording;
-      rec.start();
       recognitionRef.current = rec;
+      recognitionRef.current._stoppedByUser = stoppedByUser;
+      rec.onend = () => {
+        setInterimTranscript("");
+        if (!stoppedByUser.current) {
+          try {
+            rec.start();
+          } catch (e) {}
+        } else {
+          setIsRecording(false);
+          try {
+            var _mediaRecorderRef$cur;
+            (_mediaRecorderRef$cur = mediaRecorderRef.current) === null || _mediaRecorderRef$cur === void 0 || _mediaRecorderRef$cur.stop();
+          } catch (e) {}
+          try {
+            var _streamRef$current2;
+            (_streamRef$current2 = streamRef.current) === null || _streamRef$current2 === void 0 || _streamRef$current2.getTracks().forEach(t => t.stop());
+            streamRef.current = null;
+          } catch (e) {}
+        }
+      };
+      rec.onerror = e => {
+        if (e.error === "no-speech") return;
+        setInterimTranscript("");
+        if (!stoppedByUser.current) {
+          try {
+            rec.start();
+          } catch (err) {}
+        } else {
+          setIsRecording(false);
+          try {
+            var _mediaRecorderRef$cur2;
+            (_mediaRecorderRef$cur2 = mediaRecorderRef.current) === null || _mediaRecorderRef$cur2 === void 0 || _mediaRecorderRef$cur2.stop();
+          } catch (err) {}
+          try {
+            var _streamRef$current3;
+            (_streamRef$current3 = streamRef.current) === null || _streamRef$current3 === void 0 || _streamRef$current3.getTracks().forEach(t => t.stop());
+            streamRef.current = null;
+          } catch (err) {}
+        }
+      };
+      rec.start();
       setIsRecording(true);
     };
     doRecord();
   }, [pendingRecord]);
   const stopRecording = () => {
+    var _recognitionRef$curre2;
     setIsRecording(false);
     setInterimTranscript("");
+    if ((_recognitionRef$curre2 = recognitionRef.current) !== null && _recognitionRef$curre2 !== void 0 && _recognitionRef$curre2._stoppedByUser) {
+      recognitionRef.current._stoppedByUser.current = true;
+    }
     try {
-      var _recognitionRef$curre2;
-      (_recognitionRef$curre2 = recognitionRef.current) === null || _recognitionRef$curre2 === void 0 || _recognitionRef$curre2.stop();
+      var _recognitionRef$curre3;
+      (_recognitionRef$curre3 = recognitionRef.current) === null || _recognitionRef$curre3 === void 0 || _recognitionRef$curre3.stop();
     } catch (e) {}
     try {
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
-        mediaRecorderRef.current.stop();
-      }
+      var _mediaRecorderRef$cur3;
+      (_mediaRecorderRef$cur3 = mediaRecorderRef.current) === null || _mediaRecorderRef$cur3 === void 0 || _mediaRecorderRef$cur3.stop();
     } catch (e) {}
     try {
-      var _streamRef$current3;
-      (_streamRef$current3 = streamRef.current) === null || _streamRef$current3 === void 0 || _streamRef$current3.getTracks().forEach(t => t.stop());
+      var _streamRef$current4;
+      (_streamRef$current4 = streamRef.current) === null || _streamRef$current4 === void 0 || _streamRef$current4.getTracks().forEach(t => t.stop());
       streamRef.current = null;
     } catch (e) {}
   };
@@ -1482,11 +1513,6 @@ function MYKITAEnglishApp() {
       ref: audioRef,
       controls: true,
       src: audioURL,
-      onEnded: () => {
-        if (audioRef.current) {
-          audioRef.current.src = "";
-        }
-      },
       style: {
         marginTop: "8px",
         width: "100%",
