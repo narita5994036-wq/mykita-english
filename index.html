@@ -673,6 +673,10 @@ function MYKITAEnglishApp() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [vocabStats, setVocabStats] = useState({});
   const [audioURL, setAudioURL] = useState(null);
+  const [audioBlob, setAudioBlob] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioSourceRef = useRef(null);
+  const audioCtxRef = useRef(null);
   const [pendingRecord, setPendingRecord] = useState(false);
   const chatEndRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -767,6 +771,45 @@ function MYKITAEnglishApp() {
   const stripJapanese = text => text.replace(/[\u3040-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]+/g, "").replace(/\s+/g, " ").trim();
   const streamRef = useRef(null);
   const audioRef = useRef(null);
+  const playRecording = async () => {
+    if (!audioBlob) return;
+    if (isPlaying) {
+      try {
+        var _audioSourceRef$curre;
+        (_audioSourceRef$curre = audioSourceRef.current) === null || _audioSourceRef$curre === void 0 || _audioSourceRef$curre.stop();
+      } catch (e) {}
+      try {
+        var _audioCtxRef$current;
+        (_audioCtxRef$current = audioCtxRef.current) === null || _audioCtxRef$current === void 0 || _audioCtxRef$current.close();
+      } catch (e) {}
+      audioCtxRef.current = null;
+      audioSourceRef.current = null;
+      setIsPlaying(false);
+      return;
+    }
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      audioCtxRef.current = ctx;
+      const arrayBuf = await audioBlob.arrayBuffer();
+      const audioBuf = await ctx.decodeAudioData(arrayBuf);
+      const source = ctx.createBufferSource();
+      source.buffer = audioBuf;
+      source.connect(ctx.destination);
+      source.onended = () => {
+        setIsPlaying(false);
+        try {
+          ctx.close();
+        } catch (e) {}
+        audioCtxRef.current = null;
+        audioSourceRef.current = null;
+      };
+      audioSourceRef.current = source;
+      source.start(0);
+      setIsPlaying(true);
+    } catch (e) {
+      setIsPlaying(false);
+    }
+  };
   const cleanupRecording = () => {
     try {
       var _recognitionRef$curre;
@@ -792,6 +835,17 @@ function MYKITAEnglishApp() {
       setTranscript("\u26a0\ufe0f iPhone Safari\u306fSpeechRecognition\u306b\u975e\u5bfe\u5fdc\u3067\u3059\u3002PC\u7248Chrome\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u306a\u3002");
       return;
     }
+    try {
+      var _audioSourceRef$curre2;
+      (_audioSourceRef$curre2 = audioSourceRef.current) === null || _audioSourceRef$curre2 === void 0 || _audioSourceRef$curre2.stop();
+    } catch (e) {}
+    try {
+      var _audioCtxRef$current2;
+      (_audioCtxRef$current2 = audioCtxRef.current) === null || _audioCtxRef$current2 === void 0 || _audioCtxRef$current2.close();
+    } catch (e) {}
+    audioCtxRef.current = null;
+    audioSourceRef.current = null;
+    setIsPlaying(false);
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = "";
@@ -836,7 +890,8 @@ function MYKITAEnglishApp() {
             const blob = new Blob(audioChunksRef.current, {
               type: mr.mimeType || "audio/mp4"
             });
-            setAudioURL(URL.createObjectURL(blob));
+            setAudioBlob(blob);
+            setAudioURL("ready");
           }
         };
         mr.start(100);
@@ -1509,16 +1564,14 @@ function MYKITAEnglishApp() {
     }, "\u9332\u97F3\u3057\u3066\u30B7\u30E3\u30C9\u30FC\u30A4\u30F3\u30B0") : React.createElement("button", {
       style: S.btn("r"),
       onClick: stopRecording
-    }, "\u25A0 \u505C\u6B62"), audioURL && React.createElement("audio", {
-      ref: audioRef,
-      controls: true,
-      src: audioURL,
+    }, "\u25A0 \u505C\u6B62"), audioURL && React.createElement("button", {
       style: {
+        ...S.btn("p"),
         marginTop: "8px",
-        width: "100%",
-        filter: "invert(1)"
-      }
-    }), isSpeaking && React.createElement("span", {
+        width: "100%"
+      },
+      onClick: playRecording
+    }, isPlaying ? "\u25a0 \u505c\u6b62" : "\u25b6 \u9332\u97f3\u3092\u518d\u751f"), isSpeaking && React.createElement("span", {
       style: {
         fontFamily: "monospace",
         fontSize: "10px",
