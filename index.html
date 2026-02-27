@@ -644,6 +644,7 @@ function MYKITAEnglishApp() {
   const [selectedPhrase, setSelectedPhrase] = useState(null);
   const [showJp, setShowJp] = useState({});
   const [dictWord, setDictWord] = useState(null);
+  const [dictPhraseIdx, setDictPhraseIdx] = useState(null);
   const [dictResult, setDictResult] = useState(null);
   const [dictLoading, setDictLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -771,15 +772,17 @@ function MYKITAEnglishApp() {
     }
   }, [getBestVoice]);
   const hasJapanese = text => /[\u3040-\u30FF\u4E00-\u9FFF]/.test(text);
-  const lookupWord = async word => {
+  const lookupWord = async (word, phraseIdx) => {
     const clean = word.replace(/[^a-zA-Z\-']/g, "").toLowerCase();
     if (!clean) return;
-    if (dictWord === clean) {
+    if (dictWord === clean && dictPhraseIdx === phraseIdx) {
       setDictWord(null);
+      setDictPhraseIdx(null);
       setDictResult(null);
       return;
     }
     setDictWord(clean);
+    setDictPhraseIdx(phraseIdx);
     setDictResult(null);
     setDictLoading(true);
     for (const cat of VOCAB) {
@@ -806,13 +809,19 @@ function MYKITAEnglishApp() {
       const meaning = (_entry$meanings = entry.meanings) === null || _entry$meanings === void 0 ? void 0 : _entry$meanings[0];
       const def = meaning === null || meaning === void 0 || (_meaning$definitions = meaning.definitions) === null || _meaning$definitions === void 0 ? void 0 : _meaning$definitions[0];
       const partOfSpeech = (meaning === null || meaning === void 0 ? void 0 : meaning.partOfSpeech) || "";
+      const enDef = (def === null || def === void 0 ? void 0 : def.definition) || "";
       const example = (def === null || def === void 0 ? void 0 : def.example) || "";
-      const jpDef = (def === null || def === void 0 ? void 0 : def.definition) || "";
+      let jpDef = enDef;
+      try {
+        const trRes = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(enDef)}&langpair=en|ja`);
+        const trData = await trRes.json();
+        if (trData.responseStatus === 200) jpDef = trData.responseData.translatedText;
+      } catch (e) {}
       setDictResult({
         jp: jpDef,
         pronunciation: phonetic,
         note: partOfSpeech ? `\u54c1\u8a5e: ${partOfSpeech}` : "",
-        example: example,
+        example,
         source: "api"
       });
     } catch (e) {
@@ -1565,6 +1574,7 @@ function MYKITAEnglishApp() {
         setTranscript("");
         setShowJp({});
         setDictWord(null);
+        setDictPhraseIdx(null);
         setDictResult(null);
       }
     }, c.category))), cat.phrases.map((p, i) => React.createElement("div", {
@@ -1574,11 +1584,11 @@ function MYKITAEnglishApp() {
       style: S.phraseEn
     }, "\"", p.en.split(/(\s+|(?=[,.'!?])|(?<=[,.'!?]))/).map((tok, ti) => /[a-zA-Z\-']+/.test(tok) ? React.createElement("span", {
       key: ti,
-      onClick: () => lookupWord(tok),
+      onClick: () => lookupWord(tok, i),
       style: {
         cursor: "pointer",
-        borderBottom: dictWord === tok.replace(/[^a-zA-Z\-']/g, "").toLowerCase() ? "1px solid #c8b89a" : "1px dotted #444",
-        color: dictWord === tok.replace(/[^a-zA-Z\-']/g, "").toLowerCase() ? "#c8b89a" : "inherit"
+        borderBottom: dictWord === tok.replace(/[^a-zA-Z\-']/g, "").toLowerCase() && dictPhraseIdx === i ? "1px solid #c8b89a" : "1px dotted #444",
+        color: dictWord === tok.replace(/[^a-zA-Z\-']/g, "").toLowerCase() && dictPhraseIdx === i ? "#c8b89a" : "inherit"
       }
     }, tok) : tok), "\""), React.createElement("div", {
       style: {
@@ -1611,7 +1621,7 @@ function MYKITAEnglishApp() {
         color: "#6a9a6a",
         fontSize: "10px"
       }
-    }, "\uD83D\uDCA1 ", p.note)), dictWord && (selectedPhrase === i || selectedPhrase === null) && React.createElement("div", {
+    }, "\uD83D\uDCA1 ", p.note)), dictWord && dictPhraseIdx === i && React.createElement("div", {
       style: {
         marginTop: "8px",
         padding: "10px 12px",
