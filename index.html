@@ -643,6 +643,9 @@ function MYKITAEnglishApp() {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [selectedPhrase, setSelectedPhrase] = useState(null);
   const [showJp, setShowJp] = useState({});
+  const [dictWord, setDictWord] = useState(null);
+  const [dictResult, setDictResult] = useState(null);
+  const [dictLoading, setDictLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -768,6 +771,63 @@ function MYKITAEnglishApp() {
     }
   }, [getBestVoice]);
   const hasJapanese = text => /[\u3040-\u30FF\u4E00-\u9FFF]/.test(text);
+  const lookupWord = async word => {
+    const clean = word.replace(/[^a-zA-Z\-']/g, "").toLowerCase();
+    if (!clean) return;
+    if (dictWord === clean) {
+      setDictWord(null);
+      setDictResult(null);
+      return;
+    }
+    setDictWord(clean);
+    setDictResult(null);
+    setDictLoading(true);
+    for (const cat of VOCAB) {
+      for (const w of cat.words) {
+        if (w.en.toLowerCase() === clean || w.en.toLowerCase().includes(clean)) {
+          setDictResult({
+            jp: w.jp,
+            note: w.note,
+            usage: w.usage,
+            source: "vocab"
+          });
+          setDictLoading(false);
+          return;
+        }
+      }
+    }
+    try {
+      var _data$content;
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{
+            role: "user",
+            content: `\u773c\u93e1\u63a5\u5ba2\u306e\u6587\u8108\u3067\u82f1\u5358\u8a9e\u300c${clean}\u300d\u3092\u8abf\u3079\u3066\u304f\u3060\u3055\u3044\u3002JSON\u5f62\u5f0f\u306e\u307f\u3067\u8fd4\u7b54\u3057\u3001\u4ed6\u306e\u30c6\u30ad\u30b9\u30c8\u306f\u4e00\u5207\u542b\u3081\u306a\u3044\u3067\u304f\u3060\u3055\u3044\u3002\u30d5\u30a9\u30fc\u30de\u30c3\u30c8: {"jp":"\u65e5\u672c\u8a9e\u306e\u610f\u5473","pronunciation":"\u767a\u97f3\u8a18\u53f7","note":"\u63a5\u5ba2\u3067\u306e\u4f7f\u3044\u65b9\u3084\u6ce8\u610f\u70b9\uff081\u301c2\u6587\uff09","example":"\u63a5\u5ba2\u3067\u306e\u4f8b\u6587"}`
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = ((_data$content = data.content) === null || _data$content === void 0 || (_data$content = _data$content[0]) === null || _data$content === void 0 ? void 0 : _data$content.text) || "";
+      const json = JSON.parse(text.replace(/```json|```/g, "").trim());
+      setDictResult({
+        ...json,
+        source: "ai"
+      });
+    } catch (e) {
+      setDictResult({
+        jp: "\u691c\u7d22\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f",
+        note: "",
+        source: "error"
+      });
+    }
+    setDictLoading(false);
+  };
   const stripJapanese = text => text.replace(/[\u3040-\u30FF\u4E00-\u9FFF\uFF00-\uFFEF]+/g, "").replace(/\s+/g, " ").trim();
   const streamRef = useRef(null);
   const audioRef = useRef(null);
@@ -1009,7 +1069,7 @@ function MYKITAEnglishApp() {
     tourist: "You are a tourist in Japan who speaks only English. You need prescription glasses urgently. 1-2 sentences. English only."
   };
   const callAPI = async (system, msgs) => {
-    var _data$content;
+    var _data$content2;
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -1023,7 +1083,7 @@ function MYKITAEnglishApp() {
       })
     });
     const data = await res.json();
-    return ((_data$content = data.content) === null || _data$content === void 0 || (_data$content = _data$content[0]) === null || _data$content === void 0 ? void 0 : _data$content.text) || "";
+    return ((_data$content2 = data.content) === null || _data$content2 === void 0 || (_data$content2 = _data$content2[0]) === null || _data$content2 === void 0 ? void 0 : _data$content2.text) || "";
   };
   const sendMessage = async () => {
     if (!userInput.trim() || isLoading) return;
@@ -1508,13 +1568,23 @@ function MYKITAEnglishApp() {
         setSelectedPhrase(null);
         setTranscript("");
         setShowJp({});
+        setDictWord(null);
+        setDictResult(null);
       }
     }, c.category))), cat.phrases.map((p, i) => React.createElement("div", {
       key: i,
       style: S.phraseCard(selectedPhrase === i)
     }, React.createElement("div", {
       style: S.phraseEn
-    }, "\"", p.en, "\""), React.createElement("div", {
+    }, "\"", p.en.split(/(\s+|(?=[,.'!?])|(?<=[,.'!?]))/).map((tok, ti) => /[a-zA-Z\-']+/.test(tok) ? React.createElement("span", {
+      key: ti,
+      onClick: () => lookupWord(tok),
+      style: {
+        cursor: "pointer",
+        borderBottom: dictWord === tok.replace(/[^a-zA-Z\-']/g, "").toLowerCase() ? "1px solid #c8b89a" : "1px dotted #444",
+        color: dictWord === tok.replace(/[^a-zA-Z\-']/g, "").toLowerCase() ? "#c8b89a" : "inherit"
+      }
+    }, tok) : tok), "\""), React.createElement("div", {
       style: {
         display: "flex",
         gap: "8px",
@@ -1545,7 +1615,55 @@ function MYKITAEnglishApp() {
         color: "#6a9a6a",
         fontSize: "10px"
       }
-    }, "\uD83D\uDCA1 ", p.note)), selectedPhrase === i && React.createElement("div", {
+    }, "\uD83D\uDCA1 ", p.note)), dictWord && (selectedPhrase === i || selectedPhrase === null) && React.createElement("div", {
+      style: {
+        marginTop: "8px",
+        padding: "10px 12px",
+        background: "#0d0d1a",
+        border: "1px solid #2a2a5a",
+        borderRadius: "3px",
+        fontFamily: "monospace",
+        fontSize: "11px",
+        lineHeight: "1.7"
+      }
+    }, React.createElement("div", {
+      style: {
+        color: "#a0a0e0",
+        marginBottom: "4px",
+        fontSize: "10px",
+        letterSpacing: "0.1em"
+      }
+    }, "\uD83D\uDCD6 ", dictWord), dictLoading ? React.createElement("div", {
+      style: {
+        color: "#555"
+      }
+    }, "\u691C\u7D22\u4E2D...") : dictResult && React.createElement(React.Fragment, null, React.createElement("div", {
+      style: {
+        color: "#f0ede8",
+        fontWeight: "bold"
+      }
+    }, dictResult.jp), dictResult.pronunciation && React.createElement("div", {
+      style: {
+        color: "#888"
+      }
+    }, dictResult.pronunciation), dictResult.note && React.createElement("div", {
+      style: {
+        color: "#8a8ab8",
+        marginTop: "4px"
+      }
+    }, "\uD83D\uDCA1 ", dictResult.note), dictResult.example && React.createElement("div", {
+      style: {
+        color: "#666",
+        marginTop: "4px",
+        fontStyle: "italic"
+      }
+    }, "\"", dictResult.example, "\""), dictResult.usage && React.createElement("div", {
+      style: {
+        color: "#666",
+        marginTop: "4px",
+        fontStyle: "italic"
+      }
+    }, "\"", dictResult.usage, "\""))), selectedPhrase === i && React.createElement("div", {
       style: {
         marginTop: "12px"
       }
