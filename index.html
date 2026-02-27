@@ -60,6 +60,193 @@ const MASTERY_LABEL = {
   mastered: "\u7fd2\u5f97\u6e08",
   struggling: "\u8981\u5fa9\u7fd2"
 };
+const IPA_GUIDE = [{
+  group: "\u6bcd\u97f3\uff08\u77ed\u6bcd\u97f3\uff09",
+  symbols: [{
+    sym: "\u026a",
+    ex: "bit /b\u026at/",
+    jp: "\u300c\u30a4\u300d\u3088\u308a\u77ed\u304f\u66d6\u6627\u306a\u97f3\u3002\u65e5\u672c\u8a9e\u306e\u300c\u30a4\u300d\u3088\u308a\u53e3\u3092\u72ed\u3081\u308b"
+  }, {
+    sym: "e",
+    ex: "bed /bed/",
+    jp: "\u300c\u30a8\u300d\u306b\u8fd1\u3044\u97f3\u3002\u53e3\u3092\u6a2a\u306b\u5e83\u3052\u308b"
+  }, {
+    sym: "\u00e6",
+    ex: "cat /k\u00e6t/",
+    jp: "\u300c\u30a2\u300d\u3068\u300c\u30a8\u300d\u306e\u4e2d\u9593\u3002\u53e3\u3092\u5927\u304d\u304f\u6a2a\u306b\u958b\u304f"
+  }, {
+    sym: "\u028c",
+    ex: "cup /k\u028cp/",
+    jp: "\u300c\u30a2\u300d\u3088\u308a\u77ed\u304f\u4e2d\u592e\u306e\u97f3\u3002\u529b\u3092\u629c\u3044\u3066\u767a\u97f3"
+  }, {
+    sym: "\u0252",
+    ex: "hot /h\u0252t/",
+    jp: "\u300c\u30aa\u300d\u3088\u308a\u53e3\u3092\u5927\u304d\u304f\u958b\u3051\u308b\u77ed\u3044\u97f3\uff08\u82f1\u56fd\u82f1\u8a9e\uff09"
+  }, {
+    sym: "\u028a",
+    ex: "book /b\u028ak/",
+    jp: "\u300c\u30a6\u300d\u3088\u308a\u77ed\u304f\u66d6\u6627\u306a\u97f3\u3002\u5507\u3092\u3042\u307e\u308a\u4e38\u3081\u306a\u3044"
+  }]
+}, {
+  group: "\u6bcd\u97f3\uff08\u9577\u6bcd\u97f3\uff09",
+  symbols: [{
+    sym: "i\u02d0",
+    ex: "see /si\u02d0/",
+    jp: "\u300c\u30a4\u30fc\u300d\u3068\u4f38\u3070\u3059\u97f3\u3002\u5507\u3092\u6a2a\u306b\u5f15\u304f"
+  }, {
+    sym: "\u0251\u02d0",
+    ex: "car /k\u0251\u02d0/",
+    jp: "\u300c\u30a2\u30fc\u300d\u3068\u4f38\u3070\u3059\u97f3\u3002\u53e3\u3092\u5927\u304d\u304f\u958b\u3051\u308b"
+  }, {
+    sym: "\u0254\u02d0",
+    ex: "door /d\u0254\u02d0/",
+    jp: "\u300c\u30aa\u30fc\u300d\u3068\u4f38\u3070\u3059\u97f3\u3002\u5507\u3092\u4e38\u3081\u308b"
+  }, {
+    sym: "u\u02d0",
+    ex: "food /fu\u02d0d/",
+    jp: "\u300c\u30a6\u30fc\u300d\u3068\u4f38\u3070\u3059\u97f3\u3002\u5507\u3092\u4e38\u304f\u3059\u307c\u3081\u308b"
+  }, {
+    sym: "\u025c\u02d0",
+    ex: "bird /b\u025c\u02d0d/",
+    jp: "\u300c\u30a2\u30fc\u300d\u3068\u300c\u30a8\u30fc\u300d\u306e\u4e2d\u9593\u3002\u65e5\u672c\u8a9e\u306b\u306a\u3044\u97f3"
+  }]
+}, {
+  group: "\u6bcd\u97f3\uff08\u4e8c\u91cd\u6bcd\u97f3\uff09",
+  symbols: [{
+    sym: "e\u026a",
+    ex: "face /fe\u026as/",
+    jp: "\u300c\u30a8\u30a4\u300d\u3002\u300c\u30a8\u300d\u304b\u3089\u300c\u30a4\u300d\u3078\u6ed1\u3089\u304b\u306b\u79fb\u52d5"
+  }, {
+    sym: "a\u026a",
+    ex: "price /pra\u026as/",
+    jp: "\u300c\u30a2\u30a4\u300d\u3002\u300c\u30a2\u300d\u304b\u3089\u300c\u30a4\u300d\u3078\u79fb\u52d5"
+  }, {
+    sym: "\u0254\u026a",
+    ex: "choice /t\u0283\u0254\u026as/",
+    jp: "\u300c\u30aa\u30a4\u300d\u3002\u300c\u30aa\u300d\u304b\u3089\u300c\u30a4\u300d\u3078\u79fb\u52d5"
+  }, {
+    sym: "\u0259\u028a",
+    ex: "go /\u0261\u0259\u028a/",
+    jp: "\u300c\u30aa\u30a6\u300d\u3002\u300c\u30aa\u300d\u304b\u3089\u300c\u30a6\u300d\u3078\u79fb\u52d5\uff08\u82f1\u56fd\u82f1\u8a9e\uff09"
+  }, {
+    sym: "a\u028a",
+    ex: "mouth /ma\u028a\u03b8/",
+    jp: "\u300c\u30a2\u30a6\u300d\u3002\u300c\u30a2\u300d\u304b\u3089\u300c\u30a6\u300d\u3078\u79fb\u52d5"
+  }, {
+    sym: "\u026a\u0259",
+    ex: "near /n\u026a\u0259/",
+    jp: "\u300c\u30a4\u30a2\u300d\u3002\u300c\u30a4\u300d\u304b\u3089\u300c\u30a2\u300d\u3078\u79fb\u52d5"
+  }]
+}, {
+  group: "\u5b50\u97f3\uff08\u7121\u58f0\u97f3\uff09",
+  symbols: [{
+    sym: "p",
+    ex: "pen /pen/",
+    jp: "\u300c\u30d1\u884c\u300d\u306e\u5b50\u97f3\u3002\u606f\u3092\u5f37\u304f\u51fa\u3059"
+  }, {
+    sym: "t",
+    ex: "top /t\u0252p/",
+    jp: "\u300c\u30bf\u884c\u300d\u306e\u5b50\u97f3\u3002\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u830e\u306b\u3064\u3051\u308b"
+  }, {
+    sym: "k",
+    ex: "key /ki\u02d0/",
+    jp: "\u300c\u30ab\u884c\u300d\u306e\u5b50\u97f3"
+  }, {
+    sym: "f",
+    ex: "far /f\u0251\u02d0/",
+    jp: "\u4e0a\u306e\u6b6f\u3092\u4e0b\u5507\u306b\u5f53\u3066\u3066\u606f\u3092\u51fa\u3059\u3002\u300c\u30d5\u300d\u3067\u306f\u306a\u3044"
+  }, {
+    sym: "s",
+    ex: "see /si\u02d0/",
+    jp: "\u300c\u30b5\u884c\u300d\u306e\u5b50\u97f3\u3002\u606f\u304c\u6f0f\u308c\u308b\u97f3"
+  }, {
+    sym: "\u0283",
+    ex: "she /\u0283i\u02d0/",
+    jp: "\u300c\u30b7\u30e5\u300d\u306e\u5b50\u97f3\u3002\u5507\u3092\u5c11\u3057\u524d\u306b\u51fa\u3059"
+  }, {
+    sym: "\u03b8",
+    ex: "think /\u03b8\u026a\u014bk/",
+    jp: "\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u306b\u5f53\u3066\u3066\u606f\u3092\u51fa\u3059\u3002\u300c\u30b9\u300d\u3067\u306f\u306a\u3044"
+  }, {
+    sym: "t\u0283",
+    ex: "chair /t\u0283e\u0259/",
+    jp: "\u300c\u30c1\u300d\u306e\u5b50\u97f3\u3002\u300c\u30c1\u30e5\u300d\u306e\u3088\u3046\u306a\u97f3"
+  }, {
+    sym: "h",
+    ex: "hat /h\u00e6t/",
+    jp: "\u306e\u3069\u304b\u3089\u606f\u3092\u51fa\u3059\u97f3\u3002\u65e5\u672c\u8a9e\u306e\u300c\u30cf\u300d\u3088\u308a\u5f31\u3044"
+  }]
+}, {
+  group: "\u5b50\u97f3\uff08\u6709\u58f0\u97f3\uff09",
+  symbols: [{
+    sym: "b",
+    ex: "bad /b\u00e6d/",
+    jp: "\u300c\u30d0\u884c\u300d\u306e\u5b50\u97f3\u3002\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
+  }, {
+    sym: "d",
+    ex: "did /d\u026ad/",
+    jp: "\u300c\u30c0\u884c\u300d\u306e\u5b50\u97f3\u3002\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u830e\u306b\u3064\u3051\u308b"
+  }, {
+    sym: "\u0261",
+    ex: "get /\u0261et/",
+    jp: "\u300c\u30ac\u884c\u300d\u306e\u5b50\u97f3"
+  }, {
+    sym: "v",
+    ex: "van /v\u00e6n/",
+    jp: "\u4e0a\u306e\u6b6f\u3092\u4e0b\u5507\u306b\u5f53\u3066\u3066\u58f0\u3092\u51fa\u3059\u3002\u300c\u30d6\u300d\u3067\u306f\u306a\u3044"
+  }, {
+    sym: "z",
+    ex: "zoo /zu\u02d0/",
+    jp: "\u300c\u30b6\u884c\u300d\u306e\u5b50\u97f3\u3002\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u306a\u304c\u3089\u606f\u3092\u51fa\u3059"
+  }, {
+    sym: "\u0292",
+    ex: "vision /v\u026a\u0292n/",
+    jp: "\u300c\u30b8\u30e5\u300d\u306e\u5b50\u97f3\u3002\u300c\u30ba\u300d\u3088\u308a\u53e3\u3092\u4e38\u3081\u308b"
+  }, {
+    sym: "\u00f0",
+    ex: "this /\u00f0\u026as/",
+    jp: "\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u306b\u5f53\u3066\u3066\u58f0\u3092\u51fa\u3059\u3002\u300c\u30ba\u300d\u3067\u306f\u306a\u3044"
+  }, {
+    sym: "d\u0292",
+    ex: "judge /d\u0292\u028cd\u0292/",
+    jp: "\u300c\u30b8\u300d\u306e\u5b50\u97f3\u3002\u300c\u30c7\u30b8\u30e5\u300d\u306e\u3088\u3046\u306a\u97f3"
+  }]
+}, {
+  group: "\u5b50\u97f3\uff08\u5171\u9cf4\u97f3\u30fb\u305d\u306e\u4ed6\uff09",
+  symbols: [{
+    sym: "m",
+    ex: "map /m\u00e6p/",
+    jp: "\u300c\u30de\u884c\u300d\u306e\u5b50\u97f3\u3002\u5507\u3092\u9589\u3058\u3066\u9f3b\u304b\u3089\u97f3\u3092\u51fa\u3059"
+  }, {
+    sym: "n",
+    ex: "now /na\u028a/",
+    jp: "\u300c\u30ca\u884c\u300d\u306e\u5b50\u97f3\u3002\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u830e\u306b\u3064\u3051\u3066\u9f3b\u304b\u3089\u97f3\u3092\u51fa\u3059"
+  }, {
+    sym: "\u014b",
+    ex: "sing /s\u026a\u014b/",
+    jp: "\u300c\u30f3\u30b0\u300d\u306e\u97f3\u3002\u8a9e\u672b\u306b\u3088\u304f\u73fe\u308c\u308b\u9f3b\u97f3"
+  }, {
+    sym: "l",
+    ex: "leg /le\u0261/",
+    jp: "\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u830e\u306b\u3064\u3051\u306a\u304c\u3089\u58f0\u3092\u51fa\u3059\u3002\u300c\u30e9\u884c\u300d\u3088\u308a\u820c\u304c\u524d"
+  }, {
+    sym: "r",
+    ex: "red /red/",
+    jp: "\u820c\u5148\u3092\u53e3\u306e\u4e2d\u592e\u306b\u6d6e\u304b\u305b\u308b\u3002\u820c\u3092\u4e0a\u306e\u6b6f\u830e\u306b\u3064\u3051\u306a\u3044"
+  }, {
+    sym: "w",
+    ex: "we /wi\u02d0/",
+    jp: "\u5507\u3092\u4e38\u304f\u3059\u307c\u3081\u3066\u304b\u3089\u300c\u30a6\u300d\u3068\u767a\u97f3"
+  }, {
+    sym: "j",
+    ex: "yes /jes/",
+    jp: "\u300c\u30e4\u884c\u300d\u306e\u5b50\u97f3\u3002\u300c\u30a4\u300d\u304b\u3089\u6b21\u306e\u97f3\u3078\u6ed1\u3089\u304b\u306b\u79fb\u52d5"
+  }, {
+    sym: "\u0259",
+    ex: "about /\u0259\u02c8ba\u028at/",
+    jp: "\u300c\u30b7\u30e5\u30ef\u300d\u3002\u6700\u3082\u5f31\u3044\u6bcd\u97f3\u3002\u3042\u3044\u307e\u3044\u306a\u300c\u30a2\u300d\u306e\u97f3"
+  }]
+}];
 const VOCAB = [{
   category: "\u63a5\u5ba2\u57fa\u672c",
   words: [{
@@ -647,6 +834,8 @@ function MYKITAEnglishApp() {
   const [dictPhraseIdx, setDictPhraseIdx] = useState(null);
   const [dictResult, setDictResult] = useState(null);
   const [dictLoading, setDictLoading] = useState(false);
+  const [ipaTooltip, setIpaTooltip] = useState(null);
+  const [showIpaGuide, setShowIpaGuide] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -772,6 +961,42 @@ function MYKITAEnglishApp() {
     }
   }, [getBestVoice]);
   const hasJapanese = text => /[\u3040-\u30FF\u4E00-\u9FFF]/.test(text);
+  const lookupIpa = sym => {
+    if ((ipaTooltip === null || ipaTooltip === void 0 ? void 0 : ipaTooltip.sym) === sym) {
+      setIpaTooltip(null);
+      return;
+    }
+    for (const grp of IPA_GUIDE) {
+      const found = grp.symbols.find(s => s.sym === sym);
+      if (found) {
+        setIpaTooltip({
+          ...found,
+          group: grp.group
+        });
+        return;
+      }
+    }
+  };
+  const renderPhonetic = phonetic => {
+    if (!phonetic) return null;
+    return phonetic.split("").map((ch, i) => {
+      const match = IPA_GUIDE.flatMap(g => g.symbols).find(s => s.sym === ch);
+      return match ? React.createElement("span", {
+        key: i,
+        onClick: () => lookupIpa(ch),
+        style: {
+          cursor: "pointer",
+          color: (ipaTooltip === null || ipaTooltip === void 0 ? void 0 : ipaTooltip.sym) === ch ? "#c8b89a" : "#a0a0e0",
+          borderBottom: "1px dotted #4a4a8a"
+        }
+      }, ch) : React.createElement("span", {
+        key: i,
+        style: {
+          color: "#888"
+        }
+      }, ch);
+    });
+  };
   const lookupWord = async (word, phraseIdx) => {
     const clean = word.replace(/[^a-zA-Z\-']/g, "").toLowerCase();
     if (!clean) return;
@@ -1650,9 +1875,50 @@ function MYKITAEnglishApp() {
       }
     }, dictResult.jp), dictResult.pronunciation && React.createElement("div", {
       style: {
-        color: "#888"
+        marginTop: "4px"
       }
-    }, dictResult.pronunciation), dictResult.note && React.createElement("div", {
+    }, React.createElement("span", {
+      style: {
+        color: "#666",
+        fontSize: "10px"
+      }
+    }, "\u767A\u97F3\u8A18\u53F7\uFF08\u8A18\u53F7\u3092\u30BF\u30C3\u30D7\u3067\u89E3\u8AAC\uFF09"), React.createElement("div", {
+      style: {
+        fontSize: "14px",
+        letterSpacing: "0.05em",
+        marginTop: "2px"
+      }
+    }, renderPhonetic(dictResult.pronunciation)), ipaTooltip && React.createElement("div", {
+      style: {
+        marginTop: "6px",
+        padding: "8px 10px",
+        background: "#0a0a2a",
+        border: "1px solid #3a3a6a",
+        borderRadius: "3px",
+        fontSize: "11px"
+      }
+    }, React.createElement("span", {
+      style: {
+        color: "#c8b89a",
+        fontSize: "16px"
+      }
+    }, ipaTooltip.sym), React.createElement("span", {
+      style: {
+        color: "#666",
+        fontSize: "10px",
+        marginLeft: "8px"
+      }
+    }, ipaTooltip.group), React.createElement("div", {
+      style: {
+        color: "#e0e0f0",
+        marginTop: "4px"
+      }
+    }, "\u4F8B: ", ipaTooltip.ex), React.createElement("div", {
+      style: {
+        color: "#8a8ab8",
+        marginTop: "2px"
+      }
+    }, ipaTooltip.jp))), dictResult.note && React.createElement("div", {
       style: {
         color: "#8a8ab8",
         marginTop: "4px"
@@ -2261,7 +2527,7 @@ function MYKITAEnglishApp() {
     style: S.title
   }, "Eyewear Sales English"), React.createElement("div", {
     style: S.tabs
-  }, [["shadowing", "Shadowing"], ["vocab", "Vocabulary"], ["knowledge", "Brand Knowledge"], ["roleplay", "Roleplay"], ["quiz", "Adaptive Quiz"]].map(_ref2 => {
+  }, [["shadowing", "Shadowing"], ["vocab", "Vocabulary"], ["knowledge", "Brand Knowledge"], ["roleplay", "Roleplay"], ["quiz", "Adaptive Quiz"], ["ipa", "\u767a\u97f3\u8a18\u53f7"]].map(_ref2 => {
     let [k, l] = _ref2;
     return React.createElement("button", {
       key: k,
@@ -2270,7 +2536,64 @@ function MYKITAEnglishApp() {
     }, l);
   }))), React.createElement("div", {
     style: S.main
-  }, activeTab === "shadowing" && renderShadowing(), activeTab === "vocab" && renderVocab(), activeTab === "knowledge" && renderKnowledge(), activeTab === "roleplay" && renderRoleplay(), activeTab === "quiz" && renderQuiz()));
+  }, activeTab === "shadowing" && renderShadowing(), activeTab === "vocab" && renderVocab(), activeTab === "knowledge" && renderKnowledge(), activeTab === "roleplay" && renderRoleplay(), activeTab === "quiz" && renderQuiz(), activeTab === "ipa" && React.createElement("div", null, React.createElement("span", {
+    style: S.label
+  }, "IPA \u767A\u97F3\u8A18\u53F7\u30AC\u30A4\u30C9"), React.createElement("div", {
+    style: {
+      fontFamily: "monospace",
+      fontSize: "11px",
+      color: "#666",
+      marginBottom: "16px"
+    }
+  }, "\u8A18\u53F7\u3092\u30BF\u30C3\u30D7\u3059\u308B\u3068\u8A73\u7D30\u304C\u8868\u793A\u3055\u308C\u307E\u3059"), IPA_GUIDE.map((grp, gi) => React.createElement("div", {
+    key: gi,
+    style: {
+      marginBottom: "20px"
+    }
+  }, React.createElement("div", {
+    style: {
+      fontSize: "10px",
+      letterSpacing: "0.15em",
+      color: "#c8b89a",
+      marginBottom: "8px",
+      textTransform: "uppercase"
+    }
+  }, grp.group), grp.symbols.map((s, si) => React.createElement("div", {
+    key: si,
+    style: {
+      padding: "10px 12px",
+      marginBottom: "6px",
+      background: (ipaTooltip === null || ipaTooltip === void 0 ? void 0 : ipaTooltip.sym) === s.sym ? "#0a0a2a" : "#111",
+      border: `1px solid ${(ipaTooltip === null || ipaTooltip === void 0 ? void 0 : ipaTooltip.sym) === s.sym ? "#3a3a6a" : "#222"}`,
+      borderRadius: "3px",
+      cursor: "pointer"
+    },
+    onClick: () => lookupIpa(s.sym)
+  }, React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "baseline",
+      gap: "12px"
+    }
+  }, React.createElement("span", {
+    style: {
+      fontSize: "20px",
+      color: "#c8b89a",
+      minWidth: "28px"
+    }
+  }, s.sym), React.createElement("span", {
+    style: {
+      color: "#888",
+      fontSize: "11px"
+    }
+  }, s.ex)), (ipaTooltip === null || ipaTooltip === void 0 ? void 0 : ipaTooltip.sym) === s.sym && React.createElement("div", {
+    style: {
+      marginTop: "6px",
+      color: "#a0a0d0",
+      fontSize: "11px",
+      lineHeight: "1.6"
+    }
+  }, s.jp))))))));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(MYKITAEnglishApp));
   </script>
