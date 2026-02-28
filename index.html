@@ -839,6 +839,7 @@ function MYKITAEnglishApp() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const [recordingContext, setRecordingContext] = useState("shadowing");
   const [interimTranscript, setInterimTranscript] = useState("");
   const [jpWarning, setJpWarning] = useState(false);
   const [knowledgeSection, setKnowledgeSection] = useState("collections");
@@ -1119,12 +1120,14 @@ function MYKITAEnglishApp() {
     streamRef.current = null;
     audioChunksRef.current = [];
   };
-  const startRecording = () => {
+  const startRecording = function () {
+    let context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "shadowing";
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
       setTranscript("\u26a0\ufe0f iPhone Safari\u306fSpeechRecognition\u306b\u975e\u5bfe\u5fdc\u3067\u3059\u3002PC\u7248Chrome\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u306a\u3002");
       return;
     }
+    setRecordingContext(context);
     try {
       var _audioSourceRef$curre2;
       (_audioSourceRef$curre2 = audioSourceRef.current) === null || _audioSourceRef$curre2 === void 0 || _audioSourceRef$curre2.stop();
@@ -1214,6 +1217,10 @@ function MYKITAEnglishApp() {
               best = stripJapanese(best);
             }
             setTranscript(best);
+            setRecordingContext(ctx => {
+              if (ctx === "quiz") setQuizInput(best);else if (ctx === "roleplay") setUserInput(best);
+              return ctx;
+            });
             setInterimTranscript("");
           } else {
             interim += e.results[i][0].transcript;
@@ -2389,14 +2396,44 @@ function MYKITAEnglishApp() {
     }
   }, "typing\u2026"))), React.createElement("div", {
     ref: chatEndRef
-  })), React.createElement("div", {
+  })), isRecording && recordingContext === "roleplay" && React.createElement("div", {
+    style: {
+      fontFamily: "monospace",
+      fontSize: "11px",
+      color: "#c8b89a",
+      marginBottom: "6px",
+      padding: "0 0 4px"
+    }
+  }, "\uD83D\uDD34 \u9332\u97F3\u4E2D\u2026 ", interimTranscript && React.createElement("span", {
+    style: {
+      color: "#666"
+    }
+  }, interimTranscript)), React.createElement("div", {
     style: S.inputRow
-  }, React.createElement("input", {
-    style: S.input,
+  }, !isRecording ? React.createElement("button", {
+    style: {
+      ...S.btn("p"),
+      whiteSpace: "nowrap"
+    },
+    onClick: () => {
+      setJpWarning(false);
+      startRecording("roleplay");
+    }
+  }, "\uD83C\uDFA4") : React.createElement("button", {
+    style: {
+      ...S.btn("r"),
+      whiteSpace: "nowrap"
+    },
+    onClick: stopRecording
+  }, "\u25A0"), React.createElement("input", {
+    style: {
+      ...S.input,
+      borderColor: isRecording && recordingContext === "roleplay" ? "#8b3030" : "#222"
+    },
     value: userInput,
     onChange: e => setUserInput(e.target.value),
     onKeyDown: e => e.key === "Enter" && sendMessage(),
-    placeholder: "\u82F1\u8A9E\u3067\u8FD4\u7B54\u3057\u3066\u304F\u3060\u3055\u3044\u2026"
+    placeholder: isRecording && recordingContext === "roleplay" ? "\ud83d\udd34 \u9332\u97f3\u4e2d\u2026" : "\u82f1\u8a9e\u3067\u8fd4\u7b54 / \u97f3\u58f0\u5165\u529b\u2026"
   }), React.createElement("button", {
     style: S.btn("p"),
     onClick: sendMessage,
@@ -2450,13 +2487,51 @@ function MYKITAEnglishApp() {
       }
     }, "\u7FD2\u5F97\u6E08\uFF1A", masteredCount)), React.createElement("div", {
       style: S.quizJp
-    }, q.jp), React.createElement("textarea", {
-      style: S.quizInput,
+    }, q.jp), React.createElement("div", {
+      style: {
+        marginBottom: "14px"
+      }
+    }, React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: "8px",
+        marginBottom: "8px",
+        flexWrap: "wrap"
+      }
+    }, !isRecording ? React.createElement("button", {
+      style: S.btn("p"),
+      onClick: () => {
+        setJpWarning(false);
+        startRecording("quiz");
+      }
+    }, "\uD83C\uDFA4 \u97F3\u58F0\u5165\u529B") : React.createElement("button", {
+      style: S.btn("r"),
+      onClick: stopRecording
+    }, "\u25A0 \u505C\u6B62"), React.createElement("button", {
+      style: S.btn(),
+      onClick: () => setQuizInput(""),
+      disabled: !quizInput
+    }, "\u30AF\u30EA\u30A2")), isRecording && recordingContext === "quiz" && React.createElement("div", {
+      style: {
+        fontFamily: "monospace",
+        fontSize: "11px",
+        color: "#c8b89a",
+        marginBottom: "6px"
+      }
+    }, "\uD83D\uDD34 \u9332\u97F3\u4E2D\u2026 ", interimTranscript && React.createElement("span", {
+      style: {
+        color: "#666"
+      }
+    }, interimTranscript)), React.createElement("textarea", {
+      style: {
+        ...S.quizInput,
+        borderColor: quizInput ? "#444" : "#222"
+      },
       value: quizInput,
       onChange: e => setQuizInput(e.target.value),
-      placeholder: "\u82F1\u8A9E\u306B\u8A33\u3057\u3066\u304F\u3060\u3055\u3044\u2026",
+      placeholder: "\u97F3\u58F0\u5165\u529B\u3001\u307E\u305F\u306F\u3053\u3053\u306B\u76F4\u63A5\u5165\u529B\u2026",
       disabled: !!quizResult && !quizResult.loading
-    }), React.createElement("div", {
+    })), React.createElement("div", {
       style: {
         display: "flex",
         gap: "10px",
