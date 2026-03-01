@@ -249,214 +249,407 @@ const IPA_GUIDE = [{
 }];
 const IPA_DIAGRAMS = {
   "i\u02d0": {
-    lip: 0.15,
+    lip: "spread",
+    lipOpen: 0.05,
     tonguePos: "high-front",
-    desc: "\u820c\u3092\u524d\u4e0a\u65b9\u306b\u6301\u3061\u4e0a\u3052\u3001\u5507\u3092\u6a2a\u306b\u5f15\u304f"
+    airflow: "front",
+    voiced: true,
+    desc: "\u820c\u3092\u524d\u4e0a\u65b9\u306b\u6301\u3061\u4e0a\u3052\u3001\u5507\u3092\u6a2a\u306b\u5f37\u304f\u5f15\u304f"
   },
   "\u026a": {
-    lip: 0.18,
+    lip: "spread",
+    lipOpen: 0.1,
     tonguePos: "high-front",
-    desc: "i\u02d0\u3088\u308a\u5c11\u3057\u4f4e\u3081\u30fb\u77ed\u3081\u3002\u5507\u306e\u529b\u3092\u629c\u304f"
+    airflow: "front",
+    voiced: true,
+    desc: "i\u02d0\u3088\u308a\u5c11\u3057\u4f4e\u3081\u3002\u5507\u306e\u529b\u3092\u629c\u304f"
   },
   "e": {
-    lip: 0.3,
+    lip: "spread",
+    lipOpen: 0.2,
     tonguePos: "mid-front",
+    airflow: "front",
+    voiced: true,
     desc: "\u820c\u3092\u4e2d\u524d\u65b9\u3002\u5507\u3092\u6a2a\u306b\u5f15\u304f"
   },
   "\u00e6": {
-    lip: 0.5,
+    lip: "spread",
+    lipOpen: 0.45,
     tonguePos: "low-front",
+    airflow: "front",
+    voiced: true,
     desc: "\u820c\u3092\u524d\u4e0b\u65b9\u3078\u3002\u53e3\u3092\u5927\u304d\u304f\u6a2a\u306b\u958b\u304f"
   },
   "\u028c": {
-    lip: 0.35,
+    lip: "neutral",
+    lipOpen: 0.35,
     tonguePos: "mid-central",
-    desc: "\u820c\u306f\u4e2d\u592e\u30fb\u4e2d\u9ad8\u5ea6\u3002\u529b\u3092\u629c\u304f"
+    airflow: "center",
+    voiced: true,
+    desc: "\u820c\u306f\u4e2d\u592e\u3002\u529b\u3092\u629c\u3044\u3066\u767a\u97f3"
   },
   "\u0251\u02d0": {
-    lip: 0.6,
+    lip: "open",
+    lipOpen: 0.65,
     tonguePos: "low-back",
-    desc: "\u820c\u3092\u5f8c\u308d\u4e0b\u65b9\u3078\u3002\u53e3\u3092\u5927\u304d\u304f\u958b\u304f"
+    airflow: "back",
+    voiced: true,
+    desc: "\u820c\u3092\u5f8c\u308d\u4e0b\u65b9\u3078\u3002\u53e3\u3092\u6700\u5927\u306b\u958b\u304f"
   },
   "\u0252": {
-    lip: 0.55,
+    lip: "round",
+    lipOpen: 0.5,
     tonguePos: "low-back",
-    desc: "\u0251\u02d0\u3088\u308a\u5507\u3092\u5c11\u3057\u4e38\u3081\u308b"
+    airflow: "back",
+    voiced: true,
+    desc: "\u0251\u02d0\u3088\u308a\u5507\u3092\u3084\u3084\u4e38\u3081\u308b"
   },
   "\u0254\u02d0": {
-    lip: 0.45,
+    lip: "round",
+    lipOpen: 0.4,
     tonguePos: "mid-back",
-    desc: "\u820c\u3092\u5f8c\u308d\u4e2d\u4f4d\u3002\u5507\u3092\u4e38\u304f\u3059\u307c\u3081\u308b"
+    airflow: "back",
+    voiced: true,
+    desc: "\u5507\u3092\u4e38\u304f\u3059\u307c\u3081\u820c\u3092\u5f8c\u308d\u4e2d\u4f4d\u3078"
   },
   "\u028a": {
-    lip: 0.2,
+    lip: "round",
+    lipOpen: 0.15,
     tonguePos: "high-back",
+    airflow: "back",
+    voiced: true,
     desc: "\u820c\u3092\u5f8c\u308d\u4e0a\u65b9\u3002\u5507\u3092\u8efd\u304f\u4e38\u3081\u308b"
   },
   "u\u02d0": {
-    lip: 0.15,
+    lip: "round",
+    lipOpen: 0.1,
     tonguePos: "high-back",
+    airflow: "back",
+    voiced: true,
     desc: "\u820c\u3092\u5f8c\u308d\u4e0a\u65b9\u3002\u5507\u3092\u5f37\u304f\u4e38\u304f\u3059\u307c\u3081\u308b"
   },
   "\u025c\u02d0": {
-    lip: 0.3,
+    lip: "neutral",
+    lipOpen: 0.25,
     tonguePos: "mid-central",
-    desc: "\u820c\u3092\u4e2d\u592e\u306b\u3002\u5507\u306f\u4e38\u3081\u305a\u8efd\u304f\u958b\u304f"
+    airflow: "center",
+    voiced: true,
+    desc: "\u820c\u3092\u4e2d\u592e\u306b\u3002\u5507\u306f\u4e38\u3081\u305a"
   },
   "\u0259": {
-    lip: 0.25,
+    lip: "neutral",
+    lipOpen: 0.2,
     tonguePos: "mid-central",
+    airflow: "center",
+    voiced: true,
     desc: "\u6700\u3082\u529b\u306e\u629c\u3051\u305f\u4e2d\u592e\u6bcd\u97f3\u3002\u30b7\u30e5\u30ef\u97f3"
   },
   "e\u026a": {
-    lip: 0.3,
+    lip: "spread",
+    lipOpen: 0.25,
     tonguePos: "mid-front",
-    desc: "\u300c\u30a8\u300d\u2192\u300c\u30a4\u300d\u3078\u3002\u820c\u304c\u524d\u4e0a\u65b9\u3078\u79fb\u52d5"
+    airflow: "front",
+    voiced: true,
+    desc: "\u300c\u30a8\u300d\u304b\u3089\u300c\u30a4\u300d\u3078\u820c\u304c\u4e0a\u304c\u308b"
   },
   "a\u026a": {
-    lip: 0.55,
+    lip: "spread",
+    lipOpen: 0.5,
     tonguePos: "low-front",
-    desc: "\u300c\u30a2\u300d\u2192\u300c\u30a4\u300d\u3078\u3002\u820c\u304c\u4e0a\u304c\u308a\u306a\u304c\u3089\u524d\u3078"
+    airflow: "front",
+    voiced: true,
+    desc: "\u300c\u30a2\u300d\u304b\u3089\u300c\u30a4\u300d\u3078\u820c\u304c\u4e0a\u304c\u308a\u306a\u304c\u3089\u524d\u3078"
   },
   "\u0254\u026a": {
-    lip: 0.45,
+    lip: "round",
+    lipOpen: 0.4,
     tonguePos: "mid-back",
-    desc: "\u300c\u30aa\u300d\u2192\u300c\u30a4\u300d\u3078\u3002\u820c\u304c\u5f8c\u308d\u304b\u3089\u524d\u3078"
+    airflow: "back",
+    voiced: true,
+    desc: "\u300c\u30aa\u300d\u304b\u3089\u300c\u30a4\u300d\u3078\u820c\u304c\u5f8c\u308d\u304b\u3089\u524d\u3078"
   },
   "\u0259\u028a": {
-    lip: 0.25,
+    lip: "round",
+    lipOpen: 0.2,
     tonguePos: "mid-central",
-    desc: "\u300c\u30a2\u300d\u2192\u300c\u30a6\u300d\u3078\u3002\u5507\u304c\u4e38\u307e\u308a\u306a\u304c\u3089\u9589\u3058\u308b"
+    airflow: "center",
+    voiced: true,
+    desc: "\u300c\u30a2\u300d\u304b\u3089\u300c\u30a6\u300d\u3078\u5507\u304c\u4e38\u307e\u308b"
   },
   "a\u028a": {
-    lip: 0.55,
+    lip: "round",
+    lipOpen: 0.5,
     tonguePos: "low-back",
-    desc: "\u300c\u30a2\u300d\u2192\u300c\u30a6\u300d\u3078\u3002\u53e3\u304c\u9589\u3058\u306a\u304c\u3089\u5507\u304c\u4e38\u307e\u308b"
+    airflow: "back",
+    voiced: true,
+    desc: "\u300c\u30a2\u300d\u304b\u3089\u300c\u30a6\u300d\u3078\u5507\u304c\u4e38\u307e\u308b"
   },
   "\u026a\u0259": {
-    lip: 0.18,
+    lip: "spread",
+    lipOpen: 0.12,
     tonguePos: "high-front",
-    desc: "\u300c\u30a4\u300d\u2192\u300c\u30a2\u300d\u3078\u3002\u820c\u304c\u4e0b\u304c\u308a\u306a\u304c\u3089\u5f8c\u308d\u3078"
+    airflow: "front",
+    voiced: true,
+    desc: "\u300c\u30a4\u300d\u304b\u3089\u300c\u30a2\u300d\u3078\u820c\u304c\u4e0b\u304c\u308b"
   },
   "p": {
-    lip: 0.0,
+    lip: "closed",
+    lipOpen: 0.0,
     tonguePos: "neutral",
-    desc: "\u5507\u3092\u5b8c\u5168\u306b\u9589\u3058\u3001\u606f\u3092\u6e9c\u3081\u3066\u4e00\u6c17\u306b\u958b\u653e"
+    airflow: "burst",
+    voiced: false,
+    desc: "\u5507\u3092\u5b8c\u5168\u306b\u9589\u3058\u606f\u3092\u6e9c\u3081\u3066\u4e00\u6c17\u306b\u958b\u653e"
   },
   "b": {
-    lip: 0.0,
+    lip: "closed",
+    lipOpen: 0.0,
     tonguePos: "neutral",
-    desc: "\u5507\u3092\u9589\u3058\u3066\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u306a\u304c\u3089\u958b\u653e"
+    airflow: "burst",
+    voiced: true,
+    desc: "\u5507\u3092\u9589\u3058\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u306a\u304c\u3089\u958b\u653e"
   },
   "t": {
-    lip: 0.25,
+    lip: "neutral",
+    lipOpen: 0.2,
     tonguePos: "alveolar",
-    desc: "\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u830e\u306b\u3064\u3051\u606f\u3092\u6b62\u3081\u958b\u653e"
+    airflow: "burst",
+    voiced: false,
+    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u3064\u3051\u606f\u3092\u6b62\u3081\u958b\u653e"
   },
   "d": {
-    lip: 0.25,
+    lip: "neutral",
+    lipOpen: 0.2,
     tonguePos: "alveolar",
+    airflow: "burst",
+    voiced: true,
     desc: "t\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
   },
   "k": {
-    lip: 0.3,
+    lip: "neutral",
+    lipOpen: 0.25,
     tonguePos: "velar",
-    desc: "\u820c\u306e\u5f8c\u308d\u90e8\u5206\u3092\u8edf\u53e3\u84cb\u306b\u3064\u3051\u3066\u958b\u653e"
+    airflow: "burst",
+    voiced: false,
+    desc: "\u820c\u306e\u5f8c\u90e8\u3092\u8edf\u53e3\u84cb\u306b\u3064\u3051\u3066\u958b\u653e"
   },
   "\u0261": {
-    lip: 0.3,
+    lip: "neutral",
+    lipOpen: 0.25,
     tonguePos: "velar",
+    airflow: "burst",
+    voiced: true,
     desc: "k\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
   },
   "f": {
-    lip: 0.15,
-    tonguePos: "labiodental",
-    desc: "\u4e0a\u306e\u6b6f\u3092\u4e0b\u5507\u306b\u8efd\u304f\u5f53\u3066\u3001\u9699\u9593\u304b\u3089\u606f\u3092\u51fa\u3059"
+    lip: "dental",
+    lipOpen: 0.1,
+    tonguePos: "neutral",
+    airflow: "front",
+    voiced: false,
+    desc: "\u4e0a\u306e\u6b6f\u3092\u4e0b\u5507\u306b\u5f53\u3066\u9699\u9593\u304b\u3089\u606f\u3092\u51fa\u3059"
   },
   "v": {
-    lip: 0.15,
-    tonguePos: "labiodental",
+    lip: "dental",
+    lipOpen: 0.1,
+    tonguePos: "neutral",
+    airflow: "front",
+    voiced: true,
     desc: "f\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
   },
   "s": {
-    lip: 0.2,
+    lip: "neutral",
+    lipOpen: 0.15,
     tonguePos: "alveolar",
-    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u8fd1\u3065\u3051\u3001\u7d30\u3044\u9699\u9593\u304b\u3089\u606f\u3092\u901a\u3059"
+    airflow: "front",
+    voiced: false,
+    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u8fd1\u3065\u3051\u7d30\u3044\u9699\u9593\u304b\u3089\u606f\u3092\u901a\u3059"
   },
   "z": {
-    lip: 0.2,
+    lip: "neutral",
+    lipOpen: 0.15,
     tonguePos: "alveolar",
+    airflow: "front",
+    voiced: true,
     desc: "s\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
   },
   "\u0283": {
-    lip: 0.2,
+    lip: "round",
+    lipOpen: 0.15,
     tonguePos: "palatal",
+    airflow: "front",
+    voiced: false,
     desc: "\u820c\u3092\u5f8c\u9000\u3055\u305b\u5507\u3092\u5c11\u3057\u524d\u306b\u51fa\u3057\u3066\u606f\u3092\u51fa\u3059"
   },
   "\u0292": {
-    lip: 0.2,
+    lip: "round",
+    lipOpen: 0.15,
     tonguePos: "palatal",
+    airflow: "front",
+    voiced: true,
     desc: "\u0283\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
   },
   "\u03b8": {
-    lip: 0.3,
+    lip: "dental",
+    lipOpen: 0.25,
     tonguePos: "dental",
-    desc: "\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u306e\u5148\u7aef\u306b\u8efd\u304f\u5f53\u3066\u606f\u3092\u901a\u3059"
+    airflow: "front",
+    voiced: false,
+    desc: "\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u5148\u306b\u8efd\u304f\u5f53\u3066\u606f\u3092\u901a\u3059"
   },
   "\u00f0": {
-    lip: 0.3,
+    lip: "dental",
+    lipOpen: 0.25,
     tonguePos: "dental",
+    airflow: "front",
+    voiced: true,
     desc: "\u03b8\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
   },
   "t\u0283": {
-    lip: 0.2,
+    lip: "round",
+    lipOpen: 0.15,
     tonguePos: "palatal",
+    airflow: "burst",
+    voiced: false,
     desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u3064\u3051\u3066\u304b\u3089\u5f8c\u9000\u3057\u306a\u304c\u3089\u958b\u653e"
   },
   "d\u0292": {
-    lip: 0.2,
+    lip: "round",
+    lipOpen: 0.15,
     tonguePos: "palatal",
+    airflow: "burst",
+    voiced: true,
     desc: "t\u0283\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
   },
   "h": {
-    lip: 0.35,
+    lip: "open",
+    lipOpen: 0.35,
     tonguePos: "neutral",
+    airflow: "center",
+    voiced: false,
     desc: "\u58f0\u9580\u3092\u72ed\u3081\u3066\u306e\u3069\u304b\u3089\u606f\u3092\u51fa\u3059"
   },
   "m": {
-    lip: 0.0,
+    lip: "closed",
+    lipOpen: 0.0,
     tonguePos: "neutral",
-    desc: "\u5507\u3092\u9589\u3058\u3001\u9f3b\u304b\u3089\u58f0\u3092\u5171\u9cf4\u3055\u305b\u308b"
+    airflow: "nasal",
+    voiced: true,
+    desc: "\u5507\u3092\u9589\u3058\u9f3b\u304b\u3089\u58f0\u3092\u5171\u9cf4\u3055\u305b\u308b"
   },
   "n": {
-    lip: 0.25,
+    lip: "neutral",
+    lipOpen: 0.2,
     tonguePos: "alveolar",
-    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u3064\u3051\u3001\u9f3b\u304b\u3089\u58f0\u3092\u51fa\u3059"
+    airflow: "nasal",
+    voiced: true,
+    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u3064\u3051\u9f3b\u304b\u3089\u58f0\u3092\u51fa\u3059"
   },
   "\u014b": {
-    lip: 0.3,
+    lip: "neutral",
+    lipOpen: 0.25,
     tonguePos: "velar",
+    airflow: "nasal",
+    voiced: true,
     desc: "\u820c\u5f8c\u90e8\u3092\u8edf\u53e3\u84cb\u306b\u3064\u3051\u9f3b\u304b\u3089\u58f0\u3092\u51fa\u3059"
   },
   "l": {
-    lip: 0.25,
+    lip: "neutral",
+    lipOpen: 0.2,
     tonguePos: "alveolar",
-    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u3064\u3051\u3001\u820c\u306e\u4e21\u5074\u304b\u3089\u58f0\u3092\u901a\u3059"
+    airflow: "sides",
+    voiced: true,
+    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u3064\u3051\u820c\u306e\u4e21\u5074\u304b\u3089\u58f0\u3092\u901a\u3059"
   },
   "r": {
-    lip: 0.2,
+    lip: "neutral",
+    lipOpen: 0.2,
     tonguePos: "retroflex",
+    airflow: "center",
+    voiced: true,
     desc: "\u820c\u5148\u3092\u53e3\u4e2d\u592e\u306b\u6d6e\u304b\u305b\u5f8c\u308d\u306b\u305d\u3089\u3059"
   },
   "w": {
-    lip: 0.1,
+    lip: "round",
+    lipOpen: 0.08,
     tonguePos: "high-back",
-    desc: "\u5507\u3092\u4e38\u304f\u3059\u307c\u3081\u3066\u304b\u3089\u7d20\u65e9\u304f\u6b21\u306e\u6bcd\u97f3\u3078"
+    airflow: "front",
+    voiced: true,
+    desc: "\u5507\u3092\u4e38\u304f\u3059\u307c\u3081\u3066\u304b\u3089\u6b21\u306e\u6bcd\u97f3\u3078"
   },
   "j": {
-    lip: 0.15,
+    lip: "spread",
+    lipOpen: 0.12,
     tonguePos: "high-front",
+    airflow: "front",
+    voiced: true,
     desc: "\u820c\u3092\u9ad8\u524d\u65b9\u306b\u6301\u3061\u4e0a\u3052\u3066\u304b\u3089\u6b21\u306e\u97f3\u3078"
+  }
+};
+const TONGUE_COORDS = {
+  "high-front": {
+    root: [148, 118],
+    body: [120, 88],
+    tip: [62, 52]
+  },
+  "high-back": {
+    root: [148, 118],
+    body: [138, 70],
+    tip: [115, 62]
+  },
+  "mid-front": {
+    root: [148, 118],
+    body: [110, 96],
+    tip: [65, 68]
+  },
+  "mid-central": {
+    root: [148, 118],
+    body: [118, 90],
+    tip: [88, 75]
+  },
+  "mid-back": {
+    root: [148, 118],
+    body: [135, 80],
+    tip: [112, 72]
+  },
+  "low-front": {
+    root: [148, 118],
+    body: [105, 112],
+    tip: [68, 96]
+  },
+  "low-back": {
+    root: [148, 118],
+    body: [138, 104],
+    tip: [115, 95]
+  },
+  "alveolar": {
+    root: [148, 118],
+    body: [108, 98],
+    tip: [58, 55]
+  },
+  "dental": {
+    root: [148, 118],
+    body: [100, 100],
+    tip: [50, 60]
+  },
+  "palatal": {
+    root: [148, 118],
+    body: [125, 82],
+    tip: [85, 60]
+  },
+  "velar": {
+    root: [148, 118],
+    body: [140, 72],
+    tip: [118, 64]
+  },
+  "retroflex": {
+    root: [148, 118],
+    body: [112, 95],
+    tip: [80, 70]
+  },
+  "neutral": {
+    root: [148, 118],
+    body: [118, 108],
+    tip: [80, 100]
   }
 };
 const MouthDiagram = _ref => {
@@ -465,190 +658,328 @@ const MouthDiagram = _ref => {
   } = _ref;
   const d = IPA_DIAGRAMS[sym];
   if (!d) return null;
-  const tongueMap = {
-    "high-front": {
-      x: 62,
-      y: 52,
-      cx: 55,
-      cy: 45
+  const tc = TONGUE_COORDS[d.tonguePos] || TONGUE_COORDS["neutral"];
+  const [rx, ry] = tc.root;
+  const [bx, by] = tc.body;
+  const [tx, ty] = tc.tip;
+  const tongueTop = `M ${rx} ${ry} Q ${bx + 8} ${by - 4} ${tx} ${ty}`;
+  const tongueBot = `Q ${bx + 5} ${by + 12} ${rx} ${ry}`;
+  const lipData = {
+    spread: {
+      rx: 22,
+      ry: 5 + d.lipOpen * 8,
+      desc: "\u6a2a\u306b\u5f15\u304f"
     },
-    "high-back": {
-      x: 95,
-      y: 52,
-      cx: 88,
-      cy: 45
+    round: {
+      rx: 9,
+      ry: 8 + d.lipOpen * 14,
+      desc: "\u4e38\u3081\u308b"
     },
-    "mid-front": {
-      x: 62,
-      y: 62,
-      cx: 55,
-      cy: 55
+    open: {
+      rx: 18,
+      ry: 12 + d.lipOpen * 16,
+      desc: "\u958b\u304f"
     },
-    "mid-central": {
-      x: 78,
-      y: 62,
-      cx: 72,
-      cy: 56
+    neutral: {
+      rx: 16,
+      ry: 6 + d.lipOpen * 10,
+      desc: "\u81ea\u7136"
     },
-    "mid-back": {
-      x: 95,
-      y: 62,
-      cx: 88,
-      cy: 56
+    closed: {
+      rx: 18,
+      ry: 1,
+      desc: "\u9589\u3058\u308b"
     },
-    "low-front": {
-      x: 62,
-      y: 74,
-      cx: 56,
-      cy: 70
-    },
-    "low-back": {
-      x: 95,
-      y: 74,
-      cx: 88,
-      cy: 70
-    },
-    "alveolar": {
-      x: 55,
-      y: 48,
-      cx: 50,
-      cy: 44
-    },
-    "dental": {
-      x: 48,
-      y: 52,
-      cx: 44,
-      cy: 48
-    },
-    "palatal": {
-      x: 72,
-      y: 50,
-      cx: 65,
-      cy: 46
-    },
-    "velar": {
-      x: 90,
-      y: 52,
-      cx: 84,
-      cy: 48
-    },
-    "labiodental": {
-      x: 42,
-      y: 56,
-      cx: 38,
-      cy: 52
-    },
-    "retroflex": {
-      x: 68,
-      y: 56,
-      cx: 65,
-      cy: 50
-    },
-    "neutral": {
-      x: 75,
-      y: 68,
-      cx: 68,
-      cy: 65
+    dental: {
+      rx: 16,
+      ry: 4 + d.lipOpen * 8,
+      desc: "\u6b6f\u306b\u5f53\u3066\u308b"
     }
   };
-  const tp = tongueMap[d.tonguePos] || tongueMap["neutral"];
-  const lipOpen = d.lip;
-  const upperLipY = 40 + lipOpen * 8;
-  const lowerLipY = 48 + lipOpen * 14;
-  return React.createElement("svg", {
-    width: "160",
-    height: "120",
-    viewBox: "0 0 160 120",
+  const lp = lipData[d.lip] || lipData["neutral"];
+  return React.createElement("div", {
     style: {
-      display: "block",
-      margin: "8px auto"
+      display: "flex",
+      gap: "12px",
+      alignItems: "flex-start",
+      margin: "10px 0"
     }
-  }, React.createElement("ellipse", {
-    cx: "80",
-    cy: "60",
-    rx: "70",
-    ry: "55",
-    fill: "#1a1a1a",
+  }, React.createElement("div", {
+    style: {
+      flex: "1 1 0"
+    }
+  }, React.createElement("div", {
+    style: {
+      fontSize: "9px",
+      color: "#555",
+      textAlign: "center",
+      marginBottom: "3px",
+      fontFamily: "monospace",
+      letterSpacing: "0.08em"
+    }
+  }, "\u65AD\u9762\u56F3\uFF08\u6A2A\u304B\u3089\uFF09"), React.createElement("svg", {
+    viewBox: "0 0 200 160",
+    style: {
+      width: "100%",
+      maxWidth: "200px",
+      display: "block",
+      margin: "0 auto",
+      background: "#111",
+      borderRadius: "4px",
+      border: "1px solid #1e1e1e"
+    }
+  }, React.createElement("path", {
+    d: "M 38 30 Q 90 18 145 38 L 160 38 L 160 130 L 38 130 Z",
+    fill: "#0d1520"
+  }), React.createElement("path", {
+    d: "M 38 30 Q 90 18 145 38 L 145 22 Q 90 8 38 18 Z",
+    fill: "#1a1a2a",
+    stroke: "#2a2a3a",
+    strokeWidth: "0.5"
+  }), React.createElement("text", {
+    x: "90",
+    y: "28",
+    fontSize: "7",
+    fill: "#3a3a5a",
+    textAnchor: "middle"
+  }, "\u9F3B\u8154"), React.createElement("path", {
+    d: "M 38 30 Q 75 22 110 28",
+    fill: "none",
+    stroke: "#6a6a7a",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), React.createElement("path", {
+    d: "M 110 28 Q 132 30 140 40 Q 145 50 143 60",
+    fill: "none",
+    stroke: "#7a6a6a",
+    strokeWidth: "2",
+    strokeLinecap: "round"
+  }), React.createElement("path", {
+    d: "M 143 60 Q 145 68 142 72",
+    fill: "none",
+    stroke: "#7a6a6a",
+    strokeWidth: "2",
+    strokeLinecap: "round"
+  }), React.createElement("rect", {
+    x: "30",
+    y: "30",
+    width: "10",
+    height: "12",
+    rx: "1",
+    fill: "#888",
+    opacity: "0.9"
+  }), React.createElement("rect", {
+    x: "30",
+    y: "42",
+    width: "10",
+    height: "3",
+    rx: "1",
+    fill: "#555"
+  }), React.createElement("path", {
+    d: "M 40 33 Q 48 28 60 28",
+    fill: "none",
+    stroke: "#666",
+    strokeWidth: "1.5"
+  }), d.lipOpen > 0 && React.createElement(React.Fragment, null, React.createElement("rect", {
+    x: "30",
+    y: 38 + d.lipOpen * 38,
+    width: "10",
+    height: "12",
+    rx: "1",
+    fill: "#888",
+    opacity: "0.9"
+  }), React.createElement("rect", {
+    x: "30",
+    y: 50 + d.lipOpen * 38,
+    width: "10",
+    height: "3",
+    rx: "1",
+    fill: "#555"
+  })), d.lip === "closed" ? React.createElement("path", {
+    d: "M 20 50 Q 32 46 38 44 Q 32 54 20 50 Z",
+    fill: "#c8b89a",
+    opacity: "0.9"
+  }) : React.createElement(React.Fragment, null, React.createElement("path", {
+    d: `M 18 ${44 - d.lipOpen * 4} Q 32 ${40 - d.lipOpen * 6} 38 ${44 - d.lipOpen * 4}`,
+    fill: "none",
+    stroke: "#c8b89a",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), React.createElement("path", {
+    d: `M 18 ${46 + d.lipOpen * 30} Q 32 ${50 + d.lipOpen * 32} 38 ${46 + d.lipOpen * 30}`,
+    fill: "none",
+    stroke: "#c8b89a",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  })), React.createElement("path", {
+    d: `${tongueTop} ${tongueBot}`,
+    fill: "#c06060",
+    opacity: "0.85",
+    stroke: "#e07070",
+    strokeWidth: "1"
+  }), React.createElement("circle", {
+    cx: tx,
+    cy: ty,
+    r: "4",
+    fill: "#ff9090",
+    opacity: "0.9"
+  }), React.createElement("path", {
+    d: "M 145 38 L 160 38 L 160 130 Q 150 128 145 120 L 145 38",
+    fill: "#0d1020",
     stroke: "#333",
     strokeWidth: "1"
   }), React.createElement("path", {
-    d: "M 30 38 Q 55 28 80 26 Q 105 24 130 38",
+    d: "M 145 80 Q 155 85 158 95",
     fill: "none",
-    stroke: "#4a4a4a",
-    strokeWidth: "2"
-  }), React.createElement("path", {
-    d: "M 108 38 Q 118 46 115 58",
-    fill: "none",
-    stroke: "#4a4a4a",
+    stroke: "#3a3a5a",
     strokeWidth: "1.5"
-  }), React.createElement("rect", {
-    x: "38",
-    y: upperLipY - 2,
-    width: "50",
-    height: "5",
-    rx: "1",
-    fill: "#555"
-  }), React.createElement("rect", {
-    x: "38",
-    y: lowerLipY - 3,
-    width: "50",
-    height: "5",
-    rx: "1",
-    fill: "#555"
-  }), React.createElement("path", {
-    d: `M 28 ${upperLipY} Q 55 ${upperLipY - 4} 88 ${upperLipY}`,
-    fill: "none",
-    stroke: "#c8b89a",
-    strokeWidth: "2.5",
-    strokeLinecap: "round"
-  }), React.createElement("path", {
-    d: `M 28 ${lowerLipY} Q 55 ${lowerLipY + 4} 88 ${lowerLipY}`,
-    fill: "none",
-    stroke: "#c8b89a",
-    strokeWidth: "2.5",
-    strokeLinecap: "round"
-  }), React.createElement("path", {
-    d: `M 115 82 Q 95 80 75 78 Q ${tp.cx + 8} ${tp.cy + 10} ${tp.x} ${tp.y}`,
-    fill: "none",
-    stroke: "#e07070",
-    strokeWidth: "3",
-    strokeLinecap: "round"
-  }), React.createElement("circle", {
-    cx: tp.x,
-    cy: tp.y,
-    r: "4",
-    fill: "#e07070",
+  }), d.voiced && React.createElement("circle", {
+    cx: "155",
+    cy: "100",
+    r: "3",
+    fill: "#4a8a4a",
     opacity: "0.8"
-  }), React.createElement("path", {
-    d: "M 115 58 Q 120 70 118 85",
+  }), !d.voiced && React.createElement("circle", {
+    cx: "155",
+    cy: "100",
+    r: "3",
+    fill: "#555",
+    opacity: "0.6"
+  }), d.airflow === "front" && React.createElement("path", {
+    d: "M 55 145 L 20 145 L 24 141 M 20 145 L 24 149",
     fill: "none",
-    stroke: "#333",
+    stroke: "#4a7a9a",
     strokeWidth: "1.5"
+  }), d.airflow === "burst" && React.createElement("path", {
+    d: "M 38 52 L 10 52 L 14 48 M 10 52 L 14 56",
+    fill: "none",
+    stroke: "#9a6a2a",
+    strokeWidth: "1.5",
+    strokeDasharray: "3,2"
+  }), d.airflow === "nasal" && React.createElement("path", {
+    d: "M 90 10 L 90 4 L 86 7 M 90 4 L 94 7",
+    fill: "none",
+    stroke: "#6a9a6a",
+    strokeWidth: "1.5"
+  }), d.airflow === "sides" && React.createElement(React.Fragment, null, React.createElement("path", {
+    d: "M 65 145 L 52 145 L 55 142 M 52 145 L 55 148",
+    fill: "none",
+    stroke: "#4a7a9a",
+    strokeWidth: "1.5"
+  }), React.createElement("path", {
+    d: "M 75 145 L 88 145 L 85 142 M 88 145 L 85 148",
+    fill: "none",
+    stroke: "#4a7a9a",
+    strokeWidth: "1.5"
+  })), React.createElement("text", {
+    x: "36",
+    y: "26",
+    fontSize: "7",
+    fill: "#888",
+    textAnchor: "middle"
+  }, "\u6B6F\u830E"), React.createElement("text", {
+    x: "120",
+    y: "24",
+    fontSize: "7",
+    fill: "#888",
+    textAnchor: "middle"
+  }, "\u8EDF\u53E3\u84CB"), React.createElement("text", {
+    x: "12",
+    y: "50",
+    fontSize: "7",
+    fill: "#c8b89a",
+    textAnchor: "middle"
+  }, "\u5507"), React.createElement("text", {
+    x: tx - 10,
+    y: ty + 3,
+    fontSize: "7",
+    fill: "#ff9090",
+    textAnchor: "middle"
+  }, "\u820C\u5148"), React.createElement("text", {
+    x: "155",
+    y: "97",
+    fontSize: "6",
+    fill: d.voiced ? "#4a8a4a" : "#555",
+    textAnchor: "middle"
+  }, "\u58F0\u5E2F"), d.airflow === "front" && React.createElement("text", {
+    x: "36",
+    y: "155",
+    fontSize: "7",
+    fill: "#4a7a9a"
+  }, "\u6C17\u6D41"), d.airflow === "nasal" && React.createElement("text", {
+    x: "78",
+    y: "8",
+    fontSize: "7",
+    fill: "#6a9a6a"
+  }, "\u9F3B\u8154\u3078"))), React.createElement("div", {
+    style: {
+      flex: "0 0 80px"
+    }
+  }, React.createElement("div", {
+    style: {
+      fontSize: "9px",
+      color: "#555",
+      textAlign: "center",
+      marginBottom: "3px",
+      fontFamily: "monospace",
+      letterSpacing: "0.08em"
+    }
+  }, "\u5507\uFF08\u6B63\u9762\uFF09"), React.createElement("svg", {
+    viewBox: "0 0 80 70",
+    style: {
+      width: "100%",
+      display: "block",
+      background: "#111",
+      borderRadius: "4px",
+      border: "1px solid #1e1e1e",
+      marginBottom: "6px"
+    }
+  }, React.createElement("ellipse", {
+    cx: "40",
+    cy: "35",
+    rx: "30",
+    ry: "28",
+    fill: "none",
+    stroke: "#222",
+    strokeWidth: "1"
+  }), React.createElement("ellipse", {
+    cx: "40",
+    cy: 32 - lp.ry,
+    rx: lp.rx,
+    ry: Math.max(2, lp.ry * 0.5),
+    fill: d.lip === "closed" ? "#c8b89a" : "#c8b89a",
+    opacity: "0.85"
+  }), React.createElement("ellipse", {
+    cx: "40",
+    cy: 32 + lp.ry,
+    rx: lp.rx * 1.1,
+    ry: Math.max(2, lp.ry * 0.6),
+    fill: "#c8b89a",
+    opacity: "0.85"
+  }), d.lip !== "closed" && React.createElement("ellipse", {
+    cx: "40",
+    cy: "32",
+    rx: lp.rx * 0.85,
+    ry: lp.ry,
+    fill: "#050a14"
   }), React.createElement("text", {
-    x: "140",
-    y: "45",
+    x: "40",
+    y: "64",
     fontSize: "8",
-    fill: "#555",
+    fill: "#666",
     textAnchor: "middle"
-  }, "\u4E0A"), React.createElement("text", {
-    x: "140",
-    y: "80",
-    fontSize: "8",
-    fill: "#555",
-    textAnchor: "middle"
-  }, "\u4E0B"), React.createElement("text", {
-    x: "118",
-    y: "100",
-    fontSize: "8",
-    fill: "#555",
-    textAnchor: "middle"
-  }, "\u5589"), React.createElement("text", {
-    x: "32",
-    y: "100",
-    fontSize: "8",
-    fill: "#555",
-    textAnchor: "middle"
-  }, "\u5507"));
+  }, lp.desc)), React.createElement("div", {
+    style: {
+      textAlign: "center",
+      padding: "4px",
+      background: d.voiced ? "#0d1a0d" : "#1a0d0d",
+      border: `1px solid ${d.voiced ? "#2a4a2a" : "#4a2a2a"}`,
+      borderRadius: "3px",
+      fontFamily: "monospace",
+      fontSize: "9px",
+      color: d.voiced ? "#6abf6a" : "#bf6a6a"
+    }
+  }, d.voiced ? "\u6709\u58f0\u97f3" : "\u7121\u58f0\u97f3")));
 };
 const VOCAB = [{
   category: "\u63a5\u5ba2\u57fa\u672c",
