@@ -247,6 +247,409 @@ const IPA_GUIDE = [{
     jp: "\u300c\u30b7\u30e5\u30ef\u300d\u3002\u6700\u3082\u5f31\u3044\u6bcd\u97f3\u3002\u3042\u3044\u307e\u3044\u306a\u300c\u30a2\u300d\u306e\u97f3"
   }]
 }];
+const IPA_DIAGRAMS = {
+  "i\u02d0": {
+    lip: 0.15,
+    tonguePos: "high-front",
+    desc: "\u820c\u3092\u524d\u4e0a\u65b9\u306b\u6301\u3061\u4e0a\u3052\u3001\u5507\u3092\u6a2a\u306b\u5f15\u304f"
+  },
+  "\u026a": {
+    lip: 0.18,
+    tonguePos: "high-front",
+    desc: "i\u02d0\u3088\u308a\u5c11\u3057\u4f4e\u3081\u30fb\u77ed\u3081\u3002\u5507\u306e\u529b\u3092\u629c\u304f"
+  },
+  "e": {
+    lip: 0.3,
+    tonguePos: "mid-front",
+    desc: "\u820c\u3092\u4e2d\u524d\u65b9\u3002\u5507\u3092\u6a2a\u306b\u5f15\u304f"
+  },
+  "\u00e6": {
+    lip: 0.5,
+    tonguePos: "low-front",
+    desc: "\u820c\u3092\u524d\u4e0b\u65b9\u3078\u3002\u53e3\u3092\u5927\u304d\u304f\u6a2a\u306b\u958b\u304f"
+  },
+  "\u028c": {
+    lip: 0.35,
+    tonguePos: "mid-central",
+    desc: "\u820c\u306f\u4e2d\u592e\u30fb\u4e2d\u9ad8\u5ea6\u3002\u529b\u3092\u629c\u304f"
+  },
+  "\u0251\u02d0": {
+    lip: 0.6,
+    tonguePos: "low-back",
+    desc: "\u820c\u3092\u5f8c\u308d\u4e0b\u65b9\u3078\u3002\u53e3\u3092\u5927\u304d\u304f\u958b\u304f"
+  },
+  "\u0252": {
+    lip: 0.55,
+    tonguePos: "low-back",
+    desc: "\u0251\u02d0\u3088\u308a\u5507\u3092\u5c11\u3057\u4e38\u3081\u308b"
+  },
+  "\u0254\u02d0": {
+    lip: 0.45,
+    tonguePos: "mid-back",
+    desc: "\u820c\u3092\u5f8c\u308d\u4e2d\u4f4d\u3002\u5507\u3092\u4e38\u304f\u3059\u307c\u3081\u308b"
+  },
+  "\u028a": {
+    lip: 0.2,
+    tonguePos: "high-back",
+    desc: "\u820c\u3092\u5f8c\u308d\u4e0a\u65b9\u3002\u5507\u3092\u8efd\u304f\u4e38\u3081\u308b"
+  },
+  "u\u02d0": {
+    lip: 0.15,
+    tonguePos: "high-back",
+    desc: "\u820c\u3092\u5f8c\u308d\u4e0a\u65b9\u3002\u5507\u3092\u5f37\u304f\u4e38\u304f\u3059\u307c\u3081\u308b"
+  },
+  "\u025c\u02d0": {
+    lip: 0.3,
+    tonguePos: "mid-central",
+    desc: "\u820c\u3092\u4e2d\u592e\u306b\u3002\u5507\u306f\u4e38\u3081\u305a\u8efd\u304f\u958b\u304f"
+  },
+  "\u0259": {
+    lip: 0.25,
+    tonguePos: "mid-central",
+    desc: "\u6700\u3082\u529b\u306e\u629c\u3051\u305f\u4e2d\u592e\u6bcd\u97f3\u3002\u30b7\u30e5\u30ef\u97f3"
+  },
+  "e\u026a": {
+    lip: 0.3,
+    tonguePos: "mid-front",
+    desc: "\u300c\u30a8\u300d\u2192\u300c\u30a4\u300d\u3078\u3002\u820c\u304c\u524d\u4e0a\u65b9\u3078\u79fb\u52d5"
+  },
+  "a\u026a": {
+    lip: 0.55,
+    tonguePos: "low-front",
+    desc: "\u300c\u30a2\u300d\u2192\u300c\u30a4\u300d\u3078\u3002\u820c\u304c\u4e0a\u304c\u308a\u306a\u304c\u3089\u524d\u3078"
+  },
+  "\u0254\u026a": {
+    lip: 0.45,
+    tonguePos: "mid-back",
+    desc: "\u300c\u30aa\u300d\u2192\u300c\u30a4\u300d\u3078\u3002\u820c\u304c\u5f8c\u308d\u304b\u3089\u524d\u3078"
+  },
+  "\u0259\u028a": {
+    lip: 0.25,
+    tonguePos: "mid-central",
+    desc: "\u300c\u30a2\u300d\u2192\u300c\u30a6\u300d\u3078\u3002\u5507\u304c\u4e38\u307e\u308a\u306a\u304c\u3089\u9589\u3058\u308b"
+  },
+  "a\u028a": {
+    lip: 0.55,
+    tonguePos: "low-back",
+    desc: "\u300c\u30a2\u300d\u2192\u300c\u30a6\u300d\u3078\u3002\u53e3\u304c\u9589\u3058\u306a\u304c\u3089\u5507\u304c\u4e38\u307e\u308b"
+  },
+  "\u026a\u0259": {
+    lip: 0.18,
+    tonguePos: "high-front",
+    desc: "\u300c\u30a4\u300d\u2192\u300c\u30a2\u300d\u3078\u3002\u820c\u304c\u4e0b\u304c\u308a\u306a\u304c\u3089\u5f8c\u308d\u3078"
+  },
+  "p": {
+    lip: 0.0,
+    tonguePos: "neutral",
+    desc: "\u5507\u3092\u5b8c\u5168\u306b\u9589\u3058\u3001\u606f\u3092\u6e9c\u3081\u3066\u4e00\u6c17\u306b\u958b\u653e"
+  },
+  "b": {
+    lip: 0.0,
+    tonguePos: "neutral",
+    desc: "\u5507\u3092\u9589\u3058\u3066\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u306a\u304c\u3089\u958b\u653e"
+  },
+  "t": {
+    lip: 0.25,
+    tonguePos: "alveolar",
+    desc: "\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u830e\u306b\u3064\u3051\u606f\u3092\u6b62\u3081\u958b\u653e"
+  },
+  "d": {
+    lip: 0.25,
+    tonguePos: "alveolar",
+    desc: "t\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
+  },
+  "k": {
+    lip: 0.3,
+    tonguePos: "velar",
+    desc: "\u820c\u306e\u5f8c\u308d\u90e8\u5206\u3092\u8edf\u53e3\u84cb\u306b\u3064\u3051\u3066\u958b\u653e"
+  },
+  "\u0261": {
+    lip: 0.3,
+    tonguePos: "velar",
+    desc: "k\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
+  },
+  "f": {
+    lip: 0.15,
+    tonguePos: "labiodental",
+    desc: "\u4e0a\u306e\u6b6f\u3092\u4e0b\u5507\u306b\u8efd\u304f\u5f53\u3066\u3001\u9699\u9593\u304b\u3089\u606f\u3092\u51fa\u3059"
+  },
+  "v": {
+    lip: 0.15,
+    tonguePos: "labiodental",
+    desc: "f\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
+  },
+  "s": {
+    lip: 0.2,
+    tonguePos: "alveolar",
+    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u8fd1\u3065\u3051\u3001\u7d30\u3044\u9699\u9593\u304b\u3089\u606f\u3092\u901a\u3059"
+  },
+  "z": {
+    lip: 0.2,
+    tonguePos: "alveolar",
+    desc: "s\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
+  },
+  "\u0283": {
+    lip: 0.2,
+    tonguePos: "palatal",
+    desc: "\u820c\u3092\u5f8c\u9000\u3055\u305b\u5507\u3092\u5c11\u3057\u524d\u306b\u51fa\u3057\u3066\u606f\u3092\u51fa\u3059"
+  },
+  "\u0292": {
+    lip: 0.2,
+    tonguePos: "palatal",
+    desc: "\u0283\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
+  },
+  "\u03b8": {
+    lip: 0.3,
+    tonguePos: "dental",
+    desc: "\u820c\u5148\u3092\u4e0a\u306e\u6b6f\u306e\u5148\u7aef\u306b\u8efd\u304f\u5f53\u3066\u606f\u3092\u901a\u3059"
+  },
+  "\u00f0": {
+    lip: 0.3,
+    tonguePos: "dental",
+    desc: "\u03b8\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
+  },
+  "t\u0283": {
+    lip: 0.2,
+    tonguePos: "palatal",
+    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u3064\u3051\u3066\u304b\u3089\u5f8c\u9000\u3057\u306a\u304c\u3089\u958b\u653e"
+  },
+  "d\u0292": {
+    lip: 0.2,
+    tonguePos: "palatal",
+    desc: "t\u0283\u3068\u540c\u3058\u4f4d\u7f6e\u3067\u58f0\u5e2f\u3092\u632f\u52d5\u3055\u305b\u308b"
+  },
+  "h": {
+    lip: 0.35,
+    tonguePos: "neutral",
+    desc: "\u58f0\u9580\u3092\u72ed\u3081\u3066\u306e\u3069\u304b\u3089\u606f\u3092\u51fa\u3059"
+  },
+  "m": {
+    lip: 0.0,
+    tonguePos: "neutral",
+    desc: "\u5507\u3092\u9589\u3058\u3001\u9f3b\u304b\u3089\u58f0\u3092\u5171\u9cf4\u3055\u305b\u308b"
+  },
+  "n": {
+    lip: 0.25,
+    tonguePos: "alveolar",
+    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u3064\u3051\u3001\u9f3b\u304b\u3089\u58f0\u3092\u51fa\u3059"
+  },
+  "\u014b": {
+    lip: 0.3,
+    tonguePos: "velar",
+    desc: "\u820c\u5f8c\u90e8\u3092\u8edf\u53e3\u84cb\u306b\u3064\u3051\u9f3b\u304b\u3089\u58f0\u3092\u51fa\u3059"
+  },
+  "l": {
+    lip: 0.25,
+    tonguePos: "alveolar",
+    desc: "\u820c\u5148\u3092\u6b6f\u830e\u306b\u3064\u3051\u3001\u820c\u306e\u4e21\u5074\u304b\u3089\u58f0\u3092\u901a\u3059"
+  },
+  "r": {
+    lip: 0.2,
+    tonguePos: "retroflex",
+    desc: "\u820c\u5148\u3092\u53e3\u4e2d\u592e\u306b\u6d6e\u304b\u305b\u5f8c\u308d\u306b\u305d\u3089\u3059"
+  },
+  "w": {
+    lip: 0.1,
+    tonguePos: "high-back",
+    desc: "\u5507\u3092\u4e38\u304f\u3059\u307c\u3081\u3066\u304b\u3089\u7d20\u65e9\u304f\u6b21\u306e\u6bcd\u97f3\u3078"
+  },
+  "j": {
+    lip: 0.15,
+    tonguePos: "high-front",
+    desc: "\u820c\u3092\u9ad8\u524d\u65b9\u306b\u6301\u3061\u4e0a\u3052\u3066\u304b\u3089\u6b21\u306e\u97f3\u3078"
+  }
+};
+const MouthDiagram = _ref => {
+  let {
+    sym
+  } = _ref;
+  const d = IPA_DIAGRAMS[sym];
+  if (!d) return null;
+  const tongueMap = {
+    "high-front": {
+      x: 62,
+      y: 52,
+      cx: 55,
+      cy: 45
+    },
+    "high-back": {
+      x: 95,
+      y: 52,
+      cx: 88,
+      cy: 45
+    },
+    "mid-front": {
+      x: 62,
+      y: 62,
+      cx: 55,
+      cy: 55
+    },
+    "mid-central": {
+      x: 78,
+      y: 62,
+      cx: 72,
+      cy: 56
+    },
+    "mid-back": {
+      x: 95,
+      y: 62,
+      cx: 88,
+      cy: 56
+    },
+    "low-front": {
+      x: 62,
+      y: 74,
+      cx: 56,
+      cy: 70
+    },
+    "low-back": {
+      x: 95,
+      y: 74,
+      cx: 88,
+      cy: 70
+    },
+    "alveolar": {
+      x: 55,
+      y: 48,
+      cx: 50,
+      cy: 44
+    },
+    "dental": {
+      x: 48,
+      y: 52,
+      cx: 44,
+      cy: 48
+    },
+    "palatal": {
+      x: 72,
+      y: 50,
+      cx: 65,
+      cy: 46
+    },
+    "velar": {
+      x: 90,
+      y: 52,
+      cx: 84,
+      cy: 48
+    },
+    "labiodental": {
+      x: 42,
+      y: 56,
+      cx: 38,
+      cy: 52
+    },
+    "retroflex": {
+      x: 68,
+      y: 56,
+      cx: 65,
+      cy: 50
+    },
+    "neutral": {
+      x: 75,
+      y: 68,
+      cx: 68,
+      cy: 65
+    }
+  };
+  const tp = tongueMap[d.tonguePos] || tongueMap["neutral"];
+  const lipOpen = d.lip;
+  const upperLipY = 40 + lipOpen * 8;
+  const lowerLipY = 48 + lipOpen * 14;
+  return React.createElement("svg", {
+    width: "160",
+    height: "120",
+    viewBox: "0 0 160 120",
+    style: {
+      display: "block",
+      margin: "8px auto"
+    }
+  }, React.createElement("ellipse", {
+    cx: "80",
+    cy: "60",
+    rx: "70",
+    ry: "55",
+    fill: "#1a1a1a",
+    stroke: "#333",
+    strokeWidth: "1"
+  }), React.createElement("path", {
+    d: "M 30 38 Q 55 28 80 26 Q 105 24 130 38",
+    fill: "none",
+    stroke: "#4a4a4a",
+    strokeWidth: "2"
+  }), React.createElement("path", {
+    d: "M 108 38 Q 118 46 115 58",
+    fill: "none",
+    stroke: "#4a4a4a",
+    strokeWidth: "1.5"
+  }), React.createElement("rect", {
+    x: "38",
+    y: upperLipY - 2,
+    width: "50",
+    height: "5",
+    rx: "1",
+    fill: "#555"
+  }), React.createElement("rect", {
+    x: "38",
+    y: lowerLipY - 3,
+    width: "50",
+    height: "5",
+    rx: "1",
+    fill: "#555"
+  }), React.createElement("path", {
+    d: `M 28 ${upperLipY} Q 55 ${upperLipY - 4} 88 ${upperLipY}`,
+    fill: "none",
+    stroke: "#c8b89a",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), React.createElement("path", {
+    d: `M 28 ${lowerLipY} Q 55 ${lowerLipY + 4} 88 ${lowerLipY}`,
+    fill: "none",
+    stroke: "#c8b89a",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), React.createElement("path", {
+    d: `M 115 82 Q 95 80 75 78 Q ${tp.cx + 8} ${tp.cy + 10} ${tp.x} ${tp.y}`,
+    fill: "none",
+    stroke: "#e07070",
+    strokeWidth: "3",
+    strokeLinecap: "round"
+  }), React.createElement("circle", {
+    cx: tp.x,
+    cy: tp.y,
+    r: "4",
+    fill: "#e07070",
+    opacity: "0.8"
+  }), React.createElement("path", {
+    d: "M 115 58 Q 120 70 118 85",
+    fill: "none",
+    stroke: "#333",
+    strokeWidth: "1.5"
+  }), React.createElement("text", {
+    x: "140",
+    y: "45",
+    fontSize: "8",
+    fill: "#555",
+    textAnchor: "middle"
+  }, "\u4E0A"), React.createElement("text", {
+    x: "140",
+    y: "80",
+    fontSize: "8",
+    fill: "#555",
+    textAnchor: "middle"
+  }, "\u4E0B"), React.createElement("text", {
+    x: "118",
+    y: "100",
+    fontSize: "8",
+    fill: "#555",
+    textAnchor: "middle"
+  }, "\u5589"), React.createElement("text", {
+    x: "32",
+    y: "100",
+    fontSize: "8",
+    fill: "#555",
+    textAnchor: "middle"
+  }, "\u5507"));
+};
 const VOCAB = [{
   category: "\u63a5\u5ba2\u57fa\u672c",
   words: [{
@@ -605,7 +1008,7 @@ const SHADOWING_LESSONS = [{
     jp: "\u30cd\u30b8\u304c\u306a\u3044\u305f\u3081\u3001\u9577\u671f\u7684\u306a\u30e1\u30f3\u30c6\u30ca\u30f3\u30b9\u30b3\u30b9\u30c8\u306f\u901a\u5e38\u306e\u30d5\u30ec\u30fc\u30e0\u3088\u308a\u5927\u5e45\u306b\u4f4e\u304f\u306a\u308a\u307e\u3059\u3002"
   }]
 }, {
-  category: "\ud83c\udd98 Survival English",
+  category: "SOS Survival English",
   phrases: [{
     en: "I'm sorry, my English is not very good.",
     jp: "\u7533\u3057\u8a33\u3042\u308a\u307e\u305b\u3093\u3001\u82f1\u8a9e\u304c\u3042\u307e\u308a\u5f97\u610f\u3067\u306f\u3042\u308a\u307e\u305b\u3093\u3002",
@@ -1124,7 +1527,7 @@ function MYKITAEnglishApp() {
     let context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "shadowing";
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
-      setTranscript("\u26a0\ufe0f iPhone Safari\u306fSpeechRecognition\u306b\u975e\u5bfe\u5fdc\u3067\u3059\u3002PC\u7248Chrome\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u306a\u3002");
+      setTranscript("[!] iPhone Safari\u306fSpeechRecognition\u306b\u975e\u5bfe\u5fdc\u3067\u3059\u3002PC\u7248Chrome\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u306a\u3002");
       return;
     }
     setRecordingContext(context);
@@ -1166,7 +1569,7 @@ function MYKITAEnglishApp() {
         });
         streamRef.current = stream;
       } catch (e) {
-        setTranscript("\u26a0\ufe0f \u30de\u30a4\u30af\u3078\u306e\u30a2\u30af\u30bb\u30b9\u304c\u62d2\u5426\u3055\u308c\u307e\u3057\u305f\u3002\u8a2d\u5b9a\u304b\u3089\u30de\u30a4\u30af\u3092\u8a31\u53ef\u3057\u3066\u304f\u3060\u3055\u3044\u306a\u3002");
+        setTranscript("[!] \u30de\u30a4\u30af\u3078\u306e\u30a2\u30af\u30bb\u30b9\u304c\u62d2\u5426\u3055\u308c\u307e\u3057\u305f\u3002\u8a2d\u5b9a\u304b\u3089\u30de\u30a4\u30af\u3092\u8a31\u53ef\u3057\u3066\u304f\u3060\u3055\u3044\u306a\u3002");
         return;
       }
       try {
@@ -1192,7 +1595,7 @@ function MYKITAEnglishApp() {
       } catch (e) {
         stream.getTracks().forEach(t => t.stop());
         streamRef.current = null;
-        setTranscript("\u26a0\ufe0f \u9332\u97f3\u306e\u958b\u59cb\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002");
+        setTranscript("[!] \u9332\u97f3\u306e\u958b\u59cb\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002");
         return;
       }
       const rec = new SR();
@@ -1781,8 +2184,8 @@ function MYKITAEnglishApp() {
     });
     return React.createElement("div", {
       style: S.progressBar
-    }, Object.entries(counts).map(_ref => {
-      let [level, count] = _ref;
+    }, Object.entries(counts).map(_ref2 => {
+      let [level, count] = _ref2;
       return React.createElement("div", {
         key: level,
         style: S.progressItem
@@ -1853,7 +2256,7 @@ function MYKITAEnglishApp() {
         color: "#6a9a6a",
         fontSize: "10px"
       }
-    }, "\uD83D\uDCA1 ", p.note)), dictWord && dictPhraseIdx === i && React.createElement("div", {
+    }, p.note)), dictWord && dictPhraseIdx === i && React.createElement("div", {
       style: {
         marginTop: "8px",
         padding: "10px 12px",
@@ -1871,7 +2274,7 @@ function MYKITAEnglishApp() {
         fontSize: "10px",
         letterSpacing: "0.1em"
       }
-    }, "\uD83D\uDCD6 ", dictWord), dictLoading ? React.createElement("div", {
+    }, dictWord), dictLoading ? React.createElement("div", {
       style: {
         color: "#555"
       }
@@ -1915,7 +2318,9 @@ function MYKITAEnglishApp() {
         fontSize: "10px",
         marginLeft: "8px"
       }
-    }, ipaTooltip.group), React.createElement("div", {
+    }, ipaTooltip.group), React.createElement(MouthDiagram, {
+      sym: ipaTooltip.sym
+    }), React.createElement("div", {
       style: {
         color: "#e0e0f0",
         marginTop: "4px"
@@ -1930,7 +2335,7 @@ function MYKITAEnglishApp() {
         color: "#8a8ab8",
         marginTop: "4px"
       }
-    }, "\uD83D\uDCA1 ", dictResult.note), dictResult.example && React.createElement("div", {
+    }, dictResult.note), dictResult.example && React.createElement("div", {
       style: {
         color: "#666",
         marginTop: "4px",
@@ -2404,7 +2809,7 @@ function MYKITAEnglishApp() {
       marginBottom: "6px",
       padding: "0 0 4px"
     }
-  }, "\uD83D\uDD34 \u9332\u97F3\u4E2D\u2026 ", interimTranscript && React.createElement("span", {
+  }, "REC \u9332\u97F3\u4E2D... ", interimTranscript && React.createElement("span", {
     style: {
       color: "#666"
     }
@@ -2419,7 +2824,7 @@ function MYKITAEnglishApp() {
       setJpWarning(false);
       startRecording("roleplay");
     }
-  }, "\uD83C\uDFA4") : React.createElement("button", {
+  }, "MIC") : React.createElement("button", {
     style: {
       ...S.btn("r"),
       whiteSpace: "nowrap"
@@ -2433,7 +2838,7 @@ function MYKITAEnglishApp() {
     value: userInput,
     onChange: e => setUserInput(e.target.value),
     onKeyDown: e => e.key === "Enter" && sendMessage(),
-    placeholder: isRecording && recordingContext === "roleplay" ? "\ud83d\udd34 \u9332\u97f3\u4e2d\u2026" : "\u82f1\u8a9e\u3067\u8fd4\u7b54 / \u97f3\u58f0\u5165\u529b\u2026"
+    placeholder: isRecording && recordingContext === "roleplay" ? "REC \u9332\u97f3\u4e2d..." : "\u82f1\u8a9e\u3067\u8fd4\u7b54 / \u97f3\u58f0\u5165\u529b\u2026"
   }), React.createElement("button", {
     style: S.btn("p"),
     onClick: sendMessage,
@@ -2504,7 +2909,7 @@ function MYKITAEnglishApp() {
         setJpWarning(false);
         startRecording("quiz");
       }
-    }, "\uD83C\uDFA4 \u97F3\u58F0\u5165\u529B") : React.createElement("button", {
+    }, "MIC \u97F3\u58F0\u5165\u529B") : React.createElement("button", {
       style: S.btn("r"),
       onClick: stopRecording
     }, "\u25A0 \u505C\u6B62"), React.createElement("button", {
@@ -2518,7 +2923,7 @@ function MYKITAEnglishApp() {
         color: "#c8b89a",
         marginBottom: "6px"
       }
-    }, "\uD83D\uDD34 \u9332\u97F3\u4E2D\u2026 ", interimTranscript && React.createElement("span", {
+    }, "REC \u9332\u97F3\u4E2D... ", interimTranscript && React.createElement("span", {
       style: {
         color: "#666"
       }
@@ -2602,8 +3007,8 @@ function MYKITAEnglishApp() {
     style: S.title
   }, "Eyewear Sales English"), React.createElement("div", {
     style: S.tabs
-  }, [["shadowing", "Shadowing"], ["vocab", "Vocabulary"], ["knowledge", "Brand Knowledge"], ["roleplay", "Roleplay"], ["quiz", "Adaptive Quiz"], ["ipa", "\u767a\u97f3\u8a18\u53f7"]].map(_ref2 => {
-    let [k, l] = _ref2;
+  }, [["shadowing", "Shadowing"], ["vocab", "Vocabulary"], ["knowledge", "Brand Knowledge"], ["roleplay", "Roleplay"], ["quiz", "Adaptive Quiz"], ["ipa", "\u767a\u97f3\u8a18\u53f7"]].map(_ref3 => {
+    let [k, l] = _ref3;
     return React.createElement("button", {
       key: k,
       style: S.tab(activeTab === k),
@@ -2668,7 +3073,9 @@ function MYKITAEnglishApp() {
       fontSize: "11px",
       lineHeight: "1.6"
     }
-  }, s.jp))))))));
+  }, React.createElement(MouthDiagram, {
+    sym: s.sym
+  }), s.jp))))))));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(MYKITAEnglishApp));
   </script>
