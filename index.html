@@ -1280,6 +1280,163 @@ var VOCAB = [{
 
 // \u2500\u2500\u2500 Shadowing Lessons \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
+var COUNTRY_CODES = [{
+  code: "USA",
+  jp: "\u30a2\u30e1\u30ea\u30ab\u5408\u8846\u56fd",
+  en: "United States"
+}, {
+  code: "GBR",
+  jp: "\u30a4\u30ae\u30ea\u30b9",
+  en: "United Kingdom"
+}, {
+  code: "FRA",
+  jp: "\u30d5\u30e9\u30f3\u30b9",
+  en: "France"
+}, {
+  code: "DEU",
+  jp: "\u30c9\u30a4\u30c4",
+  en: "Germany"
+}, {
+  code: "ITA",
+  jp: "\u30a4\u30bf\u30ea\u30a2",
+  en: "Italy"
+}, {
+  code: "ESP",
+  jp: "\u30b9\u30da\u30a4\u30f3",
+  en: "Spain"
+}, {
+  code: "PRT",
+  jp: "\u30dd\u30eb\u30c8\u30ac\u30eb",
+  en: "Portugal"
+}, {
+  code: "NLD",
+  jp: "\u30aa\u30e9\u30f3\u30c0",
+  en: "Netherlands"
+}, {
+  code: "BEL",
+  jp: "\u30d9\u30eb\u30ae\u30fc",
+  en: "Belgium"
+}, {
+  code: "CHE",
+  jp: "\u30b9\u30a4\u30b9",
+  en: "Switzerland"
+}, {
+  code: "AUT",
+  jp: "\u30aa\u30fc\u30b9\u30c8\u30ea\u30a2",
+  en: "Austria"
+}, {
+  code: "SWE",
+  jp: "\u30b9\u30a6\u30a7\u30fc\u30c7\u30f3",
+  en: "Sweden"
+}, {
+  code: "NOR",
+  jp: "\u30ce\u30eb\u30a6\u30a7\u30fc",
+  en: "Norway"
+}, {
+  code: "DNK",
+  jp: "\u30c7\u30f3\u30de\u30fc\u30af",
+  en: "Denmark"
+}, {
+  code: "FIN",
+  jp: "\u30d5\u30a3\u30f3\u30e9\u30f3\u30c9",
+  en: "Finland"
+}, {
+  code: "POL",
+  jp: "\u30dd\u30fc\u30e9\u30f3\u30c9",
+  en: "Poland"
+}, {
+  code: "RUS",
+  jp: "\u30ed\u30b7\u30a2",
+  en: "Russia"
+}, {
+  code: "CAN",
+  jp: "\u30ab\u30ca\u30c0",
+  en: "Canada"
+}, {
+  code: "AUS",
+  jp: "\u30aa\u30fc\u30b9\u30c8\u30e9\u30ea\u30a2",
+  en: "Australia"
+}, {
+  code: "NZL",
+  jp: "\u30cb\u30e5\u30fc\u30b8\u30fc\u30e9\u30f3\u30c9",
+  en: "New Zealand"
+}, {
+  code: "CHN",
+  jp: "\u4e2d\u56fd",
+  en: "China"
+}, {
+  code: "TWN",
+  jp: "\u53f0\u6e7e",
+  en: "Taiwan"
+}, {
+  code: "KOR",
+  jp: "\u97d3\u56fd",
+  en: "South Korea"
+}, {
+  code: "HKG",
+  jp: "\u9999\u6e2f",
+  en: "Hong Kong"
+}, {
+  code: "SGP",
+  jp: "\u30b7\u30f3\u30ac\u30dd\u30fc\u30eb",
+  en: "Singapore"
+}, {
+  code: "THA",
+  jp: "\u30bf\u30a4",
+  en: "Thailand"
+}, {
+  code: "MYS",
+  jp: "\u30de\u30ec\u30fc\u30b7\u30a2",
+  en: "Malaysia"
+}, {
+  code: "IDN",
+  jp: "\u30a4\u30f3\u30c9\u30cd\u30b7\u30a2",
+  en: "Indonesia"
+}, {
+  code: "PHL",
+  jp: "\u30d5\u30a3\u30ea\u30d4\u30f3",
+  en: "Philippines"
+}, {
+  code: "VNM",
+  jp: "\u30d9\u30c8\u30ca\u30e0",
+  en: "Vietnam"
+}, {
+  code: "IND",
+  jp: "\u30a4\u30f3\u30c9",
+  en: "India"
+}, {
+  code: "ARE",
+  jp: "\u30a2\u30e9\u30d6\u9996\u9577\u56fd\u9023\u90a6",
+  en: "UAE"
+}, {
+  code: "SAU",
+  jp: "\u30b5\u30a6\u30b8\u30a2\u30e9\u30d3\u30a2",
+  en: "Saudi Arabia"
+}, {
+  code: "ISR",
+  jp: "\u30a4\u30b9\u30e9\u30a8\u30eb",
+  en: "Israel"
+}, {
+  code: "MEX",
+  jp: "\u30e1\u30ad\u30b7\u30b3",
+  en: "Mexico"
+}, {
+  code: "BRA",
+  jp: "\u30d6\u30e9\u30b8\u30eb",
+  en: "Brazil"
+}, {
+  code: "ARG",
+  jp: "\u30a2\u30eb\u30bc\u30f3\u30c1\u30f3",
+  en: "Argentina"
+}, {
+  code: "ZAF",
+  jp: "\u5357\u30a2\u30d5\u30ea\u30ab",
+  en: "South Africa"
+}, {
+  code: "JPN",
+  jp: "\u65e5\u672c",
+  en: "Japan"
+}];
 var SHADOWING_LESSONS = [{
   category: "Welcome & Opening",
   phrases: [{
@@ -1899,182 +2056,188 @@ function MYKITAEnglishApp() {
     setMemoQ("");
     setMemoA("");
   };
-  var _useState1 = useState(0),
+
+  // Country code search
+  var _useState1 = useState(""),
     _useState10 = _slicedToArray(_useState1, 2),
-    selectedCategory = _useState10[0],
-    setSelectedCategory = _useState10[1];
-  var _useState11 = useState(null),
+    countryQ = _useState10[0],
+    setCountryQ = _useState10[1];
+  var _useState11 = useState(0),
     _useState12 = _slicedToArray(_useState11, 2),
-    selectedPhrase = _useState12[0],
-    setSelectedPhrase = _useState12[1];
-  var _useState13 = useState({}),
+    selectedCategory = _useState12[0],
+    setSelectedCategory = _useState12[1];
+  var _useState13 = useState(null),
     _useState14 = _slicedToArray(_useState13, 2),
-    showJp = _useState14[0],
-    setShowJp = _useState14[1];
-  var _useState15 = useState(null),
+    selectedPhrase = _useState14[0],
+    setSelectedPhrase = _useState14[1];
+  var _useState15 = useState({}),
     _useState16 = _slicedToArray(_useState15, 2),
-    dictWord = _useState16[0],
-    setDictWord = _useState16[1];
+    showJp = _useState16[0],
+    setShowJp = _useState16[1];
   var _useState17 = useState(null),
     _useState18 = _slicedToArray(_useState17, 2),
-    dictPhraseIdx = _useState18[0],
-    setDictPhraseIdx = _useState18[1];
+    dictWord = _useState18[0],
+    setDictWord = _useState18[1];
   var _useState19 = useState(null),
     _useState20 = _slicedToArray(_useState19, 2),
-    dictResult = _useState20[0],
-    setDictResult = _useState20[1];
-  var _useState21 = useState(false),
+    dictPhraseIdx = _useState20[0],
+    setDictPhraseIdx = _useState20[1];
+  var _useState21 = useState(null),
     _useState22 = _slicedToArray(_useState21, 2),
-    dictLoading = _useState22[0],
-    setDictLoading = _useState22[1];
-  var _useState23 = useState(null),
+    dictResult = _useState22[0],
+    setDictResult = _useState22[1];
+  var _useState23 = useState(false),
     _useState24 = _slicedToArray(_useState23, 2),
-    ipaTooltip = _useState24[0],
-    setIpaTooltip = _useState24[1]; // \u30af\u30ea\u30c3\u30af\u3057\u305fIPA\u8a18\u53f7\u306e\u89e3\u8aac
-  var _useState25 = useState(false),
+    dictLoading = _useState24[0],
+    setDictLoading = _useState24[1];
+  var _useState25 = useState(null),
     _useState26 = _slicedToArray(_useState25, 2),
-    showIpaGuide = _useState26[0],
-    setShowIpaGuide = _useState26[1];
+    ipaTooltip = _useState26[0],
+    setIpaTooltip = _useState26[1]; // \u30af\u30ea\u30c3\u30af\u3057\u305fIPA\u8a18\u53f7\u306e\u89e3\u8aac
   var _useState27 = useState(false),
     _useState28 = _slicedToArray(_useState27, 2),
-    isSpeaking = _useState28[0],
-    setIsSpeaking = _useState28[1];
+    showIpaGuide = _useState28[0],
+    setShowIpaGuide = _useState28[1];
   var _useState29 = useState(false),
     _useState30 = _slicedToArray(_useState29, 2),
-    isRecording = _useState30[0],
-    setIsRecording = _useState30[1];
-  var _useState31 = useState(""),
+    isSpeaking = _useState30[0],
+    setIsSpeaking = _useState30[1];
+  var _useState31 = useState(false),
     _useState32 = _slicedToArray(_useState31, 2),
-    transcript = _useState32[0],
-    setTranscript = _useState32[1];
-  var _useState33 = useState("shadowing"),
+    isRecording = _useState32[0],
+    setIsRecording = _useState32[1];
+  var _useState33 = useState(""),
     _useState34 = _slicedToArray(_useState33, 2),
-    recordingContext = _useState34[0],
-    setRecordingContext = _useState34[1]; // "shadowing" | "quiz" | "roleplay"
-  var _useState35 = useState(""),
+    transcript = _useState34[0],
+    setTranscript = _useState34[1];
+  var _useState35 = useState("shadowing"),
     _useState36 = _slicedToArray(_useState35, 2),
-    interimTranscript = _useState36[0],
-    setInterimTranscript = _useState36[1];
-  var _useState37 = useState(false),
+    recordingContext = _useState36[0],
+    setRecordingContext = _useState36[1]; // "shadowing" | "quiz" | "roleplay"
+  var _useState37 = useState(""),
     _useState38 = _slicedToArray(_useState37, 2),
-    jpWarning = _useState38[0],
-    setJpWarning = _useState38[1];
+    interimTranscript = _useState38[0],
+    setInterimTranscript = _useState38[1];
+  var _useState39 = useState(false),
+    _useState40 = _slicedToArray(_useState39, 2),
+    jpWarning = _useState40[0],
+    setJpWarning = _useState40[1];
 
   // Knowledge
-  var _useState39 = useState("collections"),
-    _useState40 = _slicedToArray(_useState39, 2),
-    knowledgeSection = _useState40[0],
-    setKnowledgeSection = _useState40[1];
-  var _useState41 = useState({}),
+  var _useState41 = useState("collections"),
     _useState42 = _slicedToArray(_useState41, 2),
-    showSalesJp = _useState42[0],
-    setShowSalesJp = _useState42[1];
+    knowledgeSection = _useState42[0],
+    setKnowledgeSection = _useState42[1];
   var _useState43 = useState({}),
     _useState44 = _slicedToArray(_useState43, 2),
-    showKpJp = _useState44[0],
-    setShowKpJp = _useState44[1];
+    showSalesJp = _useState44[0],
+    setShowSalesJp = _useState44[1];
+  var _useState45 = useState({}),
+    _useState46 = _slicedToArray(_useState45, 2),
+    showKpJp = _useState46[0],
+    setShowKpJp = _useState46[1];
 
   // Vocab
-  var _useState45 = useState(0),
-    _useState46 = _slicedToArray(_useState45, 2),
-    vocabCategory = _useState46[0],
-    setVocabCategory = _useState46[1];
-  var _useState47 = useState(null),
+  var _useState47 = useState(0),
     _useState48 = _slicedToArray(_useState47, 2),
-    expandedWord = _useState48[0],
-    setExpandedWord = _useState48[1];
-  var _useState49 = useState(false),
+    vocabCategory = _useState48[0],
+    setVocabCategory = _useState48[1];
+  var _useState49 = useState(null),
     _useState50 = _slicedToArray(_useState49, 2),
-    vocabFlipMode = _useState50[0],
-    setVocabFlipMode = _useState50[1];
-  var _useState51 = useState(0),
+    expandedWord = _useState50[0],
+    setExpandedWord = _useState50[1];
+  var _useState51 = useState(false),
     _useState52 = _slicedToArray(_useState51, 2),
-    flashIndex = _useState52[0],
-    setFlashIndex = _useState52[1];
-  var _useState53 = useState(false),
+    vocabFlipMode = _useState52[0],
+    setVocabFlipMode = _useState52[1];
+  var _useState53 = useState(0),
     _useState54 = _slicedToArray(_useState53, 2),
-    flashRevealed = _useState54[0],
-    setFlashRevealed = _useState54[1];
+    flashIndex = _useState54[0],
+    setFlashIndex = _useState54[1];
+  var _useState55 = useState(false),
+    _useState56 = _slicedToArray(_useState55, 2),
+    flashRevealed = _useState56[0],
+    setFlashRevealed = _useState56[1];
 
   // Roleplay
-  var _useState55 = useState([{
+  var _useState57 = useState([{
       role: "assistant",
       content: "Hello! Welcome to your store. I'm looking for some new glasses today. Can you help me?"
     }]),
-    _useState56 = _slicedToArray(_useState55, 2),
-    messages = _useState56[0],
-    setMessages = _useState56[1];
-  var _useState57 = useState(""),
     _useState58 = _slicedToArray(_useState57, 2),
-    userInput = _useState58[0],
-    setUserInput = _useState58[1];
-  var _useState59 = useState(false),
+    messages = _useState58[0],
+    setMessages = _useState58[1];
+  var _useState59 = useState(""),
     _useState60 = _slicedToArray(_useState59, 2),
-    isLoading = _useState60[0],
-    setIsLoading = _useState60[1];
-  var _useState61 = useState("general"),
+    userInput = _useState60[0],
+    setUserInput = _useState60[1];
+  var _useState61 = useState(false),
     _useState62 = _slicedToArray(_useState61, 2),
-    scenario = _useState62[0],
-    setScenario = _useState62[1];
-  var _useState63 = useState({}),
+    isLoading = _useState62[0],
+    setIsLoading = _useState62[1];
+  var _useState63 = useState("general"),
     _useState64 = _slicedToArray(_useState63, 2),
-    jpFeedback = _useState64[0],
-    setJpFeedback = _useState64[1];
-  var _useState65 = useState(null),
+    scenario = _useState64[0],
+    setScenario = _useState64[1];
+  var _useState65 = useState({}),
     _useState66 = _slicedToArray(_useState65, 2),
-    loadingFeedback = _useState66[0],
-    setLoadingFeedback = _useState66[1];
+    jpFeedback = _useState66[0],
+    setJpFeedback = _useState66[1];
+  var _useState67 = useState(null),
+    _useState68 = _slicedToArray(_useState67, 2),
+    loadingFeedback = _useState68[0],
+    setLoadingFeedback = _useState68[1];
 
   // Quiz \u2014 adaptive
-  var _useState67 = useState({}),
-    _useState68 = _slicedToArray(_useState67, 2),
-    quizStats = _useState68[0],
-    setQuizStats = _useState68[1]; // { qId: { attempts, correct } }
-  var _useState69 = useState(null),
+  var _useState69 = useState({}),
     _useState70 = _slicedToArray(_useState69, 2),
-    currentQuizIndex = _useState70[0],
-    setCurrentQuizIndex = _useState70[1];
-  var _useState71 = useState(""),
+    quizStats = _useState70[0],
+    setQuizStats = _useState70[1]; // { qId: { attempts, correct } }
+  var _useState71 = useState(null),
     _useState72 = _slicedToArray(_useState71, 2),
-    quizInput = _useState72[0],
-    setQuizInput = _useState72[1];
-  var _useState73 = useState(null),
+    currentQuizIndex = _useState72[0],
+    setCurrentQuizIndex = _useState72[1];
+  var _useState73 = useState(""),
     _useState74 = _slicedToArray(_useState73, 2),
-    quizResult = _useState74[0],
-    setQuizResult = _useState74[1];
-  var _useState75 = useState(false),
+    quizInput = _useState74[0],
+    setQuizInput = _useState74[1];
+  var _useState75 = useState(null),
     _useState76 = _slicedToArray(_useState75, 2),
-    showHint = _useState76[0],
-    setShowHint = _useState76[1];
+    quizResult = _useState76[0],
+    setQuizResult = _useState76[1];
   var _useState77 = useState(false),
     _useState78 = _slicedToArray(_useState77, 2),
-    showAnswer = _useState78[0],
-    setShowAnswer = _useState78[1];
+    showHint = _useState78[0],
+    setShowHint = _useState78[1];
+  var _useState79 = useState(false),
+    _useState80 = _slicedToArray(_useState79, 2),
+    showAnswer = _useState80[0],
+    setShowAnswer = _useState80[1];
 
   // Vocab stats for adaptive flashcard
-  var _useState79 = useState({}),
-    _useState80 = _slicedToArray(_useState79, 2),
-    vocabStats = _useState80[0],
-    setVocabStats = _useState80[1]; // { "catIdx-wordIdx": { attempts, correct } }
-
-  var _useState81 = useState(null),
+  var _useState81 = useState({}),
     _useState82 = _slicedToArray(_useState81, 2),
-    audioURL = _useState82[0],
-    setAudioURL = _useState82[1];
+    vocabStats = _useState82[0],
+    setVocabStats = _useState82[1]; // { "catIdx-wordIdx": { attempts, correct } }
+
   var _useState83 = useState(null),
     _useState84 = _slicedToArray(_useState83, 2),
-    audioBlob = _useState84[0],
-    setAudioBlob = _useState84[1];
-  var _useState85 = useState(false),
+    audioURL = _useState84[0],
+    setAudioURL = _useState84[1];
+  var _useState85 = useState(null),
     _useState86 = _slicedToArray(_useState85, 2),
-    isPlaying = _useState86[0],
-    setIsPlaying = _useState86[1];
-  var audioSourceRef = useRef(null);
-  var audioCtxRef = useRef(null);
+    audioBlob = _useState86[0],
+    setAudioBlob = _useState86[1];
   var _useState87 = useState(false),
     _useState88 = _slicedToArray(_useState87, 2),
-    pendingRecord = _useState88[0],
-    setPendingRecord = _useState88[1];
+    isPlaying = _useState88[0],
+    setIsPlaying = _useState88[1];
+  var audioSourceRef = useRef(null);
+  var audioCtxRef = useRef(null);
+  var _useState89 = useState(false),
+    _useState90 = _slicedToArray(_useState89, 2),
+    pendingRecord = _useState90[0],
+    setPendingRecord = _useState90[1];
   var chatEndRef = useRef(null);
   var recognitionRef = useRef(null);
   var mediaRecorderRef = useRef(null);
@@ -4274,7 +4437,7 @@ function MYKITAEnglishApp() {
     style: S.title
   }, "MYKITA\u306B\u95A2\u3059\u308B\u63A5\u5BA2\u82F1\u8A9E"), /*#__PURE__*/React.createElement("div", {
     style: S.tabs
-  }, [["shadowing", "Shadowing"], ["vocab", "Vocabulary"], ["knowledge", "Brand Knowledge"], ["roleplay", "Roleplay"], ["quiz", "Adaptive Quiz"], ["ipa", "\u767a\u97f3\u8a18\u53f7"], ["memo", "FAQ \u30e1\u30e2"]].map(function (_ref13) {
+  }, [["shadowing", "Shadowing"], ["vocab", "Vocabulary"], ["knowledge", "Brand Knowledge"], ["roleplay", "Roleplay"], ["quiz", "Adaptive Quiz"], ["ipa", "\u767a\u97f3\u8a18\u53f7"], ["memo", "FAQ \u30e1\u30e2"], ["taxfree", "\u514d\u7a0e \u56fd\u30b3\u30fc\u30c9"]].map(function (_ref13) {
     var _ref14 = _slicedToArray(_ref13, 2),
       k = _ref14[0],
       l = _ref14[1];
@@ -4520,7 +4683,80 @@ function MYKITAEnglishApp() {
         marginTop: "8px"
       }
     }, m.date));
-  }))));
+  })), activeTab === "taxfree" && function () {
+    var q = countryQ.trim().toLowerCase();
+    var filtered = q ? COUNTRY_CODES.filter(function (c) {
+      return c.code.toLowerCase().includes(q) || c.jp.includes(countryQ.trim()) || c.en.toLowerCase().includes(q);
+    }) : COUNTRY_CODES;
+    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+      style: S.label
+    }, "\u514D\u7A0E\u66F8\u985E \u56FD\u30B3\u30FC\u30C9\u4E00\u89A7"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "11px",
+        color: "#666",
+        marginBottom: "16px"
+      }
+    }, "\u56FD\u540D\u30FB\u30B3\u30FC\u30C9\u30FB\u82F1\u8A9E\u540D\u3067\u691C\u7D22\u3067\u304D\u307E\u3059"), /*#__PURE__*/React.createElement("input", {
+      value: countryQ,
+      onChange: function onChange(e) {
+        return setCountryQ(e.target.value);
+      },
+      placeholder: "\u4F8B\uFF1AUSA\u3000\u4E2D\u56FD\u3000France",
+      style: {
+        width: "100%",
+        background: "#111",
+        border: "1px solid #333",
+        borderRadius: "3px",
+        padding: "9px 12px",
+        color: "#f0ede8",
+        fontSize: "14px",
+        marginBottom: "14px",
+        outline: "none",
+        fontFamily: "inherit"
+      }
+    }), filtered.map(function (c) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: c.code,
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: "14px",
+          padding: "10px 12px",
+          marginBottom: "5px",
+          background: "#111",
+          border: "1px solid #1e1e1e",
+          borderRadius: "3px"
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontFamily: "monospace",
+          fontSize: "15px",
+          fontWeight: "bold",
+          color: "#c8b89a",
+          minWidth: "40px",
+          letterSpacing: "0.1em"
+        }
+      }, c.code), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: "14px",
+          color: "#f0ede8",
+          flex: 1
+        }
+      }, c.jp), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: "11px",
+          color: "#555"
+        }
+      }, c.en));
+    }), filtered.length === 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: "center",
+        color: "#444",
+        fontSize: "13px",
+        padding: "30px 0"
+      }
+    }, "\u898B\u3064\u304B\u308A\u307E\u305B\u3093\u3067\u3057\u305F"));
+  }()));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(MYKITAEnglishApp));
   </script>
