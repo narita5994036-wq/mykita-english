@@ -20,20 +20,20 @@
 "use strict";
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -1641,6 +1641,29 @@ var SHADOWING_LESSONS = [{
     jp: "\u30cd\u30b8\u304c\u306a\u3044\u305f\u3081\u3001\u9577\u671f\u7684\u306a\u30e1\u30f3\u30c6\u30ca\u30f3\u30b9\u30b3\u30b9\u30c8\u306f\u901a\u5e38\u306e\u30d5\u30ec\u30fc\u30e0\u3088\u308a\u5927\u5e45\u306b\u4f4e\u304f\u306a\u308a\u307e\u3059\u3002"
   }]
 }, {
+  category: "After-Care Service",
+  phrases: [{
+    en: "I can see you're wearing MYKITA glasses \u2014 would you like us to replace the nose pads with fresh silicone ones?",
+    jp: "MYKITA\u306e\u30e1\u30ac\u30cd\u3092\u304a\u639b\u3051\u3067\u3059\u306d\u3002\u3088\u308d\u3057\u3051\u308c\u3070\u65b0\u54c1\u306e\u30b7\u30ea\u30b3\u30f3\u30ce\u30fc\u30ba\u30d1\u30c3\u30c9\u306b\u4ea4\u63db\u3044\u305f\u3057\u307e\u3057\u3087\u3046\u304b\uff1f",
+    note: "\u6765\u5e97\u4e2d\u306e\u304a\u5ba2\u69d8\u306b\u81ea\u7136\u306b\u58f0\u3092\u304b\u3051\u308b\u30b5\u30fc\u30d3\u30b9\u306e\u4e00\u8a00\u3002glasses \u3092 sunglasses \u306b\u5909\u3048\u3066\u3082OK"
+  }, {
+    en: "I can see you're wearing MYKITA sunglasses \u2014 would you like us to replace the temple pads with fresh silicone ones?",
+    jp: "MYKITA\u306e\u30b5\u30f3\u30b0\u30e9\u30b9\u3092\u304a\u639b\u3051\u3067\u3059\u306d\u3002\u3088\u308d\u3057\u3051\u308c\u3070\u65b0\u54c1\u306e\u30b7\u30ea\u30b3\u30f3\u30c6\u30f3\u30d7\u30eb\u30d1\u30c3\u30c9\u306b\u4ea4\u63db\u3044\u305f\u3057\u307e\u3057\u3087\u3046\u304b\uff1f",
+    note: "\u30b5\u30f3\u30b0\u30e9\u30b9\u306e\u5834\u5408\u306f\u3053\u3061\u3089\u3092\u4f7f\u3046"
+  }, {
+    en: "We offer complimentary silicone pad replacement \u2014 both nose pads and temple pads.",
+    jp: "\u30b7\u30ea\u30b3\u30f3\u30d1\u30c3\u30c9\uff08\u30ce\u30fc\u30ba\u30d1\u30c3\u30c9\u30fb\u30c6\u30f3\u30d7\u30eb\u30d1\u30c3\u30c9\uff09\u306e\u4ea4\u63db\u306f\u7121\u6599\u3067\u627f\u3063\u3066\u304a\u308a\u307e\u3059\u3002",
+    note: "complimentary \u304c\u300c\u7121\u6599\u30fb\u30b5\u30fc\u30d3\u30b9\u3068\u3057\u3066\u300d\u306e\u4e01\u5be7\u306a\u8868\u73fe\u3002free \u3088\u308a\u683c\u8abf\u304c\u51fa\u308b"
+  }, {
+    en: "It only takes a moment. Please have a seat.",
+    jp: "\u3059\u3050\u306b\u7d42\u308f\u308a\u307e\u3059\u3002\u3069\u3046\u305e\u304a\u304b\u3051\u304f\u3060\u3055\u3044\u3002",
+    note: "\u30d1\u30c3\u30c9\u4ea4\u63db\u4e2d\u306b\u5f85\u3063\u3066\u3082\u3089\u3046\u3068\u304d\u306e\u4e00\u8a00"
+  }, {
+    en: "All done! The new pads should feel much more comfortable.",
+    jp: "\u5b8c\u4e86\u3067\u3059\uff01\u65b0\u3057\u3044\u30d1\u30c3\u30c9\u306e\u65b9\u304c\u305a\u3063\u3068\u5feb\u9069\u306b\u304a\u4f7f\u3044\u3044\u305f\u3060\u3051\u308b\u3068\u601d\u3044\u307e\u3059\u3002",
+    note: "\u4ea4\u63db\u5f8c\u306e\u7de0\u3081\u304f\u304f\u308a\u306b\u3002should \u304c\u81ea\u7136\u306a\u82f1\u8a9e\u306e\u63a8\u91cf\u8868\u73fe"
+  }]
+}, {
   category: "SOS Survival English",
   phrases: [{
     en: "I'm sorry, my English is not very good.",
@@ -2022,6 +2045,93 @@ function MYKITAEnglishApp() {
     _useState0 = _slicedToArray(_useState9, 2),
     memoEditId = _useState0[0],
     setMemoEditId = _useState0[1];
+  var _useState1 = useState(function () {
+      try {
+        return localStorage.getItem("mykita_claude_key") || "";
+      } catch (_unused2) {
+        return "";
+      }
+    }),
+    _useState10 = _slicedToArray(_useState1, 2),
+    claudeApiKey = _useState10[0],
+    setClaudeApiKey = _useState10[1];
+  var _useState11 = useState(""),
+    _useState12 = _slicedToArray(_useState11, 2),
+    apiKeyInput = _useState12[0],
+    setApiKeyInput = _useState12[1];
+  var _useState13 = useState(false),
+    _useState14 = _slicedToArray(_useState13, 2),
+    showApiKeySetting = _useState14[0],
+    setShowApiKeySetting = _useState14[1];
+  var _useState15 = useState(null),
+    _useState16 = _slicedToArray(_useState15, 2),
+    translating = _useState16[0],
+    setTranslating = _useState16[1]; // memo id being translated
+  var saveApiKey = function saveApiKey(key) {
+    setClaudeApiKey(key);
+    try {
+      localStorage.setItem("mykita_claude_key", key);
+    } catch (e) {}
+  };
+  var translateMemoA = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(m) {
+      var _data$content, res, data, translated, _t;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.p = _context.n) {
+          case 0:
+            if (!(!claudeApiKey || translating)) {
+              _context.n = 1;
+              break;
+            }
+            return _context.a(2);
+          case 1:
+            setTranslating(m.id);
+            _context.p = 2;
+            _context.n = 3;
+            return fetch("https://api.anthropic.com/v1/messages", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": claudeApiKey,
+                "anthropic-version": "2023-06-01"
+              },
+              body: JSON.stringify({
+                model: "claude-haiku-4-5-20251001",
+                max_tokens: 512,
+                messages: [{
+                  role: "user",
+                  content: "\u4EE5\u4E0B\u306E\u30C6\u30AD\u30B9\u30C8\u3092\u81EA\u7136\u306A\u82F1\u8A9E\u306B\u7FFB\u8A33\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u7FFB\u8A33\u6587\u306E\u307F\u8FD4\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n\n".concat(m.a)
+                }]
+              })
+            });
+          case 3:
+            res = _context.v;
+            _context.n = 4;
+            return res.json();
+          case 4:
+            data = _context.v;
+            translated = data === null || data === void 0 || (_data$content = data.content) === null || _data$content === void 0 || (_data$content = _data$content[0]) === null || _data$content === void 0 || (_data$content = _data$content.text) === null || _data$content === void 0 ? void 0 : _data$content.trim();
+            if (translated) saveMemos(memos.map(function (memo) {
+              return memo.id === m.id ? _objectSpread(_objectSpread({}, memo), {}, {
+                aEn: translated
+              }) : memo;
+            }));
+            _context.n = 6;
+            break;
+          case 5:
+            _context.p = 5;
+            _t = _context.v;
+          case 6:
+            setTranslating(null);
+          case 7:
+            return _context.a(2);
+        }
+      }, _callee, null, [[2, 5]]);
+    }));
+    return function translateMemoA(_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
   var saveMemos = function saveMemos(next) {
     setMemos(next);
     try {
@@ -2066,186 +2176,186 @@ function MYKITAEnglishApp() {
   };
 
   // Country code search
-  var _useState1 = useState(""),
-    _useState10 = _slicedToArray(_useState1, 2),
-    countryQ = _useState10[0],
-    setCountryQ = _useState10[1];
-  var _useState11 = useState(0),
-    _useState12 = _slicedToArray(_useState11, 2),
-    selectedCategory = _useState12[0],
-    setSelectedCategory = _useState12[1];
-  var _useState13 = useState(null),
-    _useState14 = _slicedToArray(_useState13, 2),
-    selectedPhrase = _useState14[0],
-    setSelectedPhrase = _useState14[1];
-  var _useState15 = useState({}),
-    _useState16 = _slicedToArray(_useState15, 2),
-    showJp = _useState16[0],
-    setShowJp = _useState16[1];
-  var _useState17 = useState(null),
+  var _useState17 = useState(""),
     _useState18 = _slicedToArray(_useState17, 2),
-    dictWord = _useState18[0],
-    setDictWord = _useState18[1];
-  var _useState19 = useState(null),
+    countryQ = _useState18[0],
+    setCountryQ = _useState18[1];
+  var _useState19 = useState(0),
     _useState20 = _slicedToArray(_useState19, 2),
-    dictPhraseIdx = _useState20[0],
-    setDictPhraseIdx = _useState20[1];
+    selectedCategory = _useState20[0],
+    setSelectedCategory = _useState20[1];
   var _useState21 = useState(null),
     _useState22 = _slicedToArray(_useState21, 2),
-    dictResult = _useState22[0],
-    setDictResult = _useState22[1];
-  var _useState23 = useState(false),
+    selectedPhrase = _useState22[0],
+    setSelectedPhrase = _useState22[1];
+  var _useState23 = useState({}),
     _useState24 = _slicedToArray(_useState23, 2),
-    dictLoading = _useState24[0],
-    setDictLoading = _useState24[1];
+    showJp = _useState24[0],
+    setShowJp = _useState24[1];
   var _useState25 = useState(null),
     _useState26 = _slicedToArray(_useState25, 2),
-    ipaTooltip = _useState26[0],
-    setIpaTooltip = _useState26[1]; // \u30af\u30ea\u30c3\u30af\u3057\u305fIPA\u8a18\u53f7\u306e\u89e3\u8aac
-  var _useState27 = useState(false),
+    dictWord = _useState26[0],
+    setDictWord = _useState26[1];
+  var _useState27 = useState(null),
     _useState28 = _slicedToArray(_useState27, 2),
-    showIpaGuide = _useState28[0],
-    setShowIpaGuide = _useState28[1];
-  var _useState29 = useState(false),
+    dictPhraseIdx = _useState28[0],
+    setDictPhraseIdx = _useState28[1];
+  var _useState29 = useState(null),
     _useState30 = _slicedToArray(_useState29, 2),
-    isSpeaking = _useState30[0],
-    setIsSpeaking = _useState30[1];
+    dictResult = _useState30[0],
+    setDictResult = _useState30[1];
   var _useState31 = useState(false),
     _useState32 = _slicedToArray(_useState31, 2),
-    isRecording = _useState32[0],
-    setIsRecording = _useState32[1];
-  var _useState33 = useState(""),
+    dictLoading = _useState32[0],
+    setDictLoading = _useState32[1];
+  var _useState33 = useState(null),
     _useState34 = _slicedToArray(_useState33, 2),
-    transcript = _useState34[0],
-    setTranscript = _useState34[1];
-  var _useState35 = useState("shadowing"),
+    ipaTooltip = _useState34[0],
+    setIpaTooltip = _useState34[1]; // \u30af\u30ea\u30c3\u30af\u3057\u305fIPA\u8a18\u53f7\u306e\u89e3\u8aac
+  var _useState35 = useState(false),
     _useState36 = _slicedToArray(_useState35, 2),
-    recordingContext = _useState36[0],
-    setRecordingContext = _useState36[1]; // "shadowing" | "quiz" | "roleplay"
-  var _useState37 = useState(""),
+    showIpaGuide = _useState36[0],
+    setShowIpaGuide = _useState36[1];
+  var _useState37 = useState(false),
     _useState38 = _slicedToArray(_useState37, 2),
-    interimTranscript = _useState38[0],
-    setInterimTranscript = _useState38[1];
+    isSpeaking = _useState38[0],
+    setIsSpeaking = _useState38[1];
   var _useState39 = useState(false),
     _useState40 = _slicedToArray(_useState39, 2),
-    jpWarning = _useState40[0],
-    setJpWarning = _useState40[1];
+    isRecording = _useState40[0],
+    setIsRecording = _useState40[1];
+  var _useState41 = useState(""),
+    _useState42 = _slicedToArray(_useState41, 2),
+    transcript = _useState42[0],
+    setTranscript = _useState42[1];
+  var _useState43 = useState("shadowing"),
+    _useState44 = _slicedToArray(_useState43, 2),
+    recordingContext = _useState44[0],
+    setRecordingContext = _useState44[1]; // "shadowing" | "quiz" | "roleplay"
+  var _useState45 = useState(""),
+    _useState46 = _slicedToArray(_useState45, 2),
+    interimTranscript = _useState46[0],
+    setInterimTranscript = _useState46[1];
+  var _useState47 = useState(false),
+    _useState48 = _slicedToArray(_useState47, 2),
+    jpWarning = _useState48[0],
+    setJpWarning = _useState48[1];
 
   // Knowledge
-  var _useState41 = useState("collections"),
-    _useState42 = _slicedToArray(_useState41, 2),
-    knowledgeSection = _useState42[0],
-    setKnowledgeSection = _useState42[1];
-  var _useState43 = useState({}),
-    _useState44 = _slicedToArray(_useState43, 2),
-    showSalesJp = _useState44[0],
-    setShowSalesJp = _useState44[1];
-  var _useState45 = useState({}),
-    _useState46 = _slicedToArray(_useState45, 2),
-    showKpJp = _useState46[0],
-    setShowKpJp = _useState46[1];
+  var _useState49 = useState("collections"),
+    _useState50 = _slicedToArray(_useState49, 2),
+    knowledgeSection = _useState50[0],
+    setKnowledgeSection = _useState50[1];
+  var _useState51 = useState({}),
+    _useState52 = _slicedToArray(_useState51, 2),
+    showSalesJp = _useState52[0],
+    setShowSalesJp = _useState52[1];
+  var _useState53 = useState({}),
+    _useState54 = _slicedToArray(_useState53, 2),
+    showKpJp = _useState54[0],
+    setShowKpJp = _useState54[1];
 
   // Vocab
-  var _useState47 = useState(0),
-    _useState48 = _slicedToArray(_useState47, 2),
-    vocabCategory = _useState48[0],
-    setVocabCategory = _useState48[1];
-  var _useState49 = useState(null),
-    _useState50 = _slicedToArray(_useState49, 2),
-    expandedWord = _useState50[0],
-    setExpandedWord = _useState50[1];
-  var _useState51 = useState(false),
-    _useState52 = _slicedToArray(_useState51, 2),
-    vocabFlipMode = _useState52[0],
-    setVocabFlipMode = _useState52[1];
-  var _useState53 = useState(0),
-    _useState54 = _slicedToArray(_useState53, 2),
-    flashIndex = _useState54[0],
-    setFlashIndex = _useState54[1];
-  var _useState55 = useState(false),
+  var _useState55 = useState(0),
     _useState56 = _slicedToArray(_useState55, 2),
-    flashRevealed = _useState56[0],
-    setFlashRevealed = _useState56[1];
+    vocabCategory = _useState56[0],
+    setVocabCategory = _useState56[1];
+  var _useState57 = useState(null),
+    _useState58 = _slicedToArray(_useState57, 2),
+    expandedWord = _useState58[0],
+    setExpandedWord = _useState58[1];
+  var _useState59 = useState(false),
+    _useState60 = _slicedToArray(_useState59, 2),
+    vocabFlipMode = _useState60[0],
+    setVocabFlipMode = _useState60[1];
+  var _useState61 = useState(0),
+    _useState62 = _slicedToArray(_useState61, 2),
+    flashIndex = _useState62[0],
+    setFlashIndex = _useState62[1];
+  var _useState63 = useState(false),
+    _useState64 = _slicedToArray(_useState63, 2),
+    flashRevealed = _useState64[0],
+    setFlashRevealed = _useState64[1];
 
   // Roleplay
-  var _useState57 = useState([{
+  var _useState65 = useState([{
       role: "assistant",
       content: "Hello! Welcome to your store. I'm looking for some new glasses today. Can you help me?"
     }]),
-    _useState58 = _slicedToArray(_useState57, 2),
-    messages = _useState58[0],
-    setMessages = _useState58[1];
-  var _useState59 = useState(""),
-    _useState60 = _slicedToArray(_useState59, 2),
-    userInput = _useState60[0],
-    setUserInput = _useState60[1];
-  var _useState61 = useState(false),
-    _useState62 = _slicedToArray(_useState61, 2),
-    isLoading = _useState62[0],
-    setIsLoading = _useState62[1];
-  var _useState63 = useState("general"),
-    _useState64 = _slicedToArray(_useState63, 2),
-    scenario = _useState64[0],
-    setScenario = _useState64[1];
-  var _useState65 = useState({}),
     _useState66 = _slicedToArray(_useState65, 2),
-    jpFeedback = _useState66[0],
-    setJpFeedback = _useState66[1];
-  var _useState67 = useState(null),
+    messages = _useState66[0],
+    setMessages = _useState66[1];
+  var _useState67 = useState(""),
     _useState68 = _slicedToArray(_useState67, 2),
-    loadingFeedback = _useState68[0],
-    setLoadingFeedback = _useState68[1];
-
-  // Quiz \u2014 adaptive
-  var _useState69 = useState({}),
+    userInput = _useState68[0],
+    setUserInput = _useState68[1];
+  var _useState69 = useState(false),
     _useState70 = _slicedToArray(_useState69, 2),
-    quizStats = _useState70[0],
-    setQuizStats = _useState70[1]; // { qId: { attempts, correct } }
-  var _useState71 = useState(null),
+    isLoading = _useState70[0],
+    setIsLoading = _useState70[1];
+  var _useState71 = useState("general"),
     _useState72 = _slicedToArray(_useState71, 2),
-    currentQuizIndex = _useState72[0],
-    setCurrentQuizIndex = _useState72[1];
-  var _useState73 = useState(""),
+    scenario = _useState72[0],
+    setScenario = _useState72[1];
+  var _useState73 = useState({}),
     _useState74 = _slicedToArray(_useState73, 2),
-    quizInput = _useState74[0],
-    setQuizInput = _useState74[1];
+    jpFeedback = _useState74[0],
+    setJpFeedback = _useState74[1];
   var _useState75 = useState(null),
     _useState76 = _slicedToArray(_useState75, 2),
-    quizResult = _useState76[0],
-    setQuizResult = _useState76[1];
-  var _useState77 = useState(false),
+    loadingFeedback = _useState76[0],
+    setLoadingFeedback = _useState76[1];
+
+  // Quiz \u2014 adaptive
+  var _useState77 = useState({}),
     _useState78 = _slicedToArray(_useState77, 2),
-    showHint = _useState78[0],
-    setShowHint = _useState78[1];
-  var _useState79 = useState(false),
+    quizStats = _useState78[0],
+    setQuizStats = _useState78[1]; // { qId: { attempts, correct } }
+  var _useState79 = useState(null),
     _useState80 = _slicedToArray(_useState79, 2),
-    showAnswer = _useState80[0],
-    setShowAnswer = _useState80[1];
-
-  // Vocab stats for adaptive flashcard
-  var _useState81 = useState({}),
+    currentQuizIndex = _useState80[0],
+    setCurrentQuizIndex = _useState80[1];
+  var _useState81 = useState(""),
     _useState82 = _slicedToArray(_useState81, 2),
-    vocabStats = _useState82[0],
-    setVocabStats = _useState82[1]; // { "catIdx-wordIdx": { attempts, correct } }
-
+    quizInput = _useState82[0],
+    setQuizInput = _useState82[1];
   var _useState83 = useState(null),
     _useState84 = _slicedToArray(_useState83, 2),
-    audioURL = _useState84[0],
-    setAudioURL = _useState84[1];
-  var _useState85 = useState(null),
+    quizResult = _useState84[0],
+    setQuizResult = _useState84[1];
+  var _useState85 = useState(false),
     _useState86 = _slicedToArray(_useState85, 2),
-    audioBlob = _useState86[0],
-    setAudioBlob = _useState86[1];
+    showHint = _useState86[0],
+    setShowHint = _useState86[1];
   var _useState87 = useState(false),
     _useState88 = _slicedToArray(_useState87, 2),
-    isPlaying = _useState88[0],
-    setIsPlaying = _useState88[1];
+    showAnswer = _useState88[0],
+    setShowAnswer = _useState88[1];
+
+  // Vocab stats for adaptive flashcard
+  var _useState89 = useState({}),
+    _useState90 = _slicedToArray(_useState89, 2),
+    vocabStats = _useState90[0],
+    setVocabStats = _useState90[1]; // { "catIdx-wordIdx": { attempts, correct } }
+
+  var _useState91 = useState(null),
+    _useState92 = _slicedToArray(_useState91, 2),
+    audioURL = _useState92[0],
+    setAudioURL = _useState92[1];
+  var _useState93 = useState(null),
+    _useState94 = _slicedToArray(_useState93, 2),
+    audioBlob = _useState94[0],
+    setAudioBlob = _useState94[1];
+  var _useState95 = useState(false),
+    _useState96 = _slicedToArray(_useState95, 2),
+    isPlaying = _useState96[0],
+    setIsPlaying = _useState96[1];
   var audioSourceRef = useRef(null);
   var audioCtxRef = useRef(null);
-  var _useState89 = useState(false),
-    _useState90 = _slicedToArray(_useState89, 2),
-    pendingRecord = _useState90[0],
-    setPendingRecord = _useState90[1];
+  var _useState97 = useState(false),
+    _useState98 = _slicedToArray(_useState97, 2),
+    pendingRecord = _useState98[0],
+    setPendingRecord = _useState98[1];
   var chatEndRef = useRef(null);
   var recognitionRef = useRef(null);
   var mediaRecorderRef = useRef(null);
@@ -2424,26 +2534,26 @@ function MYKITAEnglishApp() {
     });
   };
   var lookupWord = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(word, phraseIdx) {
-      var clean, _i3, _VOCAB, cat, _iterator, _step, w, _entry$phonetics, _entry$meanings, _meaning$definitions, res, data, entry, phonetic, meaning, def, partOfSpeech, enDef, example, jpDef, trRes, trData, _t, _t2, _t3;
-      return _regenerator().w(function (_context) {
-        while (1) switch (_context.p = _context.n) {
+    var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(word, phraseIdx) {
+      var clean, _i3, _VOCAB, cat, _iterator, _step, w, _entry$phonetics, _entry$meanings, _meaning$definitions, res, data, entry, phonetic, meaning, def, partOfSpeech, enDef, example, jpDef, trRes, trData, _t2, _t3, _t4;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.p = _context2.n) {
           case 0:
             clean = word.replace(/[^a-zA-Z\-']/g, "").toLowerCase();
             if (clean) {
-              _context.n = 1;
+              _context2.n = 1;
               break;
             }
-            return _context.a(2);
+            return _context2.a(2);
           case 1:
             if (!(dictWord === clean && dictPhraseIdx === phraseIdx)) {
-              _context.n = 2;
+              _context2.n = 2;
               break;
             }
             setDictWord(null);
             setDictPhraseIdx(null);
             setDictResult(null);
-            return _context.a(2);
+            return _context2.a(2);
           case 2:
             setDictWord(clean);
             setDictPhraseIdx(phraseIdx);
@@ -2454,21 +2564,21 @@ function MYKITAEnglishApp() {
             _i3 = 0, _VOCAB = VOCAB;
           case 3:
             if (!(_i3 < _VOCAB.length)) {
-              _context.n = 11;
+              _context2.n = 11;
               break;
             }
             cat = _VOCAB[_i3];
             _iterator = _createForOfIteratorHelper(cat.words);
-            _context.p = 4;
+            _context2.p = 4;
             _iterator.s();
           case 5:
             if ((_step = _iterator.n()).done) {
-              _context.n = 7;
+              _context2.n = 7;
               break;
             }
             w = _step.value;
             if (!(w.en.toLowerCase() === clean || w.en.toLowerCase().includes(clean))) {
-              _context.n = 6;
+              _context2.n = 6;
               break;
             }
             setDictResult({
@@ -2478,41 +2588,41 @@ function MYKITAEnglishApp() {
               source: "vocab"
             });
             setDictLoading(false);
-            return _context.a(2);
+            return _context2.a(2);
           case 6:
-            _context.n = 5;
+            _context2.n = 5;
             break;
           case 7:
-            _context.n = 9;
+            _context2.n = 9;
             break;
           case 8:
-            _context.p = 8;
-            _t = _context.v;
-            _iterator.e(_t);
+            _context2.p = 8;
+            _t2 = _context2.v;
+            _iterator.e(_t2);
           case 9:
-            _context.p = 9;
+            _context2.p = 9;
             _iterator.f();
-            return _context.f(9);
+            return _context2.f(9);
           case 10:
             _i3++;
-            _context.n = 3;
+            _context2.n = 3;
             break;
           case 11:
-            _context.p = 11;
-            _context.n = 12;
+            _context2.p = 11;
+            _context2.n = 12;
             return fetch("https://api.dictionaryapi.dev/api/v2/entries/en/".concat(encodeURIComponent(clean)));
           case 12:
-            res = _context.v;
+            res = _context2.v;
             if (res.ok) {
-              _context.n = 13;
+              _context2.n = 13;
               break;
             }
             throw new Error("not found");
           case 13:
-            _context.n = 14;
+            _context2.n = 14;
             return res.json();
           case 14:
-            data = _context.v;
+            data = _context2.v;
             entry = data[0];
             phonetic = ((_entry$phonetics = entry.phonetics) === null || _entry$phonetics === void 0 || (_entry$phonetics = _entry$phonetics.find(function (p) {
               return p.text;
@@ -2523,21 +2633,21 @@ function MYKITAEnglishApp() {
             enDef = (def === null || def === void 0 ? void 0 : def.definition) || "";
             example = (def === null || def === void 0 ? void 0 : def.example) || ""; // MyMemory API\u3067\u82f1\u2192\u65e5\u672c\u8a9e\u306b\u7ffb\u8a33
             jpDef = enDef;
-            _context.p = 15;
-            _context.n = 16;
+            _context2.p = 15;
+            _context2.n = 16;
             return fetch("https://api.mymemory.translated.net/get?q=".concat(encodeURIComponent(enDef), "&langpair=en|ja"));
           case 16:
-            trRes = _context.v;
-            _context.n = 17;
+            trRes = _context2.v;
+            _context2.n = 17;
             return trRes.json();
           case 17:
-            trData = _context.v;
+            trData = _context2.v;
             if (trData.responseStatus === 200) jpDef = trData.responseData.translatedText;
-            _context.n = 19;
+            _context2.n = 19;
             break;
           case 18:
-            _context.p = 18;
-            _t2 = _context.v;
+            _context2.p = 18;
+            _t3 = _context2.v;
           case 19:
             setDictResult({
               jp: jpDef,
@@ -2546,11 +2656,11 @@ function MYKITAEnglishApp() {
               example: example,
               source: "api"
             });
-            _context.n = 21;
+            _context2.n = 21;
             break;
           case 20:
-            _context.p = 20;
-            _t3 = _context.v;
+            _context2.p = 20;
+            _t4 = _context2.v;
             setDictResult({
               jp: "\u3053\u306e\u5358\u8a9e\u306f\u8f9e\u66f8\u306b\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f",
               note: "",
@@ -2559,12 +2669,12 @@ function MYKITAEnglishApp() {
           case 21:
             setDictLoading(false);
           case 22:
-            return _context.a(2);
+            return _context2.a(2);
         }
-      }, _callee, null, [[15, 18], [11, 20], [4, 8, 9, 10]]);
+      }, _callee2, null, [[15, 18], [11, 20], [4, 8, 9, 10]]);
     }));
-    return function lookupWord(_x, _x2) {
-      return _ref2.apply(this, arguments);
+    return function lookupWord(_x2, _x3) {
+      return _ref3.apply(this, arguments);
     };
   }();
   var stripJapanese = function stripJapanese(text) {
@@ -2573,19 +2683,19 @@ function MYKITAEnglishApp() {
   var streamRef = useRef(null);
   var audioRef = useRef(null);
   var playRecording = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
-      var _audioSourceRef$curre, _audioCtxRef$current, ctx, arrayBuf, audioBuf, source, _t4;
-      return _regenerator().w(function (_context2) {
-        while (1) switch (_context2.p = _context2.n) {
+    var _ref4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
+      var _audioSourceRef$curre, _audioCtxRef$current, ctx, arrayBuf, audioBuf, source, _t5;
+      return _regenerator().w(function (_context3) {
+        while (1) switch (_context3.p = _context3.n) {
           case 0:
             if (audioBlob) {
-              _context2.n = 1;
+              _context3.n = 1;
               break;
             }
-            return _context2.a(2);
+            return _context3.a(2);
           case 1:
             if (!isPlaying) {
-              _context2.n = 2;
+              _context3.n = 2;
               break;
             }
             try {
@@ -2597,19 +2707,19 @@ function MYKITAEnglishApp() {
             audioCtxRef.current = null;
             audioSourceRef.current = null;
             setIsPlaying(false);
-            return _context2.a(2);
+            return _context3.a(2);
           case 2:
-            _context2.p = 2;
+            _context3.p = 2;
             ctx = new (window.AudioContext || window.webkitAudioContext)();
             audioCtxRef.current = ctx;
-            _context2.n = 3;
+            _context3.n = 3;
             return audioBlob.arrayBuffer();
           case 3:
-            arrayBuf = _context2.v;
-            _context2.n = 4;
+            arrayBuf = _context3.v;
+            _context3.n = 4;
             return ctx.decodeAudioData(arrayBuf);
           case 4:
-            audioBuf = _context2.v;
+            audioBuf = _context3.v;
             source = ctx.createBufferSource();
             source.buffer = audioBuf;
             source.connect(ctx.destination);
@@ -2625,19 +2735,19 @@ function MYKITAEnglishApp() {
             audioSourceRef.current = source;
             source.start(0);
             setIsPlaying(true);
-            _context2.n = 6;
+            _context3.n = 6;
             break;
           case 5:
-            _context2.p = 5;
-            _t4 = _context2.v;
+            _context3.p = 5;
+            _t5 = _context3.v;
             setIsPlaying(false);
           case 6:
-            return _context2.a(2);
+            return _context3.a(2);
         }
-      }, _callee2, null, [[2, 5]]);
+      }, _callee3, null, [[2, 5]]);
     }));
     return function playRecording() {
-      return _ref3.apply(this, arguments);
+      return _ref4.apply(this, arguments);
     };
   }();
   var cleanupRecording = function cleanupRecording() {
@@ -2705,33 +2815,33 @@ function MYKITAEnglishApp() {
     setPendingRecord(false);
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     var doRecord = /*#__PURE__*/function () {
-      var _ref4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
-        var stream, mimeType, mr, rec, stoppedByUser, _t5, _t6;
-        return _regenerator().w(function (_context3) {
-          while (1) switch (_context3.p = _context3.n) {
+      var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4() {
+        var stream, mimeType, mr, rec, stoppedByUser, _t6, _t7;
+        return _regenerator().w(function (_context4) {
+          while (1) switch (_context4.p = _context4.n) {
             case 0:
-              _context3.n = 1;
+              _context4.n = 1;
               return new Promise(function (r) {
                 return setTimeout(r, 500);
               });
             case 1:
-              _context3.p = 1;
-              _context3.n = 2;
+              _context4.p = 1;
+              _context4.n = 2;
               return navigator.mediaDevices.getUserMedia({
                 audio: true
               });
             case 2:
-              stream = _context3.v;
+              stream = _context4.v;
               streamRef.current = stream;
-              _context3.n = 4;
+              _context4.n = 4;
               break;
             case 3:
-              _context3.p = 3;
-              _t5 = _context3.v;
+              _context4.p = 3;
+              _t6 = _context4.v;
               setTranscript("[!] \u30de\u30a4\u30af\u3078\u306e\u30a2\u30af\u30bb\u30b9\u304c\u62d2\u5426\u3055\u308c\u307e\u3057\u305f\u3002\u8a2d\u5b9a\u304b\u3089\u30de\u30a4\u30af\u3092\u8a31\u53ef\u3057\u3066\u304f\u3060\u3055\u3044\u306a\u3002");
-              return _context3.a(2);
+              return _context4.a(2);
             case 4:
-              _context3.p = 4;
+              _context4.p = 4;
               audioChunksRef.current = [];
               mimeType = ["audio/mp4", "audio/aac", "audio/webm", ""].find(function (m) {
                 return m === "" || MediaRecorder.isTypeSupported(m);
@@ -2753,17 +2863,17 @@ function MYKITAEnglishApp() {
               };
               mr.start(100);
               mediaRecorderRef.current = mr;
-              _context3.n = 6;
+              _context4.n = 6;
               break;
             case 5:
-              _context3.p = 5;
-              _t6 = _context3.v;
+              _context4.p = 5;
+              _t7 = _context4.v;
               stream.getTracks().forEach(function (t) {
                 return t.stop();
               });
               streamRef.current = null;
               setTranscript("[!] \u9332\u97f3\u306e\u958b\u59cb\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002");
-              return _context3.a(2);
+              return _context4.a(2);
             case 6:
               rec = new SR();
               rec.lang = "en-US";
@@ -2858,12 +2968,12 @@ function MYKITAEnglishApp() {
               rec.start();
               setIsRecording(true);
             case 7:
-              return _context3.a(2);
+              return _context4.a(2);
           }
-        }, _callee3, null, [[4, 5], [1, 3]]);
+        }, _callee4, null, [[4, 5], [1, 3]]);
       }));
       return function doRecord() {
-        return _ref4.apply(this, arguments);
+        return _ref5.apply(this, arguments);
       };
     }();
     doRecord();
@@ -2902,13 +3012,13 @@ function MYKITAEnglishApp() {
     tourist: "You are a tourist in Japan who speaks only English. You need prescription glasses urgently. 1-2 sentences. English only."
   };
   var callAPI = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(system, msgs) {
-      var _data$content;
+    var _ref6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(system, msgs) {
+      var _data$content2;
       var res, data;
-      return _regenerator().w(function (_context4) {
-        while (1) switch (_context4.n) {
+      return _regenerator().w(function (_context5) {
+        while (1) switch (_context5.n) {
           case 0:
-            _context4.n = 1;
+            _context5.n = 1;
             return fetch("https://api.anthropic.com/v1/messages", {
               method: "POST",
               headers: {
@@ -2922,30 +3032,30 @@ function MYKITAEnglishApp() {
               })
             });
           case 1:
-            res = _context4.v;
-            _context4.n = 2;
+            res = _context5.v;
+            _context5.n = 2;
             return res.json();
           case 2:
-            data = _context4.v;
-            return _context4.a(2, ((_data$content = data.content) === null || _data$content === void 0 || (_data$content = _data$content[0]) === null || _data$content === void 0 ? void 0 : _data$content.text) || "");
+            data = _context5.v;
+            return _context5.a(2, ((_data$content2 = data.content) === null || _data$content2 === void 0 || (_data$content2 = _data$content2[0]) === null || _data$content2 === void 0 ? void 0 : _data$content2.text) || "");
         }
-      }, _callee4);
+      }, _callee5);
     }));
-    return function callAPI(_x3, _x4) {
-      return _ref5.apply(this, arguments);
+    return function callAPI(_x4, _x5) {
+      return _ref6.apply(this, arguments);
     };
   }();
   var sendMessage = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5() {
-      var newMsgs, reply, _t7;
-      return _regenerator().w(function (_context5) {
-        while (1) switch (_context5.p = _context5.n) {
+    var _ref7 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
+      var newMsgs, reply, _t8;
+      return _regenerator().w(function (_context6) {
+        while (1) switch (_context6.p = _context6.n) {
           case 0:
             if (!(!userInput.trim() || isLoading)) {
-              _context5.n = 1;
+              _context6.n = 1;
               break;
             }
-            return _context5.a(2);
+            return _context6.a(2);
           case 1:
             newMsgs = [].concat(_toConsumableArray(messages), [{
               role: "user",
@@ -2954,8 +3064,8 @@ function MYKITAEnglishApp() {
             setMessages(newMsgs);
             setUserInput("");
             setIsLoading(true);
-            _context5.p = 2;
-            _context5.n = 3;
+            _context6.p = 2;
+            _context6.n = 3;
             return callAPI(SCENARIOS[scenario], newMsgs.map(function (m) {
               return {
                 role: m.role,
@@ -2963,7 +3073,7 @@ function MYKITAEnglishApp() {
               };
             }));
           case 3:
-            reply = _context5.v;
+            reply = _context6.v;
             setMessages(function (prev) {
               return [].concat(_toConsumableArray(prev), [{
                 role: "assistant",
@@ -2971,11 +3081,11 @@ function MYKITAEnglishApp() {
               }]);
             });
             speak(reply, 0.9);
-            _context5.n = 5;
+            _context6.n = 5;
             break;
           case 4:
-            _context5.p = 4;
-            _t7 = _context5.v;
+            _context6.p = 4;
+            _t8 = _context6.v;
             setMessages(function (prev) {
               return [].concat(_toConsumableArray(prev), [{
                 role: "assistant",
@@ -2985,49 +3095,49 @@ function MYKITAEnglishApp() {
           case 5:
             setIsLoading(false);
           case 6:
-            return _context5.a(2);
+            return _context6.a(2);
         }
-      }, _callee5, null, [[2, 4]]);
+      }, _callee6, null, [[2, 4]]);
     }));
     return function sendMessage() {
-      return _ref6.apply(this, arguments);
+      return _ref7.apply(this, arguments);
     };
   }();
   var getFeedback = /*#__PURE__*/function () {
-    var _ref7 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(idx, text) {
-      var fb, _t8;
-      return _regenerator().w(function (_context6) {
-        while (1) switch (_context6.p = _context6.n) {
+    var _ref8 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(idx, text) {
+      var fb, _t9;
+      return _regenerator().w(function (_context7) {
+        while (1) switch (_context7.p = _context7.n) {
           case 0:
             setLoadingFeedback(idx);
-            _context6.p = 1;
-            _context6.n = 2;
+            _context7.p = 1;
+            _context7.n = 2;
             return callAPI("\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8CA9\u58F2\u54E1\u5411\u3051\u82F1\u8A9E\u30C8\u30EC\u30FC\u30CA\u30FC\u3067\u3059\u3002\u4EE5\u4E0B\u306E\u5F62\u5F0F\u3067\u8FD4\u7B54\u3057\u3066\u304F\u3060\u3055\u3044\uFF1A\n\u3010\u81EA\u7136\u3055\u3011\u2605\u2605\u2605\u2606\u2606\uFF085\u6BB5\u968E\uFF09\n\u3010\u610F\u5473\u3011\uFF08\u65E5\u672C\u8A9E\u8A33\uFF09\n\u3010\u6539\u5584\u30DD\u30A4\u30F3\u30C8\u3011\uFF08\u3042\u308C\u3070\u7C21\u6F54\u306B\uFF09\n\u3010\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE\u3011\uFF08\u3042\u308C\u3070\uFF09", [{
               role: "user",
               content: "\u3053\u306E\u30D5\u30EC\u30FC\u30BA\u3092\u8A55\u4FA1\u3057\u3066\u304F\u3060\u3055\u3044\uFF1A\u300C".concat(text, "\u300D")
             }]);
           case 2:
-            fb = _context6.v;
+            fb = _context7.v;
             setJpFeedback(function (prev) {
               return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, idx, fb));
             });
-            _context6.n = 4;
+            _context7.n = 4;
             break;
           case 3:
-            _context6.p = 3;
-            _t8 = _context6.v;
+            _context7.p = 3;
+            _t9 = _context7.v;
             setJpFeedback(function (prev) {
               return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, idx, "\u30d5\u30a3\u30fc\u30c9\u30d0\u30c3\u30af\u306e\u53d6\u5f97\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002"));
             });
           case 4:
             setLoadingFeedback(null);
           case 5:
-            return _context6.a(2);
+            return _context7.a(2);
         }
-      }, _callee6, null, [[1, 3]]);
+      }, _callee7, null, [[1, 3]]);
     }));
-    return function getFeedback(_x5, _x6) {
-      return _ref7.apply(this, arguments);
+    return function getFeedback(_x6, _x7) {
+      return _ref8.apply(this, arguments);
     };
   }();
   var resetChat = function resetChat() {
@@ -3039,23 +3149,23 @@ function MYKITAEnglishApp() {
     setJpFeedback({});
   };
   var checkQuiz = /*#__PURE__*/function () {
-    var _ref8 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
-      var q, _quizStats$q$id, _quizStats$q$id2, raw, parsed, next, _t9;
-      return _regenerator().w(function (_context7) {
-        while (1) switch (_context7.p = _context7.n) {
+    var _ref9 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
+      var q, _quizStats$q$id, _quizStats$q$id2, raw, parsed, next, _t0;
+      return _regenerator().w(function (_context8) {
+        while (1) switch (_context8.p = _context8.n) {
           case 0:
             q = QUIZ_QUESTIONS[currentQuizIndex];
             setQuizResult({
               loading: true
             });
-            _context7.p = 1;
-            _context7.n = 2;
+            _context8.p = 1;
+            _context8.n = 2;
             return callAPI("\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8CA9\u58F2\u54E1\u5411\u3051\u82F1\u8A9E\u6559\u5E2B\u3067\u3059\u3002\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C".concat(q.answer, "\u300D\n\u610F\u5473\u304C\u540C\u3058\u306A\u3089\u6B63\u89E3\u3068\u3057\u307E\u3059\u3002\u4EE5\u4E0B\u306EJSON\u5F62\u5F0F\u306E\u307F\u3067\u8FD4\u7B54\uFF1A\n{\"correct\": true, \"feedback\": \"\u65E5\u672C\u8A9E\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\", \"naturalExample\": \"\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE\uFF08\u306A\u3051\u308C\u3070null\uFF09\"}"), [{
               role: "user",
               content: quizInput
             }]);
           case 2:
-            raw = _context7.v;
+            raw = _context8.v;
             parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
             setQuizResult(parsed);
             // Update stats
@@ -3064,22 +3174,22 @@ function MYKITAEnglishApp() {
               correct: (((_quizStats$q$id2 = quizStats[q.id]) === null || _quizStats$q$id2 === void 0 ? void 0 : _quizStats$q$id2.correct) || 0) + (parsed.correct ? 1 : 0)
             }));
             saveQuizStats(next);
-            _context7.n = 4;
+            _context8.n = 4;
             break;
           case 3:
-            _context7.p = 3;
-            _t9 = _context7.v;
+            _context8.p = 3;
+            _t0 = _context8.v;
             setQuizResult({
               correct: false,
               feedback: "\u63a1\u70b9\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
             });
           case 4:
-            return _context7.a(2);
+            return _context8.a(2);
         }
-      }, _callee7, null, [[1, 3]]);
+      }, _callee8, null, [[1, 3]]);
     }));
     return function checkQuiz() {
-      return _ref8.apply(this, arguments);
+      return _ref9.apply(this, arguments);
     };
   }();
   var toggleJp = function toggleJp(key, setter) {
@@ -3480,10 +3590,10 @@ function MYKITAEnglishApp() {
     });
     return /*#__PURE__*/React.createElement("div", {
       style: S.progressBar
-    }, Object.entries(counts).map(function (_ref9) {
-      var _ref0 = _slicedToArray(_ref9, 2),
-        level = _ref0[0],
-        count = _ref0[1];
+    }, Object.entries(counts).map(function (_ref0) {
+      var _ref1 = _slicedToArray(_ref0, 2),
+        level = _ref1[0],
+        count = _ref1[1];
       return /*#__PURE__*/React.createElement("div", {
         key: level,
         style: S.progressItem
@@ -3844,40 +3954,16 @@ function MYKITAEnglishApp() {
       }, /*#__PURE__*/React.createElement("button", {
         style: S.btn("p"),
         onClick: (/*#__PURE__*/function () {
-          var _ref1 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(e) {
-            var _vocabStats$key, _vocabStats$key2;
-            var next;
-            return _regenerator().w(function (_context8) {
-              while (1) switch (_context8.n) {
-                case 0:
-                  e.stopPropagation();
-                  next = _objectSpread(_objectSpread({}, vocabStats), {}, _defineProperty({}, key, {
-                    attempts: (((_vocabStats$key = vocabStats[key]) === null || _vocabStats$key === void 0 ? void 0 : _vocabStats$key.attempts) || 0) + 1,
-                    correct: (((_vocabStats$key2 = vocabStats[key]) === null || _vocabStats$key2 === void 0 ? void 0 : _vocabStats$key2.correct) || 0) + 1
-                  }));
-                  saveVocabStats(next);
-                case 1:
-                  return _context8.a(2);
-              }
-            }, _callee8);
-          }));
-          return function (_x7) {
-            return _ref1.apply(this, arguments);
-          };
-        }())
-      }, "\u899A\u3048\u305F"), /*#__PURE__*/React.createElement("button", {
-        style: S.btn(),
-        onClick: (/*#__PURE__*/function () {
           var _ref10 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(e) {
-            var _vocabStats$key3, _vocabStats$key4;
+            var _vocabStats$key, _vocabStats$key2;
             var next;
             return _regenerator().w(function (_context9) {
               while (1) switch (_context9.n) {
                 case 0:
                   e.stopPropagation();
                   next = _objectSpread(_objectSpread({}, vocabStats), {}, _defineProperty({}, key, {
-                    attempts: (((_vocabStats$key3 = vocabStats[key]) === null || _vocabStats$key3 === void 0 ? void 0 : _vocabStats$key3.attempts) || 0) + 1,
-                    correct: ((_vocabStats$key4 = vocabStats[key]) === null || _vocabStats$key4 === void 0 ? void 0 : _vocabStats$key4.correct) || 0
+                    attempts: (((_vocabStats$key = vocabStats[key]) === null || _vocabStats$key === void 0 ? void 0 : _vocabStats$key.attempts) || 0) + 1,
+                    correct: (((_vocabStats$key2 = vocabStats[key]) === null || _vocabStats$key2 === void 0 ? void 0 : _vocabStats$key2.correct) || 0) + 1
                   }));
                   saveVocabStats(next);
                 case 1:
@@ -3887,6 +3973,30 @@ function MYKITAEnglishApp() {
           }));
           return function (_x8) {
             return _ref10.apply(this, arguments);
+          };
+        }())
+      }, "\u899A\u3048\u305F"), /*#__PURE__*/React.createElement("button", {
+        style: S.btn(),
+        onClick: (/*#__PURE__*/function () {
+          var _ref11 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0(e) {
+            var _vocabStats$key3, _vocabStats$key4;
+            var next;
+            return _regenerator().w(function (_context0) {
+              while (1) switch (_context0.n) {
+                case 0:
+                  e.stopPropagation();
+                  next = _objectSpread(_objectSpread({}, vocabStats), {}, _defineProperty({}, key, {
+                    attempts: (((_vocabStats$key3 = vocabStats[key]) === null || _vocabStats$key3 === void 0 ? void 0 : _vocabStats$key3.attempts) || 0) + 1,
+                    correct: ((_vocabStats$key4 = vocabStats[key]) === null || _vocabStats$key4 === void 0 ? void 0 : _vocabStats$key4.correct) || 0
+                  }));
+                  saveVocabStats(next);
+                case 1:
+                  return _context0.a(2);
+              }
+            }, _callee0);
+          }));
+          return function (_x9) {
+            return _ref11.apply(this, arguments);
           };
         }())
       }, "\u8981\u5FA9\u7FD2"))));
@@ -3964,11 +4074,11 @@ function MYKITAEnglishApp() {
         }
       }, "\u25B6 \u7528\u4F8B"), flashRevealed && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
         style: S.btn("p"),
-        onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0() {
+        onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
           var _vocabStats$key5, _vocabStats$key6;
           var next;
-          return _regenerator().w(function (_context0) {
-            while (1) switch (_context0.n) {
+          return _regenerator().w(function (_context1) {
+            while (1) switch (_context1.n) {
               case 0:
                 next = _objectSpread(_objectSpread({}, vocabStats), {}, _defineProperty({}, key, {
                   attempts: (((_vocabStats$key5 = vocabStats[key]) === null || _vocabStats$key5 === void 0 ? void 0 : _vocabStats$key5.attempts) || 0) + 1,
@@ -3978,17 +4088,17 @@ function MYKITAEnglishApp() {
                 setFlashIndex(pickNextFlash(vocabCategory, next));
                 setFlashRevealed(false);
               case 1:
-                return _context0.a(2);
+                return _context1.a(2);
             }
-          }, _callee0);
+          }, _callee1);
         }))
       }, "\u899A\u3048\u305F \u2192 \u6B21\u3078"), /*#__PURE__*/React.createElement("button", {
         style: S.btn(),
-        onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1() {
+        onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10() {
           var _vocabStats$key7, _vocabStats$key8;
           var next;
-          return _regenerator().w(function (_context1) {
-            while (1) switch (_context1.n) {
+          return _regenerator().w(function (_context10) {
+            while (1) switch (_context10.n) {
               case 0:
                 next = _objectSpread(_objectSpread({}, vocabStats), {}, _defineProperty({}, key, {
                   attempts: (((_vocabStats$key7 = vocabStats[key]) === null || _vocabStats$key7 === void 0 ? void 0 : _vocabStats$key7.attempts) || 0) + 1,
@@ -3998,9 +4108,9 @@ function MYKITAEnglishApp() {
                 setFlashIndex(pickNextFlash(vocabCategory, next));
                 setFlashRevealed(false);
               case 1:
-                return _context1.a(2);
+                return _context10.a(2);
             }
-          }, _callee1);
+          }, _callee10);
         }))
       }, "\u8981\u5FA9\u7FD2 \u2192 \u6B21\u3078")), !flashRevealed && /*#__PURE__*/React.createElement("button", {
         style: S.btn(),
@@ -4445,10 +4555,10 @@ function MYKITAEnglishApp() {
     style: S.title
   }, "MYKITA\u306B\u95A2\u3059\u308B\u63A5\u5BA2\u82F1\u8A9E"), /*#__PURE__*/React.createElement("div", {
     style: S.tabs
-  }, [["shadowing", "Shadowing"], ["vocab", "Vocabulary"], ["knowledge", "Brand Knowledge"], ["roleplay", "Roleplay"], ["quiz", "Adaptive Quiz"], ["ipa", "\u767a\u97f3\u8a18\u53f7"], ["memo", "FAQ \u30e1\u30e2"], ["taxfree", "\u514d\u7a0e \u56fd\u30b3\u30fc\u30c9"]].map(function (_ref13) {
-    var _ref14 = _slicedToArray(_ref13, 2),
-      k = _ref14[0],
-      l = _ref14[1];
+  }, [["shadowing", "Shadowing"], ["vocab", "Vocabulary"], ["knowledge", "Brand Knowledge"], ["roleplay", "Roleplay"], ["quiz", "Adaptive Quiz"], ["ipa", "\u767a\u97f3\u8a18\u53f7"], ["memo", "FAQ \u30e1\u30e2"], ["taxfree", "\u514d\u7a0e \u56fd\u30b3\u30fc\u30c9"]].map(function (_ref14) {
+    var _ref15 = _slicedToArray(_ref14, 2),
+      k = _ref15[0],
+      l = _ref15[1];
     return /*#__PURE__*/React.createElement("button", {
       key: k,
       style: S.tab(activeTab === k),
@@ -4523,15 +4633,92 @@ function MYKITAEnglishApp() {
         sym: s.sym
       }), s.jp));
     }));
-  })), activeTab === "memo" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+  })), activeTab === "memo" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "4px"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
     style: S.label
-  }, "FAQ \u30E1\u30E2"), /*#__PURE__*/React.createElement("div", {
+  }, "FAQ \u30E1\u30E2"), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      setShowApiKeySetting(!showApiKeySetting);
+      setApiKeyInput(claudeApiKey);
+    },
+    style: {
+      background: "none",
+      border: "1px solid ".concat(claudeApiKey ? "#2a5a2a" : "#3a3a1a"),
+      borderRadius: "3px",
+      color: claudeApiKey ? "#6a9a6a" : "#888",
+      fontSize: "10px",
+      padding: "3px 8px",
+      cursor: "pointer",
+      letterSpacing: "0.05em"
+    }
+  }, claudeApiKey ? "API KEY \u8a2d\u5b9a\u6e08" : "API KEY \u672a\u8a2d\u5b9a")), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: "11px",
       color: "#666",
+      marginBottom: showApiKeySetting ? "10px" : "16px"
+    }
+  }, "\u3088\u304F\u805E\u304B\u308C\u308B\u3053\u3068\u30FB\u8FD4\u7B54\u3092\u30E1\u30E2\u3057\u3066\u304A\u304D\u307E\u3057\u3087\u3046"), showApiKeySetting && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#0a0a1a",
+      border: "1px solid #2a2a4a",
+      borderRadius: "4px",
+      padding: "12px",
       marginBottom: "16px"
     }
-  }, "\u3088\u304F\u805E\u304B\u308C\u308B\u3053\u3068\u30FB\u8FD4\u7B54\u3092\u30E1\u30E2\u3057\u3066\u304A\u304D\u307E\u3057\u3087\u3046"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "10px",
+      color: "#7a7ab0",
+      letterSpacing: "0.1em",
+      marginBottom: "8px"
+    }
+  }, "CLAUDE API KEY\uFF08\u56DE\u7B54\u306E\u82F1\u8A33\u306B\u4F7F\u7528\uFF09"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: "8px"
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    value: apiKeyInput,
+    onChange: function onChange(e) {
+      return setApiKeyInput(e.target.value);
+    },
+    placeholder: "sk-ant-...",
+    type: "password",
+    style: {
+      flex: 1,
+      background: "#0a0a0a",
+      border: "1px solid #333",
+      borderRadius: "3px",
+      padding: "8px 10px",
+      color: "#f0ede8",
+      fontSize: "12px",
+      outline: "none",
+      fontFamily: "monospace"
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      saveApiKey(apiKeyInput.trim());
+      setShowApiKeySetting(false);
+    },
+    style: S.btn("p")
+  }, "\u4FDD\u5B58"), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setShowApiKeySetting(false);
+    },
+    style: S.btn("j")
+  }, "\u9589\u3058\u308B")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "10px",
+      color: "#444",
+      marginTop: "6px"
+    }
+  }, "\u30AD\u30FC\u306F\u3053\u306E\u30C7\u30D0\u30A4\u30B9\u306ElocalStorage\u306B\u306E\u307F\u4FDD\u5B58\u3055\u308C\u307E\u3059")), /*#__PURE__*/React.createElement("div", {
     style: {
       background: memoEditId !== null ? "#0a1a0a" : "#111",
       border: "1px solid ".concat(memoEditId !== null ? "#2a5a2a" : "#2a2a2a"),
@@ -4668,7 +4855,21 @@ function MYKITAEnglishApp() {
         padding: "3px 8px",
         cursor: "pointer"
       }
-    }, "\u524A\u9664"))), m.a && /*#__PURE__*/React.createElement("div", {
+    }, "\u524A\u9664"), m.a && claudeApiKey && /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        return translateMemoA(m);
+      },
+      disabled: translating === m.id,
+      style: {
+        background: "none",
+        border: "1px solid #2a3a5a",
+        borderRadius: "3px",
+        color: translating === m.id ? "#555" : "#7a9abf",
+        fontSize: "11px",
+        padding: "3px 8px",
+        cursor: translating === m.id ? "default" : "pointer"
+      }
+    }, translating === m.id ? "\u7ffb\u8a33\u4e2d..." : "\u82f1\u8a33"))), m.a && /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "12px",
         color: "#aaa",
@@ -4684,7 +4885,24 @@ function MYKITAEnglishApp() {
         letterSpacing: "0.1em",
         marginRight: "8px"
       }
-    }, "A"), m.a), /*#__PURE__*/React.createElement("div", {
+    }, "A"), m.a), m.aEn && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "12px",
+        color: "#7a9abf",
+        lineHeight: "1.7",
+        borderTop: "1px solid #1a1a2a",
+        paddingTop: "8px",
+        marginTop: "6px",
+        whiteSpace: "pre-wrap"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "10px",
+        letterSpacing: "0.1em",
+        marginRight: "8px",
+        color: "#4a6a9a"
+      }
+    }, "EN"), m.aEn), /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "10px",
         color: "#444",
