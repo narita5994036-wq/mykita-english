@@ -2730,6 +2730,7 @@ function MYKITAEnglishApp() {
   var pickNextQuestion = function pickNextQuestion() {
     var stats = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : quizStats;
     var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : quizMode;
+    var forceIdx = arguments.length > 2 ? arguments[2] : undefined;
     var statArr = QUIZ_QUESTIONS.map(function (q) {
       return stats[q.id] || {
         attempts: 0,
@@ -2737,7 +2738,9 @@ function MYKITAEnglishApp() {
       };
     });
     var idx;
-    if (mode === "random") {
+    if (typeof forceIdx === "number") {
+      idx = forceIdx;
+    } else if (mode === "random") {
       idx = Math.floor(Math.random() * QUIZ_QUESTIONS.length);
     } else if (mode === "struggling") {
       var _cands = QUIZ_QUESTIONS.map(function (_, i) {
@@ -4968,7 +4971,7 @@ function MYKITAEnglishApp() {
         style: S.catBtn(quizMode === _mode),
         onClick: function onClick() {
           setQuizMode(_mode);
-          pickNextQuestion(quizStats, _mode);
+          pickNextQuestion(quizStats, _mode, _mode === "sequential" ? 0 : undefined);
         }
       }, _label);
     })), /*#__PURE__*/React.createElement("div", {
