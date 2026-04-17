@@ -3355,7 +3355,16 @@ function MYKITAEnglishApp() {
                     setTranscript(best);
                     // context\u306b\u5fdc\u3058\u3066\u5404input\u306b\u3082\u53cd\u6620
                     setRecordingContext(function (ctx) {
-                      if (ctx === "quiz") setQuizInput(best);else if (ctx === "roleplay") setUserInput(best);
+                      if (ctx === "quiz") {
+                        setQuizInput(best);
+                        if (claudeApiKey) {
+                          callAPI("\u82f1\u8a9e\u306e\u97f3\u58f0\u8a8d\u8b58\u30c6\u30ad\u30b9\u30c8\u306b\u9069\u5207\u306a\u53e5\u8aad\u70b9\u3068\u5927\u6587\u5b57\u5c0f\u6587\u5b57\u3092\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u82f1\u8a9e\u30c6\u30ad\u30b9\u30c8\u306e\u307f\u8fd4\u3057\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:best}])
+                            .then(function(r) { setQuizInput(r.trim()); })
+                            .catch(function() {});
+                        }
+                      } else if (ctx === "roleplay") {
+                        setUserInput(best);
+                      }
                       return ctx;
                     });
                     setInterimTranscript("");
@@ -3689,7 +3698,7 @@ function MYKITAEnglishApp() {
               body: JSON.stringify({
                 model: "claude-haiku-4-5-20251001",
                 max_tokens: 512,
-                system: "\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8CA9\u58F2\u54E1\u5411\u3051\u82F1\u8A9E\u6559\u5E2B\u3067\u3059\u3002\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C".concat(q.answer, "\u300D\n\u5B66\u7FD2\u8005\u306E\u56DE\u7B54\u3092\u63A1\u70B9\u3057\u3001\u5FC5\u305AJSON\u306E\u307F\u3067\u8FD4\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30DE\u30FC\u30AF\u30C0\u30A6\u30F3\u4E0D\u8981\u3002\n{\"grade\":\"correct|partial|incorrect\",\"feedback\":\"\u65E5\u672C\u8A9E1\u6587\",\"naturalExample\":\"\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE\u307E\u305F\u306Fnull\"}"),
+                system: "\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8ca9\u58f2\u54e1\u5411\u3051\u82f1\u8a9e\u6559\u5e2b\u3067\u3059\u3002\u6a21\u7bc4\u89e3\u7b54\uff1a\u300c".concat(q.answer, "\u300d\n\u5b66\u7fd2\u8005\u306e\u56de\u7b54\u3092\u63a1\u70b9\u3057\u3001\u5fc5\u305ajson\u306e\u307f\u3067\u8fd4\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u30de\u30fc\u30af\u30c0\u30a6\u30f3\u4e0d\u8981\u3002\n\u63a1\u70b9\u57fa\u6e96\uff1a\u5358\u8a9e\u30fb\u610f\u5473\u30fb\u6587\u6cd5\u304c\u5408\u3063\u3066\u3044\u308c\u3070\u6b63\u89e3\u3002\u53e5\u8aad\u70b9\u30fb\u5927\u6587\u5b57\u5c0f\u6587\u5b57\u306e\u9055\u3044\u306f\u7121\u8996\u3059\u308b\u3053\u3068\u3002\u97f3\u58f0\u5165\u529b\u306e\u305f\u3081\u53e5\u8aad\u70b9\u304c\u6b20\u3051\u3066\u3044\u308b\u3053\u3068\u304c\u591a\u3044\u3002\n{\"grade\":\"correct|partial|incorrect\",\"feedback\":\"\u65e5\u672c\u8a9e1\u6587\",\"naturalExample\":\"\u3088\u308a\u81ea\u7136\u306a\u8868\u73fe\u307e\u305f\u306fnull\"}"),
                 messages: [{
                   role: "user",
                   content: quizInput
