@@ -5162,9 +5162,15 @@ function MYKITAEnglishApp() {
         fontSize: "10px",
         color: "#8bc98b",
         letterSpacing: "0.1em",
-        marginBottom: "8px"
+        marginBottom: "8px",
+        display: "flex",
+        alignItems: "center",
+        gap: "8px"
       }
-    }, "\u6A21\u7BC4\u89E3\u7B54"), /*#__PURE__*/React.createElement("div", {
+    }, "\u6A21\u7BC4\u89E3\u7B54", /*#__PURE__*/React.createElement("button", {
+      style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+      onClick: function onClick() { return speak(q.answer); }
+    }, "\u25B6")), /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "14px",
         color: "#f0ede8",
@@ -5368,7 +5374,10 @@ function MYKITAEnglishApp() {
           borderTop: "1px solid #1a1a1a",
           paddingTop: "8px"
         }
-      }, "\u6A21\u7BC4\u89E3\u7B54\uFF1A", /*#__PURE__*/React.createElement("span", null, q.answer.split(/(\s+|[^\w'\s]+)/).filter(Boolean).map(function (token, i) {
+      }, /*#__PURE__*/React.createElement("span", {style:{display:"inline-flex",alignItems:"center",gap:"6px"}},"模範回答：", /*#__PURE__*/React.createElement("button", {
+        style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+        onClick: function onClick() { return speak(q.answer); }
+      }, "\u25B6")), /*#__PURE__*/React.createElement("span", null, q.answer.split(/(\s+|[^\w'\s]+)/).filter(Boolean).map(function (token, i) {
         var isWord = /^[\w']+$/.test(token);
         return /*#__PURE__*/React.createElement("span", {
           key: i,
