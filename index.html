@@ -2715,6 +2715,7 @@ function MYKITAEnglishApp() {
   var recognitionRef = useRef(null);
   var mediaRecorderRef = useRef(null);
   var audioChunksRef = useRef([]);
+  var ttsCacheRef = useRef({});
 
   // \u2500\u2500\u2500 Load/Save Progress \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
@@ -2894,12 +2895,15 @@ function MYKITAEnglishApp() {
     }
     return null;
   }, []);
+  var TTS_SUBS = {"MYKITA":"My keeta","Mykita":"My keeta","mykita":"my keeta","LINDBERG":"Lindberg","silhouette":"sil-oo-ET","Silhouette":"Sil-oo-ET","titanium":"tie-TAY-nee-um","acetate":"AS-eh-tate","rimless":"rim-less","progressive":"pro-GRES-iv"};
+  var applyTtsSubs = function(t) { return Object.keys(TTS_SUBS).reduce(function(s,k){return s.split(k).join(TTS_SUBS[k]);},t); };
   var speak = useCallback(function (text) {
     var rate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
+    var finalText = ttsCacheRef.current[text] || applyTtsSubs(text);
     var doSpeak = function doSpeak() {
-      var utt = new SpeechSynthesisUtterance(text);
+      var utt = new SpeechSynthesisUtterance(finalText);
       utt.lang = "en-US";
       utt.rate = rate;
       utt.pitch = 1.0;
@@ -3512,6 +3516,13 @@ function MYKITAEnglishApp() {
       return _ref6.apply(this, arguments);
     };
   }();
+  var preprocessTts = function preprocessTts(text) {
+    if (!claudeApiKey || !text || ttsCacheRef.current[text] !== undefined) return;
+    ttsCacheRef.current[text] = applyTtsSubs(text);
+    callAPI("\u82f1\u8a9e\u306eTTS\uff08\u30c6\u30ad\u30b9\u30c8\u97f3\u58f0\u5408\u6210\uff09\u3067\u81ea\u7136\u306b\u8aad\u307f\u4e0a\u3052\u308b\u305f\u3081\u3001\u4ee5\u4e0b\u306e\u82f1\u6587\u3092\u6539\u5584\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u30eb\u30fc\u30eb\uff1a\u2460\u9577\u3044\u7bc0\u306b\u306f\u30ab\u30f3\u30de\u3067\u9593\u3092\u8ffd\u52a0\u2461\u56fa\u6709\u540d\u8a5e\u306f\u767a\u97f3\u30ac\u30a4\u30c9\u3092\u30cf\u30a4\u30d5\u30f3\u3064\u304d\u3067\u8ffd\u52a0\uff08\u4f8b: MYKITA\u2192My-kee-ta\uff09\u2462\u7701\u7565\u5f62\u306f\u5c55\u958b\u2463\u5143\u306e\u610f\u5473\u3092\u5909\u3048\u305a\u3001\u82f1\u6587\u306e\u307f\u8fd4\u3059\u3002", [{role:"user",content:text}])
+      .then(function(result) { ttsCacheRef.current[text] = result.trim(); })
+      .catch(function() { delete ttsCacheRef.current[text]; });
+  };
   var sendMessage = /*#__PURE__*/function () {
     var _ref7 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
       var newMsgs, reply, _t8;
@@ -3548,6 +3559,7 @@ function MYKITAEnglishApp() {
               }]);
             });
             speak(reply, 0.9);
+            preprocessTts(reply);
             _context6.n = 5;
             break;
           case 4:
@@ -4194,12 +4206,14 @@ function MYKITAEnglishApp() {
         onClick: function onClick() {
           setSelectedPhrase(i);
           speak(p.en);
+          preprocessTts(p.en);
         }
       }, "\u25B6 \u518D\u751F"), /*#__PURE__*/React.createElement("button", {
         style: S.btn(),
         onClick: function onClick() {
           setSelectedPhrase(i);
           speak(p.en, 0.65);
+          preprocessTts(p.en);
         }
       }, "\u25B6 \u30B9\u30ED\u30FC")), showJp[i] && /*#__PURE__*/React.createElement("div", {
         style: S.jpBox
