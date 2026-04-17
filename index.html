@@ -3329,24 +3329,32 @@ function MYKITAEnglishApp() {
       return _regenerator().w(function (_context5) {
         while (1) switch (_context5.n) {
           case 0:
-            _context5.n = 1;
+            if (claudeApiKey) {
+              _context5.n = 1;
+              break;
+            }
+            throw new Error("API key not set");
+          case 1:
+            _context5.n = 2;
             return fetch("https://api.anthropic.com/v1/messages", {
               method: "POST",
               headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "x-api-key": claudeApiKey,
+                "anthropic-version": "2023-06-01"
               },
               body: JSON.stringify({
-                model: "claude-sonnet-4-20250514",
+                model: "claude-haiku-4-5-20251001",
                 max_tokens: 1000,
                 system: system,
                 messages: msgs
               })
             });
-          case 1:
-            res = _context5.v;
-            _context5.n = 2;
-            return res.json();
           case 2:
+            res = _context5.v;
+            _context5.n = 3;
+            return res.json();
+          case 3:
             data = _context5.v;
             return _context5.a(2, ((_data$content2 = data.content) === null || _data$content2 === void 0 || (_data$content2 = _data$content2[0]) === null || _data$content2 === void 0 ? void 0 : _data$content2.text) || "");
         }
@@ -3471,7 +3479,7 @@ function MYKITAEnglishApp() {
             });
             _context8.p = 1;
             _context8.n = 2;
-            return callAPI("\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8CA9\u58F2\u54E1\u5411\u3051\u82F1\u8A9E\u6559\u5E2B\u3067\u3059\u3002\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C".concat(q.answer, "\u300D\n\u610F\u5473\u304C\u540C\u3058\u306A\u3089\u6B63\u89E3\u3068\u3057\u307E\u3059\u3002\u4EE5\u4E0B\u306EJSON\u5F62\u5F0F\u306E\u307F\u3067\u8FD4\u7B54\uFF1A\n{\"correct\": true, \"feedback\": \"\u65E5\u672C\u8A9E\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\", \"naturalExample\": \"\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE\uFF08\u306A\u3051\u308C\u3070null\uFF09\"}"), [{
+            return callAPI("\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8CA9\u58F2\u54E1\u5411\u3051\u82F1\u8A9E\u6559\u5E2B\u3067\u3059\u3002\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C".concat(q.answer, "\u300D\n\u5B66\u7FD2\u8005\u306E\u56DE\u7B54\u3092\u4EE5\u4E0B\u306E3\u6BB5\u968E\u3067\u63A1\u70B9\u3057\u3001JSON\u5F62\u5F0F\u306E\u307F\u3067\u8FD4\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n- correct: \u610F\u5473\u30FB\u5185\u5BB9\u304C\u6B63\u78BA\u3067\u82F1\u8A9E\u3068\u3057\u3066\u81EA\u7136\n- partial: \u610F\u5473\u306F\u4F1D\u308F\u308B\u304C\u82F1\u8A9E\u3068\u3057\u3066\u4E0D\u81EA\u7136\u3001\u307E\u305F\u306F\u4E00\u90E8\u4E0D\u6B63\u78BA\n- incorrect: \u610F\u5473\u304C\u5927\u304D\u304F\u7570\u306A\u308B\u3001\u307E\u305F\u306F\u7406\u89E3\u4E0D\u80FD\n{\"grade\": \"correct|partial|incorrect\", \"feedback\": \"\u65E5\u672C\u8A9E\u30671\u301C2\u6587\u306E\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\", \"naturalExample\": \"\u3088\u308A\u81EA\u7136\u306A\u82F1\u8A9E\u8868\u73FE\uFF08correct\u306E\u5834\u5408\u306Fnull\uFF09\"}"), [{
               role: "user",
               content: quizInput
             }]);
@@ -3479,10 +3487,9 @@ function MYKITAEnglishApp() {
             raw = _context8.v;
             parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
             setQuizResult(parsed);
-            // Update stats
             next = _objectSpread(_objectSpread({}, quizStats), {}, _defineProperty({}, q.id, {
               attempts: (((_quizStats$q$id = quizStats[q.id]) === null || _quizStats$q$id === void 0 ? void 0 : _quizStats$q$id.attempts) || 0) + 1,
-              correct: (((_quizStats$q$id2 = quizStats[q.id]) === null || _quizStats$q$id2 === void 0 ? void 0 : _quizStats$q$id2.correct) || 0) + (parsed.correct ? 1 : 0)
+              correct: (((_quizStats$q$id2 = quizStats[q.id]) === null || _quizStats$q$id2 === void 0 ? void 0 : _quizStats$q$id2.correct) || 0) + (parsed.grade === "correct" ? 1 : 0)
             }));
             saveQuizStats(next);
             _context8.n = 4;
@@ -3491,8 +3498,8 @@ function MYKITAEnglishApp() {
             _context8.p = 3;
             _t0 = _context8.v;
             setQuizResult({
-              correct: false,
-              feedback: "\u63a1\u70b9\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+              grade: "incorrect",
+              feedback: "\u63a1\u70b9\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002API\u30ad\u30fc\u3092\u78ba\u8a8d\u3057\u3066\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
             });
           case 4:
             return _context8.a(2);
@@ -4793,10 +4800,12 @@ function MYKITAEnglishApp() {
         marginBottom: "14px"
       }
     }, !quizResult ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
-      style: S.btn("p"),
+      style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {
+        opacity: !quizInput.trim() || !claudeApiKey ? 0.4 : 1
+      }),
       onClick: checkQuiz,
-      disabled: !quizInput.trim()
-    }, "AI\u306B\u63A1\u70B9\u3057\u3066\u3082\u3089\u3046"), /*#__PURE__*/React.createElement("button", {
+      disabled: !quizInput.trim() || !claudeApiKey
+    }, "AI\u63A1\u70B9"), /*#__PURE__*/React.createElement("button", {
       style: S.btn("j"),
       onClick: function onClick() {
         return setShowHint(!showHint);
@@ -4816,7 +4825,17 @@ function MYKITAEnglishApp() {
       onClick: function onClick() {
         return speak(q.answer);
       }
-    }, "\u25B6 \u6A21\u7BC4\u89E3\u7B54\u3092\u805E\u304F"))), showHint && !quizResult && /*#__PURE__*/React.createElement("div", {
+    }, "\u25B6 \u6A21\u7BC4\u89E3\u7B54\u3092\u805E\u304F"))), !claudeApiKey && !quizResult && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "11px",
+        color: "#6a5a2a",
+        background: "#1a1500",
+        border: "1px solid #3a3000",
+        borderRadius: "3px",
+        padding: "8px 12px",
+        marginBottom: "12px"
+      }
+    }, "AI\u63A1\u70B9\u3092\u4F7F\u3046\u306B\u306F\u300CFAQ \u30E1\u30E2\u300D\u30BF\u30D6\u3067API\u30AD\u30FC\u3092\u8A2D\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044"), showHint && !quizResult && /*#__PURE__*/React.createElement("div", {
       style: _objectSpread(_objectSpread({}, S.jpBox), {}, {
         marginBottom: "12px"
       })
@@ -4825,33 +4844,112 @@ function MYKITAEnglishApp() {
         marginBottom: "12px"
       })
     }, "\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C", q.answer, "\u300D"), (quizResult === null || quizResult === void 0 ? void 0 : quizResult.loading) && /*#__PURE__*/React.createElement("div", {
-      style: S.resultBox(true)
-    }, "AI\u304C\u63A1\u70B9\u4E2D\u2026"), quizResult && !quizResult.loading && /*#__PURE__*/React.createElement("div", {
-      style: S.resultBox(quizResult.correct)
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: "14px",
-        marginBottom: "8px"
-      }
-    }, quizResult.correct ? "\u6b63\u89e3" : "\u60dc\u3057\u3044"), /*#__PURE__*/React.createElement("div", null, quizResult.feedback), quizResult.naturalExample && /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: "10px",
-        color: "#c8b89a"
-      }
-    }, "\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE\uFF1A\u300C", quizResult.naturalExample, "\u300D", /*#__PURE__*/React.createElement("button", {
-      style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {
-        marginLeft: "10px",
-        padding: "4px 10px"
-      }),
-      onClick: function onClick() {
-        return speak(quizResult.naturalExample);
-      }
-    }, "\u25B6")), /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginTop: "10px",
-        color: "#666"
-      }
-    }, "\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C", q.answer, "\u300D")));
+      style: _objectSpread(_objectSpread({}, S.resultBox(null)), {}, {
+        color: "#888",
+        background: "#111"
+      })
+    }, "\u63A1\u70B9\u4E2D\u2026"), quizResult && !quizResult.loading && function () {
+      var grade = quizResult.grade || (quizResult.correct ? "correct" : "partial");
+      var gradeStyles = {
+        correct: {
+          mark: "\u25ce",
+          label: "\u6b63\u89e3",
+          color: "#4a9a4a",
+          bg: "#0a1a0a",
+          border: "#2a5a2a"
+        },
+        partial: {
+          mark: "\u25b3",
+          label: "\u60dc\u3057\u3044",
+          color: "#b89a30",
+          bg: "#1a1500",
+          border: "#4a4000"
+        },
+        incorrect: {
+          mark: "\u2717",
+          label: "\u4e0d\u6b63\u89e3",
+          color: "#9a4a4a",
+          bg: "#1a0a0a",
+          border: "#5a2a2a"
+        }
+      };
+      var g = gradeStyles[grade] || gradeStyles.partial;
+      return /*#__PURE__*/React.createElement("div", {
+        style: {
+          background: g.bg,
+          border: "1px solid ".concat(g.border),
+          borderRadius: "4px",
+          padding: "16px",
+          marginBottom: "12px"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          marginBottom: "10px"
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: "22px",
+          color: g.color
+        }
+      }, g.mark), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: "14px",
+          color: g.color,
+          fontFamily: "monospace",
+          letterSpacing: "0.1em"
+        }
+      }, g.label)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "13px",
+          color: "#ccc",
+          lineHeight: "1.7",
+          marginBottom: "10px"
+        }
+      }, quizResult.feedback), quizResult.naturalExample && /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderTop: "1px solid ".concat(g.border),
+          paddingTop: "10px",
+          marginBottom: "10px"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "10px",
+          color: "#c8b89a",
+          letterSpacing: "0.1em",
+          marginBottom: "5px"
+        }
+      }, "\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE"), /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: "10px"
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: "13px",
+          color: "#c8b89a",
+          fontFamily: "monospace"
+        }
+      }, quizResult.naturalExample), /*#__PURE__*/React.createElement("button", {
+        style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {
+          padding: "3px 8px",
+          fontSize: "11px"
+        }),
+        onClick: function onClick() {
+          return speak(quizResult.naturalExample);
+        }
+      }, "\u25B6"))), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "11px",
+          color: "#555",
+          borderTop: "1px solid #1a1a1a",
+          paddingTop: "8px"
+        }
+      }, "\u6A21\u7BC4\u89E3\u7B54\uFF1A", q.answer));
+    }());
   };
 
   // \u2500\u2500\u2500 Render \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
