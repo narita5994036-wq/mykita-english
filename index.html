@@ -2654,6 +2654,14 @@ function MYKITAEnglishApp() {
     _useStateQL2 = _slicedToArray(_useStateQL, 2),
     quizListView = _useStateQL2[0],
     setQuizListView = _useStateQL2[1];
+  var _useStateQM = useState("adaptive"),
+    _useStateQM2 = _slicedToArray(_useStateQM, 2),
+    quizMode = _useStateQM2[0],
+    setQuizMode = _useStateQM2[1];
+  var _useStateWL = useState(null),
+    _useStateWL2 = _slicedToArray(_useStateWL, 2),
+    wordLookup = _useStateWL2[0],
+    setWordLookup = _useStateWL2[1];
 
   // Vocab stats for adaptive flashcard
   var _useState89 = useState({}),
@@ -2717,18 +2725,86 @@ function MYKITAEnglishApp() {
   }, [activeTab]);
   var pickNextQuestion = function pickNextQuestion() {
     var stats = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : quizStats;
+    var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : quizMode;
     var statArr = QUIZ_QUESTIONS.map(function (q) {
       return stats[q.id] || {
         attempts: 0,
         correct: 0
       };
     });
-    var idx = weightedPick(QUIZ_QUESTIONS, statArr);
+    var idx;
+    if (mode === "random") {
+      idx = Math.floor(Math.random() * QUIZ_QUESTIONS.length);
+    } else if (mode === "struggling") {
+      var _cands = QUIZ_QUESTIONS.map(function (_, i) {
+        return i;
+      }).filter(function (i) {
+        var lv = masteryLevel(statArr[i]);
+        return lv === "struggling" || lv === "new";
+      });
+      if (_cands.length === 0) _cands = QUIZ_QUESTIONS.map(function (_, i) {
+        return i;
+      });
+      idx = _cands[Math.floor(Math.random() * _cands.length)];
+    } else if (mode === "unanswered") {
+      var _unanswered = QUIZ_QUESTIONS.map(function (_, i) {
+        return i;
+      }).filter(function (i) {
+        return statArr[i].attempts === 0;
+      });
+      idx = _unanswered.length > 0 ? _unanswered[Math.floor(Math.random() * _unanswered.length)] : Math.floor(Math.random() * QUIZ_QUESTIONS.length);
+    } else if (mode === "sequential") {
+      idx = currentQuizIndex === null ? 0 : (currentQuizIndex + 1) % QUIZ_QUESTIONS.length;
+    } else {
+      idx = weightedPick(QUIZ_QUESTIONS, statArr);
+    }
     setCurrentQuizIndex(idx);
     setQuizInput("");
     setQuizResult(null);
     setShowHint(false);
     setShowAnswer(false);
+    setWordLookup(null);
+  };
+  var lookupWord = function lookupWord(word) {
+    if (!claudeApiKey || wordLookup && wordLookup.loading) return;
+    setWordLookup({
+      word: word,
+      result: null,
+      loading: true
+    });
+    fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": claudeApiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 256,
+        messages: [{
+          role: "user",
+          content: "\"".concat(word, "\" \u306E\u610F\u5473\u30FB\u54C1\u8A5E\u30FB\u767A\u97F3\u8A18\u53F7\u3092\u65E5\u672C\u8A9E\u3067\u7C21\u6F54\u306B\u8AAC\u660E\u3057\u3066\u304F\u3060\u3055\u3044\uFF083\u884C\u4EE5\u5185\uFF09")
+        }]
+      })
+    }).then(function (res) {
+      return res.json();
+    }).then(function (data) {
+      var _dc;
+      var text = data && data.content && (_dc = data.content[0]) !== null && _dc !== void 0 && _dc.text ? data.content[0].text.trim() : null;
+      setWordLookup({
+        word: word,
+        result: text || "\u53D6\u5F97\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F",
+        loading: false
+      });
+    }).catch(function () {
+      setWordLookup({
+        word: word,
+        result: "\u30A8\u30E9\u30FC\u304C\u767A\u751F\u3057\u307E\u3057\u305F",
+        loading: false
+      });
+    });
   };
 
   // \u2500\u2500\u2500 Adaptive Vocab Flashcard \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -4863,6 +4939,23 @@ function MYKITAEnglishApp() {
     })) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
+        gap: "6px",
+        flexWrap: "wrap",
+        marginBottom: "14px"
+      }
+    }, [["adaptive", "\u9069\u5FDC\u578B"], ["random", "\u5B8C\u5168\u30E9\u30F3\u30C0\u30E0"], ["struggling", "\u82E6\u624B\u4E2D\u5FC3"], ["unanswered", "\u672A\u51FA\u984C\u4E2D\u5FC3"], ["sequential", "\u5B9A\u578B\u9806"]].map(function (_refMode) {
+      var _mode = _refMode[0], _label = _refMode[1];
+      return /*#__PURE__*/React.createElement("button", {
+        key: _mode,
+        style: S.catBtn(quizMode === _mode),
+        onClick: function onClick() {
+          setQuizMode(_mode);
+          pickNextQuestion(quizStats, _mode);
+        }
+      }, _label);
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
         gap: "12px",
         alignItems: "center",
         marginBottom: "14px",
@@ -5090,7 +5183,48 @@ function MYKITAEnglishApp() {
           borderTop: "1px solid #1a1a1a",
           paddingTop: "8px"
         }
-      }, "\u6A21\u7BC4\u89E3\u7B54\uFF1A", q.answer));
+      }, "\u6A21\u7BC4\u89E3\u7B54\uFF1A", /*#__PURE__*/React.createElement("span", null, q.answer.split(/(\s+|[^\w'\s]+)/).filter(Boolean).map(function (token, i) {
+        var isWord = /^[\w']+$/.test(token);
+        return /*#__PURE__*/React.createElement("span", {
+          key: i,
+          style: isWord && claudeApiKey ? {
+            cursor: "pointer",
+            textDecoration: "underline",
+            textDecorationStyle: "dotted",
+            color: wordLookup && wordLookup.word.toLowerCase() === token.toLowerCase() ? "#c8b89a" : "#555"
+          } : null,
+          onClick: isWord && claudeApiKey ? function () {
+            return lookupWord(token);
+          } : undefined
+        }, token);
+      }))), wordLookup && /*#__PURE__*/React.createElement("div", {
+        style: {
+          marginTop: "10px",
+          background: "#0a0a1a",
+          border: "1px solid #2a2a4a",
+          borderRadius: "3px",
+          padding: "10px 12px"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "10px",
+          color: "#7a7ab0",
+          letterSpacing: "0.1em",
+          marginBottom: "6px"
+        }
+      }, wordLookup.word.toUpperCase()), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "11px",
+          color: "#555"
+        }
+      }, "\u8ABF\u3079\u3066\u3044\u307E\u3059...") : /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: "12px",
+          color: "#aaa",
+          lineHeight: "1.7",
+          whiteSpace: "pre-wrap"
+        }
+      }, wordLookup.result)));
     }()));
   };
 
