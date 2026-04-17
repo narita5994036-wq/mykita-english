@@ -4252,7 +4252,10 @@ function MYKITAEnglishApp() {
           fontSize: "10px",
           letterSpacing: "0.1em"
         }
-      }, dictWord), dictLoading ? /*#__PURE__*/React.createElement("div", {
+      }, /*#__PURE__*/React.createElement("span", {style:{display:"inline-flex",alignItems:"center",gap:"6px"}}, dictWord, /*#__PURE__*/React.createElement("button", {
+          style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+          onClick: function onClick() { return speak(dictWord); }
+        }, "\u25B6"))), dictLoading ? /*#__PURE__*/React.createElement("div", {
         style: {
           color: "#555"
         }
@@ -5204,9 +5207,15 @@ function MYKITAEnglishApp() {
         fontSize: "10px",
         color: "#7a7ab0",
         letterSpacing: "0.1em",
-        marginBottom: "6px"
+        marginBottom: "6px",
+        display: "flex",
+        alignItems: "center",
+        gap: "6px"
       }
-    }, wordLookup.word.toUpperCase()), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
+    }, wordLookup.word.toUpperCase(), /*#__PURE__*/React.createElement("button", {
+      style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+      onClick: function onClick() { return speak(wordLookup.word); }
+    }, "\u25B6")), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "11px",
         color: "#555"
@@ -5404,9 +5413,15 @@ function MYKITAEnglishApp() {
           fontSize: "10px",
           color: "#7a7ab0",
           letterSpacing: "0.1em",
-          marginBottom: "6px"
+          marginBottom: "6px",
+          display: "flex",
+          alignItems: "center",
+          gap: "6px"
         }
-      }, wordLookup.word.toUpperCase()), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
+      }, wordLookup.word.toUpperCase(), /*#__PURE__*/React.createElement("button", {
+        style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+        onClick: function onClick() { return speak(wordLookup.word); }
+      }, "\u25B6")), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
         style: {
           fontSize: "11px",
           color: "#555"
