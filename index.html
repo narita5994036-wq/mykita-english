@@ -3333,9 +3333,23 @@ function MYKITAEnglishApp() {
             case 6:
               rec = new SR();
               rec.lang = "en-US";
-              rec.continuous = false;
+              rec.continuous = true;
               rec.interimResults = true;
               rec.maxAlternatives = 5;
+              var silenceTimer = null;
+              var accumulated = "";
+              rec.onspeechstart = function() {
+                if (silenceTimer) { clearTimeout(silenceTimer); silenceTimer = null; }
+              };
+              rec.onspeechend = function() {
+                silenceTimer = setTimeout(function() {
+                  silenceTimer = null;
+                  if (!stoppedByUser.current) {
+                    stoppedByUser.current = true;
+                    try { rec.stop(); } catch(e) {}
+                  }
+                }, 1000);
+              };
               rec.onresult = function (e) {
                 var interim = "";
                 var _loop = function _loop() {
@@ -3352,18 +3366,20 @@ function MYKITAEnglishApp() {
                       setJpWarning(true);
                       best = stripJapanese(best);
                     }
-                    setTranscript(best);
+                    accumulated = (accumulated + " " + best).trim();
+                    var finalText = accumulated;
+                    setTranscript(finalText);
                     // context\u306b\u5fdc\u3058\u3066\u5404input\u306b\u3082\u53cd\u6620
                     setRecordingContext(function (ctx) {
                       if (ctx === "quiz") {
-                        setQuizInput(best);
+                        setQuizInput(finalText);
                         if (claudeApiKey) {
-                          callAPI("\u82f1\u8a9e\u306e\u97f3\u58f0\u8a8d\u8b58\u30c6\u30ad\u30b9\u30c8\u306b\u9069\u5207\u306a\u53e5\u8aad\u70b9\u3068\u5927\u6587\u5b57\u5c0f\u6587\u5b57\u3092\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u82f1\u8a9e\u30c6\u30ad\u30b9\u30c8\u306e\u307f\u8fd4\u3057\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:best}])
+                          callAPI("\u82f1\u8a9e\u306e\u97f3\u58f0\u8a8d\u8b58\u30c6\u30ad\u30b9\u30c8\u306b\u9069\u5207\u306a\u53e5\u8aad\u70b9\u3068\u5927\u6587\u5b57\u5c0f\u6587\u5b57\u3092\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u82f1\u8a9e\u30c6\u30ad\u30b9\u30c8\u306e\u307f\u8fd4\u3057\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:finalText}])
                             .then(function(r) { setQuizInput(r.trim()); })
                             .catch(function() {});
                         }
                       } else if (ctx === "roleplay") {
-                        setUserInput(best);
+                        setUserInput(finalText);
                       }
                       return ctx;
                     });
@@ -3387,8 +3403,10 @@ function MYKITAEnglishApp() {
               recognitionRef.current._stoppedByUser = stoppedByUser;
               rec.onend = function () {
                 setInterimTranscript("");
+                if (silenceTimer) { clearTimeout(silenceTimer); silenceTimer = null; }
                 // \u30e6\u30fc\u30b6\u30fc\u304c\u505c\u6b62\u3057\u3066\u3044\u306a\u3051\u308c\u3070\u81ea\u52d5\u518d\u958b
                 if (!stoppedByUser.current) {
+                  accumulated = "";
                   try {
                     rec.start();
                   } catch (e) {}
