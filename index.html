@@ -1578,9 +1578,9 @@ var SHADOWING_LESSONS = [{
     jp: "\u6c17\u306b\u5165\u3063\u305f\u30d5\u30ec\u30fc\u30e0\u306f\u3042\u308a\u307e\u3057\u305f\u304b\uff1f",
     note: "\u8272\u3005\u8a66\u3057\u639b\u3051\u3057\u3066\u3044\u308b\u304a\u5ba2\u69d8\u3078\u306e\u81ea\u7136\u306a\u58f0\u304b\u3051"
   }, {
-    en: "What style or colour do you prefer?",
+    en: "What style or color do you prefer?",
     jp: "\u3069\u3093\u306a\u5f62\u3084\u8272\u304c\u304a\u597d\u307f\u3067\u3059\u304b\uff1f",
-    note: "\u597d\u307f\u3092\u5f15\u304d\u51fa\u3059\u6700\u521d\u306e\u8cea\u554f\u3002style / colour \u3069\u3061\u3089\u304b\u3089\u805e\u3044\u3066\u3082OK"
+    note: "\u597d\u307f\u3092\u5f15\u304d\u51fa\u3059\u6700\u521d\u306e\u8cea\u554f\u3002style / color \u3069\u3061\u3089\u304b\u3089\u805e\u3044\u3066\u3082OK"
   }, {
     en: "I see you're wearing MYKITA!",
     jp: "\u30de\u30a4\u30ad\u30fc\u30bf\u306e\u30e1\u30ac\u30cd\u3092\u304a\u4f7f\u3044\u3067\u3059\u306d\uff01",
@@ -2624,6 +2624,26 @@ function MYKITAEnglishApp() {
     _useState76 = _slicedToArray(_useState75, 2),
     loadingFeedback = _useState76[0],
     setLoadingFeedback = _useState76[1];
+  var _useStateRT = useState({}),
+    _useStateRT2 = _slicedToArray(_useStateRT, 2),
+    rpTranslations = _useStateRT2[0],
+    setRpTranslations = _useStateRT2[1];
+  var _useStateRLT = useState(null),
+    _useStateRLT2 = _slicedToArray(_useStateRLT, 2),
+    rpLoadingTrans = _useStateRLT2[0],
+    setRpLoadingTrans = _useStateRLT2[1];
+  var _useStateRH = useState(null),
+    _useStateRH2 = _slicedToArray(_useStateRH, 2),
+    rpHint = _useStateRH2[0],
+    setRpHint = _useStateRH2[1];
+  var _useStateRLH = useState(false),
+    _useStateRLH2 = _slicedToArray(_useStateRLH, 2),
+    rpLoadingHint = _useStateRLH2[0],
+    setRpLoadingHint = _useStateRLH2[1];
+  var _useStateRJE = useState(false),
+    _useStateRJE2 = _slicedToArray(_useStateRJE, 2),
+    rpLoadingJpEn = _useStateRJE2[0],
+    setRpLoadingJpEn = _useStateRJE2[1];
 
   // Quiz \u2014 adaptive
   var _useState77 = useState({}),
@@ -2695,6 +2715,7 @@ function MYKITAEnglishApp() {
   var recognitionRef = useRef(null);
   var mediaRecorderRef = useRef(null);
   var audioChunksRef = useRef([]);
+  var ttsCacheRef = useRef({});
 
   // \u2500\u2500\u2500 Load/Save Progress \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
@@ -2793,7 +2814,7 @@ function MYKITAEnglishApp() {
         max_tokens: 256,
         messages: [{
           role: "user",
-          content: "\"".concat(word, "\" \u306E\u610F\u5473\u30FB\u54C1\u8A5E\u30FB\u767A\u97F3\u8A18\u53F7\u3092\u65E5\u672C\u8A9E\u3067\u7C21\u6F54\u306B\u8AAC\u660E\u3057\u3066\u304F\u3060\u3055\u3044\uFF083\u884C\u4EE5\u5185\uFF09")
+          content: "\"".concat(word, "\"\u306e\u6700\u3082\u65e5\u5e38\u7684\u30fb\u4e00\u822c\u7684\u306a\u610f\u5473\u3092\u65e5\u672c\u8a9e\u3067\u7c21\u6f54\u306b\u8aac\u660e\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u54c1\u8a5e\u3068\u77ed\u3044\u4f8b\u6587\u3082\u542b\u3081\u30663\u884c\u4ee5\u5185\u3067\u3002\u5c02\u9580\u7684\u30fb\u5b66\u8853\u7684\u306a\u5b9a\u7fa9\u306f\u907f\u3051\u3066\u304f\u3060\u3055\u3044\u3002")
         }]
       })
     }).then(function (res) {
@@ -2874,12 +2895,15 @@ function MYKITAEnglishApp() {
     }
     return null;
   }, []);
+  var TTS_SUBS = {"MYKITA":"My keeta","Mykita":"My keeta","mykita":"my keeta","LINDBERG":"Lindberg","silhouette":"sil-oo-ET","Silhouette":"Sil-oo-ET","titanium":"tie-TAY-nee-um","acetate":"AS-eh-tate","rimless":"rim-less","progressive":"pro-GRES-iv"};
+  var applyTtsSubs = function(t) { return Object.keys(TTS_SUBS).reduce(function(s,k){return s.split(k).join(TTS_SUBS[k]);},t); };
   var speak = useCallback(function (text) {
     var rate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
+    var finalText = ttsCacheRef.current[text] || applyTtsSubs(text);
     var doSpeak = function doSpeak() {
-      var utt = new SpeechSynthesisUtterance(text);
+      var utt = new SpeechSynthesisUtterance(finalText);
       utt.lang = "en-US";
       utt.rate = rate;
       utt.pitch = 1.0;
@@ -3051,18 +3075,30 @@ function MYKITAEnglishApp() {
             def = meaning === null || meaning === void 0 || (_meaning$definitions = meaning.definitions) === null || _meaning$definitions === void 0 ? void 0 : _meaning$definitions[0];
             partOfSpeech = (meaning === null || meaning === void 0 ? void 0 : meaning.partOfSpeech) || "";
             enDef = (def === null || def === void 0 ? void 0 : def.definition) || "";
-            example = (def === null || def === void 0 ? void 0 : def.example) || ""; // MyMemory API\u3067\u82f1\u2192\u65e5\u672c\u8a9e\u306b\u7ffb\u8a33
+            example = (def === null || def === void 0 ? void 0 : def.example) || "";
             jpDef = enDef;
             _context2.p = 15;
             _context2.n = 16;
-            return fetch("https://api.mymemory.translated.net/get?q=".concat(encodeURIComponent(enDef), "&langpair=en|ja"));
+            return claudeApiKey ? fetch("https://api.anthropic.com/v1/messages", {
+              method: "POST",
+              headers: {"Content-Type":"application/json","x-api-key":claudeApiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+              body: JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:256,messages:[{role:"user",content:"\""+clean+"\"\u306e\u6700\u3082\u65e5\u5e38\u7684\u30fb\u4e00\u822c\u7684\u306a\u610f\u5473\u3092\u65e5\u672c\u8a9e\u3067\u7c21\u6f54\u306b\u8aac\u660e\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u54c1\u8a5e\u3068\u77ed\u3044\u4f8b\u6587\u3082\u542b\u3081\u30663\u884c\u4ee5\u5185\u3067\u3002\u5c02\u9580\u7684\u30fb\u5b66\u8853\u7684\u306a\u5b9a\u7fa9\u306f\u907f\u3051\u3066\u304f\u3060\u3055\u3044\u3002"}]})
+            }) : fetch("https://api.mymemory.translated.net/get?q=".concat(encodeURIComponent(enDef), "&langpair=en|ja"));
           case 16:
             trRes = _context2.v;
             _context2.n = 17;
             return trRes.json();
           case 17:
             trData = _context2.v;
-            if (trData.responseStatus === 200) jpDef = trData.responseData.translatedText;
+            if (claudeApiKey) {
+              if (trData.content && trData.content[0] && trData.content[0].text) {
+                jpDef = trData.content[0].text.trim();
+                partOfSpeech = "";
+                example = "";
+              }
+            } else {
+              if (trData.responseStatus === 200) jpDef = trData.responseData.translatedText;
+            }
             _context2.n = 19;
             break;
           case 18:
@@ -3319,7 +3355,16 @@ function MYKITAEnglishApp() {
                     setTranscript(best);
                     // context\u306b\u5fdc\u3058\u3066\u5404input\u306b\u3082\u53cd\u6620
                     setRecordingContext(function (ctx) {
-                      if (ctx === "quiz") setQuizInput(best);else if (ctx === "roleplay") setUserInput(best);
+                      if (ctx === "quiz") {
+                        setQuizInput(best);
+                        if (claudeApiKey) {
+                          callAPI("\u82f1\u8a9e\u306e\u97f3\u58f0\u8a8d\u8b58\u30c6\u30ad\u30b9\u30c8\u306b\u9069\u5207\u306a\u53e5\u8aad\u70b9\u3068\u5927\u6587\u5b57\u5c0f\u6587\u5b57\u3092\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u82f1\u8a9e\u30c6\u30ad\u30b9\u30c8\u306e\u307f\u8fd4\u3057\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:best}])
+                            .then(function(r) { setQuizInput(r.trim()); })
+                            .catch(function() {});
+                        }
+                      } else if (ctx === "roleplay") {
+                        setUserInput(best);
+                      }
                       return ctx;
                     });
                     setInterimTranscript("");
@@ -3480,6 +3525,13 @@ function MYKITAEnglishApp() {
       return _ref6.apply(this, arguments);
     };
   }();
+  var preprocessTts = function preprocessTts(text) {
+    if (!claudeApiKey || !text || ttsCacheRef.current[text] !== undefined) return;
+    ttsCacheRef.current[text] = applyTtsSubs(text);
+    callAPI("\u82f1\u8a9e\u306eTTS\uff08\u30c6\u30ad\u30b9\u30c8\u97f3\u58f0\u5408\u6210\uff09\u3067\u81ea\u7136\u306b\u8aad\u307f\u4e0a\u3052\u308b\u305f\u3081\u3001\u4ee5\u4e0b\u306e\u82f1\u6587\u3092\u6539\u5584\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u30eb\u30fc\u30eb\uff1a\u2460\u9577\u3044\u7bc0\u306b\u306f\u30ab\u30f3\u30de\u3067\u9593\u3092\u8ffd\u52a0\u2461\u56fa\u6709\u540d\u8a5e\u306f\u767a\u97f3\u30ac\u30a4\u30c9\u3092\u30cf\u30a4\u30d5\u30f3\u3064\u304d\u3067\u8ffd\u52a0\uff08\u4f8b: MYKITA\u2192My-kee-ta\uff09\u2462\u7701\u7565\u5f62\u306f\u5c55\u958b\u2463\u5143\u306e\u610f\u5473\u3092\u5909\u3048\u305a\u3001\u82f1\u6587\u306e\u307f\u8fd4\u3059\u3002", [{role:"user",content:text}])
+      .then(function(result) { ttsCacheRef.current[text] = result.trim(); })
+      .catch(function() { delete ttsCacheRef.current[text]; });
+  };
   var sendMessage = /*#__PURE__*/function () {
     var _ref7 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6() {
       var newMsgs, reply, _t8;
@@ -3516,6 +3568,7 @@ function MYKITAEnglishApp() {
               }]);
             });
             speak(reply, 0.9);
+            preprocessTts(reply);
             _context6.n = 5;
             break;
           case 4:
@@ -3582,6 +3635,34 @@ function MYKITAEnglishApp() {
     }]);
     setUserInput("");
     setJpFeedback({});
+    setRpTranslations({});
+    setRpHint(null);
+  };
+  var getRpTranslation = function getRpTranslation(idx, text) {
+    if (!claudeApiKey) return;
+    setRpLoadingTrans(idx);
+    callAPI("\u3042\u306a\u305f\u306f\u7ffb\u8a33\u8005\u3067\u3059\u3002\u82f1\u6587\u3092\u81ea\u7136\u306a\u65e5\u672c\u8a9e\u306b\u7ffb\u8a33\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u7ffb\u8a33\u6587\u306e\u307f\u51fa\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:text}])
+      .then(function(t) { setRpTranslations(function(p) { return _objectSpread(_objectSpread({},p),{},_defineProperty({},idx,t)); }); })
+      .catch(function() { setRpTranslations(function(p) { return _objectSpread(_objectSpread({},p),{},_defineProperty({},idx,"\u7ffb\u8a33\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002")); }); })
+      .finally(function() { setRpLoadingTrans(null); });
+  };
+  var getRpHint = function getRpHint() {
+    if (!claudeApiKey) return;
+    setRpLoadingHint(true);
+    setRpHint(null);
+    var convText = messages.map(function(m) { return (m.role==="user"?"\u8ca9\u58f2\u54e1: ":"Customer: ")+m.content; }).join("\n");
+    callAPI("\u3042\u306a\u305f\u306f\u30e1\u30ac\u30cd\u8ca9\u58f2\u54e1\u5411\u3051\u82f1\u4f1a\u8a71\u30b3\u30fc\u30c1\u3067\u3059\u3002\u4ee5\u4e0b\u306e\u4f1a\u8a71\u306e\u6d41\u308c\u3092\u898b\u3066\u3001\u8ca9\u58f2\u54e1\u304c\u6b21\u306b\u8a00\u3048\u305d\u3046\u306a\u82f1\u8a9e\u30d5\u30ec\u30fc\u30ba\u306e\u30d2\u30f3\u30c8\u30921\u301c2\u6587\u306e\u65e5\u672c\u8a9e\u3067\u63d0\u6848\u3057\u3001\u82f1\u8a9e\u30d5\u30ec\u30fc\u30ba\u4f8b\u30921\u3064\u542b\u3081\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:convText}])
+      .then(function(h) { setRpHint(h); })
+      .catch(function() { setRpHint("\u30d2\u30f3\u30c8\u306e\u53d6\u5f97\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002"); })
+      .finally(function() { setRpLoadingHint(false); });
+  };
+  var getRpJpToEn = function getRpJpToEn() {
+    if (!userInput.trim() || !claudeApiKey) return;
+    setRpLoadingJpEn(true);
+    callAPI("\u3042\u306a\u305f\u306f\u30e1\u30ac\u30cd\u8ca9\u58f2\u54e1\u5411\u3051\u82f1\u4f1a\u8a71\u30b3\u30fc\u30c1\u3067\u3059\u3002\u4ee5\u4e0b\u306e\u65e5\u672c\u8a9e\u3092\u3001\u8ca9\u58f2\u54e1\u3068\u3057\u3066\u81ea\u7136\u306a\u82f1\u8a9e\u306b\u7ffb\u8a33\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u7ffb\u8a33\u6587\u306e\u307f\u51fa\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:userInput}])
+      .then(function(en) { setUserInput(en); })
+      .catch(function() {})
+      .finally(function() { setRpLoadingJpEn(false); });
   };
   var checkQuiz = /*#__PURE__*/function () {
     var _ref9 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
@@ -3617,7 +3698,7 @@ function MYKITAEnglishApp() {
               body: JSON.stringify({
                 model: "claude-haiku-4-5-20251001",
                 max_tokens: 512,
-                system: "\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8CA9\u58F2\u54E1\u5411\u3051\u82F1\u8A9E\u6559\u5E2B\u3067\u3059\u3002\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C".concat(q.answer, "\u300D\n\u5B66\u7FD2\u8005\u306E\u56DE\u7B54\u3092\u63A1\u70B9\u3057\u3001\u5FC5\u305AJSON\u306E\u307F\u3067\u8FD4\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30DE\u30FC\u30AF\u30C0\u30A6\u30F3\u4E0D\u8981\u3002\n{\"grade\":\"correct|partial|incorrect\",\"feedback\":\"\u65E5\u672C\u8A9E1\u6587\",\"naturalExample\":\"\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE\u307E\u305F\u306Fnull\"}"),
+                system: "\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8ca9\u58f2\u54e1\u5411\u3051\u82f1\u8a9e\u6559\u5e2b\u3067\u3059\u3002\u6a21\u7bc4\u89e3\u7b54\uff1a\u300c".concat(q.answer, "\u300d\n\u5b66\u7fd2\u8005\u306e\u56de\u7b54\u3092\u63a1\u70b9\u3057\u3001\u5fc5\u305ajson\u306e\u307f\u3067\u8fd4\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u30de\u30fc\u30af\u30c0\u30a6\u30f3\u4e0d\u8981\u3002\n\u63a1\u70b9\u57fa\u6e96\uff1a\u5358\u8a9e\u30fb\u610f\u5473\u30fb\u6587\u6cd5\u304c\u5408\u3063\u3066\u3044\u308c\u3070\u6b63\u89e3\u3002\u53e5\u8aad\u70b9\u30fb\u5927\u6587\u5b57\u5c0f\u6587\u5b57\u306e\u9055\u3044\u306f\u7121\u8996\u3059\u308b\u3053\u3068\u3002\u97f3\u58f0\u5165\u529b\u306e\u305f\u3081\u53e5\u8aad\u70b9\u304c\u6b20\u3051\u3066\u3044\u308b\u3053\u3068\u304c\u591a\u3044\u3002\n{\"grade\":\"correct|partial|incorrect\",\"feedback\":\"\u65e5\u672c\u8a9e1\u6587\",\"naturalExample\":\"\u3088\u308a\u81ea\u7136\u306a\u8868\u73fe\u307e\u305f\u306fnull\"}"),
                 messages: [{
                   role: "user",
                   content: quizInput
@@ -4134,12 +4215,14 @@ function MYKITAEnglishApp() {
         onClick: function onClick() {
           setSelectedPhrase(i);
           speak(p.en);
+          preprocessTts(p.en);
         }
       }, "\u25B6 \u518D\u751F"), /*#__PURE__*/React.createElement("button", {
         style: S.btn(),
         onClick: function onClick() {
           setSelectedPhrase(i);
           speak(p.en, 0.65);
+          preprocessTts(p.en);
         }
       }, "\u25B6 \u30B9\u30ED\u30FC")), showJp[i] && /*#__PURE__*/React.createElement("div", {
         style: S.jpBox
@@ -4169,7 +4252,10 @@ function MYKITAEnglishApp() {
           fontSize: "10px",
           letterSpacing: "0.1em"
         }
-      }, dictWord), dictLoading ? /*#__PURE__*/React.createElement("div", {
+      }, /*#__PURE__*/React.createElement("span", {style:{display:"inline-flex",alignItems:"center",gap:"6px"}}, dictWord, /*#__PURE__*/React.createElement("button", {
+          style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+          onClick: function onClick() { return speak(dictWord); }
+        }, "\u25B6"))), dictLoading ? /*#__PURE__*/React.createElement("div", {
         style: {
           color: "#555"
         }
@@ -4737,114 +4823,99 @@ function MYKITAEnglishApp() {
   // \u2500\u2500\u2500 Tab: Roleplay \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
   var renderRoleplay = function renderRoleplay() {
-    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-      style: S.label
-    }, "AI\u30ED\u30FC\u30EB\u30D7\u30EC\u30A4 \u2014 \u3042\u306A\u305F\u304C\u8CA9\u58F2\u54E1"), /*#__PURE__*/React.createElement("div", {
-      style: S.row
-    }, [{
-      key: "general",
-      label: "\u4e00\u822c\u5ba2"
-    }, {
-      key: "mykita",
-      label: "MYKITA\u30d5\u30a1\u30f3"
-    }, {
-      key: "objection",
-      label: "\u4fa1\u683c\u4ea4\u6e09\u5ba2"
-    }, {
-      key: "tourist",
-      label: "\u82f1\u8a9e\u89b3\u5149\u5ba2"
-    }].map(function (sc) {
-      return /*#__PURE__*/React.createElement("button", {
-        key: sc.key,
-        style: S.catBtn(scenario === sc.key),
-        onClick: function onClick() {
-          setScenario(sc.key);
-          resetChat();
-        }
-      }, sc.label);
-    })), /*#__PURE__*/React.createElement("div", {
-      style: S.chatBox
-    }, messages.map(function (m, i) {
-      return /*#__PURE__*/React.createElement("div", {
-        key: i
-      }, /*#__PURE__*/React.createElement("div", {
-        style: S.roleLabel(m.role)
-      }, m.role === "user" ? "\u3042\u306a\u305f\uff08\u8ca9\u58f2\u54e1\uff09" : "Customer"), /*#__PURE__*/React.createElement("div", {
-        style: S.bubble(m.role)
-      }, /*#__PURE__*/React.createElement("div", {
-        style: S.bubbleIn(m.role)
-      }, m.content)), m.role === "user" && /*#__PURE__*/React.createElement("div", {
-        style: {
-          textAlign: "right",
-          marginTop: "-4px",
-          marginBottom: "10px"
-        }
-      }, /*#__PURE__*/React.createElement("button", {
-        style: S.btn("j"),
-        onClick: function onClick() {
-          return getFeedback(i, m.content);
-        },
-        disabled: loadingFeedback === i
-      }, loadingFeedback === i ? "\u8a55\u4fa1\u4e2d\u2026" : "\u65e5\u672c\u8a9e\u3067\u8a55\u4fa1\u3059\u308b"), jpFeedback[i] && /*#__PURE__*/React.createElement("div", {
-        style: S.fbBox
-      }, jpFeedback[i])));
-    }), isLoading && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-      style: S.roleLabel("assistant")
-    }, "Customer"), /*#__PURE__*/React.createElement("div", {
-      style: S.bubble("assistant")
-    }, /*#__PURE__*/React.createElement("div", {
-      style: _objectSpread(_objectSpread({}, S.bubbleIn("assistant")), {}, {
-        color: "#555"
-      })
-    }, "typing\u2026"))), /*#__PURE__*/React.createElement("div", {
-      ref: chatEndRef
-    })), isRecording && recordingContext === "roleplay" && /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontFamily: "monospace",
-        fontSize: "11px",
-        color: "#c8b89a",
-        marginBottom: "6px",
-        padding: "0 0 4px"
-      }
-    }, "REC \u9332\u97F3\u4E2D... ", interimTranscript && /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: "#666"
-      }
-    }, interimTranscript)), /*#__PURE__*/React.createElement("div", {
-      style: S.inputRow
-    }, !isRecording ? /*#__PURE__*/React.createElement("button", {
-      style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {
-        whiteSpace: "nowrap"
-      }),
-      onClick: function onClick() {
-        setJpWarning(false);
-        startRecording("roleplay");
-      }
-    }, "MIC") : /*#__PURE__*/React.createElement("button", {
-      style: _objectSpread(_objectSpread({}, S.btn("r")), {}, {
-        whiteSpace: "nowrap"
-      }),
-      onClick: stopRecording
-    }, "\u25A0"), /*#__PURE__*/React.createElement("input", {
-      style: _objectSpread(_objectSpread({}, S.input), {}, {
-        borderColor: isRecording && recordingContext === "roleplay" ? "#8b3030" : "#222"
-      }),
-      value: userInput,
-      onChange: function onChange(e) {
-        return setUserInput(e.target.value);
-      },
-      onKeyDown: function onKeyDown(e) {
-        return e.key === "Enter" && sendMessage();
-      },
-      placeholder: isRecording && recordingContext === "roleplay" ? "REC \u9332\u97f3\u4e2d..." : "\u82f1\u8a9e\u3067\u8fd4\u7b54 / \u97f3\u58f0\u5165\u529b\u2026"
-    }), /*#__PURE__*/React.createElement("button", {
-      style: S.btn("p"),
-      onClick: sendMessage,
-      disabled: isLoading
-    }, "\u9001\u4FE1"), /*#__PURE__*/React.createElement("button", {
-      style: S.btn(),
-      onClick: resetChat
-    }, "\u30EA\u30BB\u30C3\u30C8")));
+    return React.createElement("div", null,
+      React.createElement("span", {style: S.label}, "AI\u30ed\u30fc\u30eb\u30d7\u30ec\u30a4 \u2014 \u3042\u306a\u305f\u304c\u8ca9\u58f2\u54e1"),
+      React.createElement("div", {style: S.row},
+        [{key:"general",label:"\u4e00\u822c\u5ba2"},{key:"mykita",label:"MYKITA\u30d5\u30a1\u30f3"},{key:"objection",label:"\u4fa1\u683c\u4ea4\u6e09\u5ba2"},{key:"tourist",label:"\u82f1\u8a9e\u89b3\u5149\u5ba2"}]
+          .map(function(sc) {
+            return React.createElement("button", {
+              key: sc.key,
+              style: S.catBtn(scenario === sc.key),
+              onClick: function() { setScenario(sc.key); resetChat(); }
+            }, sc.label);
+          })
+      ),
+      React.createElement("div", {style: S.chatBox},
+        messages.map(function(m, i) {
+          return React.createElement("div", {key: i},
+            React.createElement("div", {style: S.roleLabel(m.role)}, m.role === "user" ? "\u3042\u306a\u305f\uff08\u8ca9\u58f2\u54e1\uff09" : "Customer"),
+            React.createElement("div", {style: S.bubble(m.role)},
+              React.createElement("div", {style: S.bubbleIn(m.role)}, m.content)
+            ),
+            m.role === "assistant" && React.createElement("div", {style:{textAlign:"left",marginTop:"-4px",marginBottom:"10px"}},
+              React.createElement("button", {
+                style: S.btn("j"),
+                onClick: function() {
+                  if (rpTranslations[i]) {
+                    setRpTranslations(function(p) { var c = _objectSpread({}, p); delete c[i]; return c; });
+                  } else {
+                    getRpTranslation(i, m.content);
+                  }
+                },
+                disabled: rpLoadingTrans === i
+              }, rpLoadingTrans === i ? "\u7ffb\u8a33\u4e2d\u2026" : rpTranslations[i] ? "\u8a33\u3092\u9690\u3059" : "\u65e5\u672c\u8a9e\u8a33"),
+              rpTranslations[i] && React.createElement("div", {style: S.fbBox}, rpTranslations[i])
+            ),
+            m.role === "user" && React.createElement("div", {style:{textAlign:"right",marginTop:"-4px",marginBottom:"10px"}},
+              React.createElement("button", {
+                style: S.btn("j"),
+                onClick: function() { return getFeedback(i, m.content); },
+                disabled: loadingFeedback === i
+              }, loadingFeedback === i ? "\u8a55\u4fa1\u4e2d\u2026" : "\u65e5\u672c\u8a9e\u3067\u8a55\u4fa1\u3059\u308b"),
+              jpFeedback[i] && React.createElement("div", {style: S.fbBox}, jpFeedback[i])
+            )
+          );
+        }),
+        isLoading && React.createElement("div", null,
+          React.createElement("div", {style: S.roleLabel("assistant")}, "Customer"),
+          React.createElement("div", {style: S.bubble("assistant")},
+            React.createElement("div", {style: _objectSpread(_objectSpread({}, S.bubbleIn("assistant")), {}, {color:"#555"})}, "typing\u2026")
+          )
+        ),
+        React.createElement("div", {ref: chatEndRef})
+      ),
+      isRecording && recordingContext === "roleplay" && React.createElement("div", {
+        style: {fontFamily:"monospace",fontSize:"11px",color:"#c8b89a",marginBottom:"6px",padding:"0 0 4px"}
+      }, "REC \u9332\u97f3\u4e2d... ", interimTranscript && React.createElement("span", {style:{color:"#666"}}, interimTranscript)),
+      React.createElement("div", {style:{display:"flex",gap:"8px",marginBottom:"8px"}},
+        !isRecording ? React.createElement("button", {
+          style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {whiteSpace:"nowrap"}),
+          onClick: function() { setJpWarning(false); startRecording("roleplay"); }
+        }, "MIC") : React.createElement("button", {
+          style: _objectSpread(_objectSpread({}, S.btn("r")), {}, {whiteSpace:"nowrap"}),
+          onClick: stopRecording
+        }, "\u25a0"),
+        React.createElement("input", {
+          style: _objectSpread(_objectSpread({}, S.input), {}, {borderColor: isRecording && recordingContext === "roleplay" ? "#8b3030" : "#222"}),
+          value: userInput,
+          onChange: function(e) { return setUserInput(e.target.value); },
+          onKeyDown: function(e) { return e.key === "Enter" && sendMessage(); },
+          placeholder: isRecording && recordingContext === "roleplay" ? "REC \u9332\u97f3\u4e2d..." : "\u82f1\u8a9e\u3067\u8fd4\u7b54 / \u65e5\u672c\u8a9e\u5165\u529b\u5f8c\u300c\u82f1\u8a9e\u306b\u76f4\u3059\u300d\u2026"
+        })
+      ),
+      React.createElement("div", {style:{display:"flex",gap:"8px",flexWrap:"wrap",marginBottom:"8px"}},
+        claudeApiKey && React.createElement("button", {
+          style: S.btn("j"),
+          onClick: getRpHint,
+          disabled: rpLoadingHint
+        }, rpLoadingHint ? "\u53d6\u5f97\u4e2d\u2026" : "\u30d2\u30f3\u30c8"),
+        claudeApiKey && React.createElement("button", {
+          style: S.btn("j"),
+          onClick: getRpJpToEn,
+          disabled: rpLoadingJpEn || !userInput.trim()
+        }, rpLoadingJpEn ? "\u5909\u63db\u4e2d\u2026" : "\u82f1\u8a9e\u306b\u76f4\u3059"),
+        React.createElement("button", {
+          style: S.btn("p"),
+          onClick: sendMessage,
+          disabled: isLoading
+        }, "\u9001\u4fe1"),
+        React.createElement("button", {
+          style: S.btn(),
+          onClick: resetChat
+        }, "\u30ea\u30bb\u30c3\u30c8")
+      ),
+      rpHint && React.createElement("div", {style: _objectSpread(_objectSpread({}, S.fbBox), {}, {marginTop:"0"})}, rpHint)
+    );
   };
 
   // \u2500\u2500\u2500 Tab: Quiz (Adaptive) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -5094,9 +5165,15 @@ function MYKITAEnglishApp() {
         fontSize: "10px",
         color: "#8bc98b",
         letterSpacing: "0.1em",
-        marginBottom: "8px"
+        marginBottom: "8px",
+        display: "flex",
+        alignItems: "center",
+        gap: "8px"
       }
-    }, "\u6A21\u7BC4\u89E3\u7B54"), /*#__PURE__*/React.createElement("div", {
+    }, "\u6A21\u7BC4\u89E3\u7B54", /*#__PURE__*/React.createElement("button", {
+      style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+      onClick: function onClick() { return speak(q.answer); }
+    }, "\u25B6")), /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "14px",
         color: "#f0ede8",
@@ -5130,9 +5207,15 @@ function MYKITAEnglishApp() {
         fontSize: "10px",
         color: "#7a7ab0",
         letterSpacing: "0.1em",
-        marginBottom: "6px"
+        marginBottom: "6px",
+        display: "flex",
+        alignItems: "center",
+        gap: "6px"
       }
-    }, wordLookup.word.toUpperCase()), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
+    }, wordLookup.word.toUpperCase(), /*#__PURE__*/React.createElement("button", {
+      style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+      onClick: function onClick() { return speak(wordLookup.word); }
+    }, "\u25B6")), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "11px",
         color: "#555"
@@ -5300,7 +5383,10 @@ function MYKITAEnglishApp() {
           borderTop: "1px solid #1a1a1a",
           paddingTop: "8px"
         }
-      }, "\u6A21\u7BC4\u89E3\u7B54\uFF1A", /*#__PURE__*/React.createElement("span", null, q.answer.split(/(\s+|[^\w'\s]+)/).filter(Boolean).map(function (token, i) {
+      }, /*#__PURE__*/React.createElement("span", {style:{display:"inline-flex",alignItems:"center",gap:"6px"}},"模範回答：", /*#__PURE__*/React.createElement("button", {
+        style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+        onClick: function onClick() { return speak(q.answer); }
+      }, "\u25B6")), /*#__PURE__*/React.createElement("span", null, q.answer.split(/(\s+|[^\w'\s]+)/).filter(Boolean).map(function (token, i) {
         var isWord = /^[\w']+$/.test(token);
         return /*#__PURE__*/React.createElement("span", {
           key: i,
@@ -5327,9 +5413,15 @@ function MYKITAEnglishApp() {
           fontSize: "10px",
           color: "#7a7ab0",
           letterSpacing: "0.1em",
-          marginBottom: "6px"
+          marginBottom: "6px",
+          display: "flex",
+          alignItems: "center",
+          gap: "6px"
         }
-      }, wordLookup.word.toUpperCase()), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
+      }, wordLookup.word.toUpperCase(), /*#__PURE__*/React.createElement("button", {
+        style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+        onClick: function onClick() { return speak(wordLookup.word); }
+      }, "\u25B6")), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
         style: {
           fontSize: "11px",
           color: "#555"
