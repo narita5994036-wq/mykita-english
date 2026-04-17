@@ -2404,7 +2404,8 @@ function MYKITAEnglishApp() {
               headers: {
                 "Content-Type": "application/json",
                 "x-api-key": claudeApiKey,
-                "anthropic-version": "2023-06-01"
+                "anthropic-version": "2023-06-01",
+                "anthropic-dangerous-direct-browser-access": "true"
               },
               body: JSON.stringify({
                 model: "claude-haiku-4-5-20251001",
@@ -3341,7 +3342,8 @@ function MYKITAEnglishApp() {
               headers: {
                 "Content-Type": "application/json",
                 "x-api-key": claudeApiKey,
-                "anthropic-version": "2023-06-01"
+                "anthropic-version": "2023-06-01",
+                "anthropic-dangerous-direct-browser-access": "true"
               },
               body: JSON.stringify({
                 model: "claude-haiku-4-5-20251001",
@@ -3356,6 +3358,12 @@ function MYKITAEnglishApp() {
             return res.json();
           case 3:
             data = _context5.v;
+            if (!data.error) {
+              _context5.n = 4;
+              break;
+            }
+            throw new Error(data.error.message);
+          case 4:
             return _context5.a(2, ((_data$content2 = data.content) === null || _data$content2 === void 0 || (_data$content2 = _data$content2[0]) === null || _data$content2 === void 0 ? void 0 : _data$content2.text) || "");
         }
       }, _callee5);
@@ -3469,7 +3477,7 @@ function MYKITAEnglishApp() {
   };
   var checkQuiz = /*#__PURE__*/function () {
     var _ref9 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
-      var q, _quizStats$q$id, _quizStats$q$id2, raw, parsed, next, _t0;
+      var q, key, _data$content3, _quizStats$q$id, _quizStats$q$id2, res, data, text, jsonStr, parsed, next, _t0;
       return _regenerator().w(function (_context8) {
         while (1) switch (_context8.p = _context8.n) {
           case 0:
@@ -3477,34 +3485,75 @@ function MYKITAEnglishApp() {
             setQuizResult({
               loading: true
             });
+            key = claudeApiKey || localStorage.getItem("mykita_claude_key") || "";
+            if (key) {
+              _context8.n = 1;
+              break;
+            }
+            setQuizResult({
+              grade: "incorrect",
+              feedback: "API\u30ad\u30fc\u304c\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002FAQ\u30e1\u30e2\u30bf\u30d6\u3067\u8a2d\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+            });
+            return _context8.a(2);
+          case 1:
             _context8.p = 1;
             _context8.n = 2;
-            return callAPI("\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8CA9\u58F2\u54E1\u5411\u3051\u82F1\u8A9E\u6559\u5E2B\u3067\u3059\u3002\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C".concat(q.answer, "\u300D\n\u5B66\u7FD2\u8005\u306E\u56DE\u7B54\u3092\u4EE5\u4E0B\u306E3\u6BB5\u968E\u3067\u63A1\u70B9\u3057\u3001JSON\u5F62\u5F0F\u306E\u307F\u3067\u8FD4\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n- correct: \u610F\u5473\u30FB\u5185\u5BB9\u304C\u6B63\u78BA\u3067\u82F1\u8A9E\u3068\u3057\u3066\u81EA\u7136\n- partial: \u610F\u5473\u306F\u4F1D\u308F\u308B\u304C\u82F1\u8A9E\u3068\u3057\u3066\u4E0D\u81EA\u7136\u3001\u307E\u305F\u306F\u4E00\u90E8\u4E0D\u6B63\u78BA\n- incorrect: \u610F\u5473\u304C\u5927\u304D\u304F\u7570\u306A\u308B\u3001\u307E\u305F\u306F\u7406\u89E3\u4E0D\u80FD\n{\"grade\": \"correct|partial|incorrect\", \"feedback\": \"\u65E5\u672C\u8A9E\u30671\u301C2\u6587\u306E\u30D5\u30A3\u30FC\u30C9\u30D0\u30C3\u30AF\", \"naturalExample\": \"\u3088\u308A\u81EA\u7136\u306A\u82F1\u8A9E\u8868\u73FE\uFF08correct\u306E\u5834\u5408\u306Fnull\uFF09\"}"), [{
-              role: "user",
-              content: quizInput
-            }]);
+            return fetch("https://api.anthropic.com/v1/messages", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": key,
+                "anthropic-version": "2023-06-01",
+                "anthropic-dangerous-direct-browser-access": "true"
+              },
+              body: JSON.stringify({
+                model: "claude-haiku-4-5-20251001",
+                max_tokens: 512,
+                system: "\u3042\u306A\u305F\u306F\u30E1\u30AC\u30CD\u8CA9\u58F2\u54E1\u5411\u3051\u82F1\u8A9E\u6559\u5E2B\u3067\u3059\u3002\u6A21\u7BC4\u89E3\u7B54\uFF1A\u300C".concat(q.answer, "\u300D\n\u5B66\u7FD2\u8005\u306E\u56DE\u7B54\u3092\u63A1\u70B9\u3057\u3001\u5FC5\u305AJSON\u306E\u307F\u3067\u8FD4\u3057\u3066\u304F\u3060\u3055\u3044\u3002\u30DE\u30FC\u30AF\u30C0\u30A6\u30F3\u4E0D\u8981\u3002\n{\"grade\":\"correct|partial|incorrect\",\"feedback\":\"\u65E5\u672C\u8A9E1\u6587\",\"naturalExample\":\"\u3088\u308A\u81EA\u7136\u306A\u8868\u73FE\u307E\u305F\u306Fnull\"}"),
+                messages: [{
+                  role: "user",
+                  content: quizInput
+                }]
+              })
+            });
           case 2:
-            raw = _context8.v;
-            parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+            res = _context8.v;
+            _context8.n = 3;
+            return res.json();
+          case 3:
+            data = _context8.v;
+            if (!data.error) {
+              _context8.n = 4;
+              break;
+            }
+            setQuizResult({
+              grade: "incorrect",
+              feedback: "API\u30A8\u30E9\u30FC: ".concat(data.error.message)
+            });
+            return _context8.a(2);
+          case 4:
+            text = ((_data$content3 = data.content) === null || _data$content3 === void 0 || (_data$content3 = _data$content3[0]) === null || _data$content3 === void 0 ? void 0 : _data$content3.text) || "";
+            jsonStr = text.replace(/```json|```/g, "").trim();
+            parsed = JSON.parse(jsonStr);
             setQuizResult(parsed);
             next = _objectSpread(_objectSpread({}, quizStats), {}, _defineProperty({}, q.id, {
               attempts: (((_quizStats$q$id = quizStats[q.id]) === null || _quizStats$q$id === void 0 ? void 0 : _quizStats$q$id.attempts) || 0) + 1,
               correct: (((_quizStats$q$id2 = quizStats[q.id]) === null || _quizStats$q$id2 === void 0 ? void 0 : _quizStats$q$id2.correct) || 0) + (parsed.grade === "correct" ? 1 : 0)
             }));
             saveQuizStats(next);
-            _context8.n = 4;
+            _context8.n = 6;
             break;
-          case 3:
-            _context8.p = 3;
+          case 5:
+            _context8.p = 5;
             _t0 = _context8.v;
             setQuizResult({
               grade: "incorrect",
-              feedback: "\u63a1\u70b9\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002API\u30ad\u30fc\u3092\u78ba\u8a8d\u3057\u3066\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+              feedback: "\u30A8\u30E9\u30FC: ".concat(_t0.message)
             });
-          case 4:
+          case 6:
             return _context8.a(2);
         }
-      }, _callee8, null, [[1, 3]]);
+      }, _callee8, null, [[1, 5]]);
     }));
     return function checkQuiz() {
       return _ref9.apply(this, arguments);
