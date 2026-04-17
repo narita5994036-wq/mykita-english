@@ -2662,6 +2662,10 @@ function MYKITAEnglishApp() {
     _useStateWL2 = _slicedToArray(_useStateWL, 2),
     wordLookup = _useStateWL2[0],
     setWordLookup = _useStateWL2[1];
+  var _useStateSS = useState(false),
+    _useStateSS2 = _slicedToArray(_useStateSS, 2),
+    selfScoreMode = _useStateSS2[0],
+    setSelfScoreMode = _useStateSS2[1];
 
   // Vocab stats for adaptive flashcard
   var _useState89 = useState({}),
@@ -2764,6 +2768,7 @@ function MYKITAEnglishApp() {
     setShowHint(false);
     setShowAnswer(false);
     setWordLookup(null);
+    setSelfScoreMode(false);
   };
   var lookupWord = function lookupWord(word) {
     if (!claudeApiKey || wordLookup && wordLookup.loading) return;
@@ -2805,6 +2810,19 @@ function MYKITAEnglishApp() {
         loading: false
       });
     });
+  };
+  var submitSelfScore = function submitSelfScore(grade) {
+    var _q = QUIZ_QUESTIONS[currentQuizIndex];
+    var next = _objectSpread(_objectSpread({}, quizStats), {}, _defineProperty({}, _q.id, {
+      attempts: ((quizStats[_q.id] || {}).attempts || 0) + 1,
+      correct: ((quizStats[_q.id] || {}).correct || 0) + (grade === "correct" ? 1 : 0)
+    }));
+    saveQuizStats(next);
+    setQuizResult({
+      grade: grade,
+      feedback: grade === "correct" ? "\u6B63\u89E3\u3068\u3057\u3066\u8A18\u9332\u3057\u307E\u3057\u305F\u3002" : grade === "partial" ? "\u60DC\u3057\u3044\u3068\u3057\u3066\u8A18\u9332\u3057\u307E\u3057\u305F\u3002" : "\u4E0D\u6B63\u89E3\u3068\u3057\u3066\u8A18\u9332\u3057\u307E\u3057\u305F\u3002"
+    });
+    setSelfScoreMode(false);
   };
 
   // \u2500\u2500\u2500 Adaptive Vocab Flashcard \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -5038,6 +5056,11 @@ function MYKITAEnglishApp() {
     }, "AI\u63A1\u70B9"), /*#__PURE__*/React.createElement("button", {
       style: S.btn("j"),
       onClick: function onClick() {
+        return setSelfScoreMode(!selfScoreMode);
+      }
+    }, selfScoreMode ? "\u30AD\u30E3\u30F3\u30BB\u30EB" : "\u30BB\u30EB\u30D5\u63A1\u70B9"), /*#__PURE__*/React.createElement("button", {
+      style: S.btn("j"),
+      onClick: function onClick() {
         return setShowHint(!showHint);
       }
     }, showHint ? "\u30d2\u30f3\u30c8\u3092\u96a0\u3059" : "\u30d2\u30f3\u30c8\u3092\u898b\u308b"), /*#__PURE__*/React.createElement("button", {
@@ -5060,7 +5083,66 @@ function MYKITAEnglishApp() {
       onClick: function onClick() {
         return speak(q.answer);
       }
-    }, "\u25B6 \u6A21\u7BC4\u89E3\u7B54\u3092\u805E\u304F"))), !claudeApiKey && !quizResult && /*#__PURE__*/React.createElement("div", {
+    }, "\u25B6 \u6A21\u7BC4\u89E3\u7B54\u3092\u805E\u304F"))), selfScoreMode && !quizResult && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: "14px",
+        padding: "14px",
+        background: "#0d1a0d",
+        border: "1px solid #2a4a2a",
+        borderRadius: "3px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "10px",
+        color: "#8bc98b",
+        letterSpacing: "0.1em",
+        marginBottom: "8px"
+      }
+    }, "\u6A21\u7BC4\u89E3\u7B54"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "14px",
+        color: "#f0ede8",
+        lineHeight: "1.6",
+        marginBottom: "14px"
+      }
+    }, q.answer), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "10px",
+        color: "#666",
+        letterSpacing: "0.1em",
+        marginBottom: "10px"
+      }
+    }, "\u81EA\u5DF1\u8A55\u4FA1"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: "10px",
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      style: _objectSpread(_objectSpread({}, S.btn()), {}, {
+        color: "#4a9a4a",
+        borderColor: "#4a9a4a"
+      }),
+      onClick: function onClick() {
+        return submitSelfScore("correct");
+      }
+    }, "\u25CE \u6B63\u89E3"), /*#__PURE__*/React.createElement("button", {
+      style: _objectSpread(_objectSpread({}, S.btn()), {}, {
+        color: "#b89a30",
+        borderColor: "#b89a30"
+      }),
+      onClick: function onClick() {
+        return submitSelfScore("partial");
+      }
+    }, "\u25B3 \u60DC\u3057\u3044"), /*#__PURE__*/React.createElement("button", {
+      style: _objectSpread(_objectSpread({}, S.btn()), {}, {
+        color: "#9a4a4a",
+        borderColor: "#9a4a4a"
+      }),
+      onClick: function onClick() {
+        return submitSelfScore("incorrect");
+      }
+    }, "\u2717 \u4E0D\u6B63\u89E3"))), !claudeApiKey && !quizResult && /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "11px",
         color: "#6a5a2a",
