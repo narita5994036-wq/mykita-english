@@ -4945,7 +4945,12 @@ function MYKITAEnglishApp() {
       onClick: function onClick() {
         return setShowAnswer(!showAnswer);
       }
-    }, showAnswer ? "\u7b54\u3048\u3092\u96a0\u3059" : "\u7b54\u3048\u3092\u898b\u308b")) : !quizResult.loading && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    }, showAnswer ? "\u7b54\u3048\u3092\u96a0\u3059" : "\u7b54\u3048\u3092\u898b\u308b"), /*#__PURE__*/React.createElement("button", {
+      style: S.btn(),
+      onClick: function onClick() {
+        return pickNextQuestion();
+      }
+    }, "\u30B9\u30AD\u30C3\u30D7")) : !quizResult.loading && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
       style: S.btn("p"),
       onClick: function onClick() {
         return pickNextQuestion();
