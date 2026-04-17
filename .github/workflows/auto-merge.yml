@@ -24,8 +24,16 @@ jobs:
         run: |
           BRANCH="${GITHUB_REF#refs/heads/}"
 
-          # Check if PR already exists
-          PR_NUMBER=$(gh pr list --head "$BRANCH" --base main --json number --jq '.[0].number' 2>/dev/null)
+          # Check if branch has any diff vs main
+          git fetch origin main
+          DIFF=$(git diff origin/main...HEAD --name-only)
+          if [ -z "$DIFF" ]; then
+            echo "No changes vs main, skipping."
+            exit 0
+          fi
+
+          # Check if open PR already exists
+          PR_NUMBER=$(gh pr list --head "$BRANCH" --base main --state open --json number --jq '.[0].number' 2>/dev/null)
 
           if [ -z "$PR_NUMBER" ]; then
             # Create PR
@@ -35,7 +43,10 @@ jobs:
               --title "Auto-merge: $BRANCH" \
               --body "This PR was automatically created and will be auto-merged into main." \
               --json number --jq '.number')
+            echo "Created PR #$PR_NUMBER"
+          else
+            echo "Using existing PR #$PR_NUMBER"
           fi
 
-          # Enable auto-merge
-          gh pr merge "$PR_NUMBER" --auto --merge
+          # Merge directly (no auto-merge needed since no required checks)
+          gh pr merge "$PR_NUMBER" --merge --delete-branch=false
