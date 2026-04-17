@@ -5059,14 +5059,14 @@ function MYKITAEnglishApp() {
     }, "AI\u63A1\u70B9"), /*#__PURE__*/React.createElement("button", {
       style: S.btn("j"),
       onClick: function onClick() {
-        return setSelfScoreMode(!selfScoreMode);
-      }
-    }, selfScoreMode ? "\u30AD\u30E3\u30F3\u30BB\u30EB" : "\u30BB\u30EB\u30D5\u63A1\u70B9"), /*#__PURE__*/React.createElement("button", {
-      style: S.btn("j"),
-      onClick: function onClick() {
         return setShowHint(!showHint);
       }
     }, showHint ? "\u30d2\u30f3\u30c8\u3092\u96a0\u3059" : "\u30d2\u30f3\u30c8\u3092\u898b\u308b"), /*#__PURE__*/React.createElement("button", {
+      style: S.btn("j"),
+      onClick: function onClick() {
+        return setSelfScoreMode(!selfScoreMode);
+      }
+    }, selfScoreMode ? "\u30AD\u30E3\u30F3\u30BB\u30EB" : "\u30BB\u30EB\u30D5\u63A1\u70B9"), /*#__PURE__*/React.createElement("button", {
       style: S.btn(),
       onClick: function onClick() {
         return pickNextQuestion();
@@ -5124,7 +5124,7 @@ function MYKITAEnglishApp() {
       onClick: function onClick() {
         return submitSelfScore("correct");
       }
-    }, "\u25CE \u6B63\u89E3"), /*#__PURE__*/React.createElement("button", {
+    }, "\uD83E\uDD73 \u6B63\u89E3"), /*#__PURE__*/React.createElement("button", {
       style: _objectSpread(_objectSpread({}, S.btn()), {}, {
         color: "#b89a30",
         borderColor: "#b89a30"
@@ -5132,7 +5132,7 @@ function MYKITAEnglishApp() {
       onClick: function onClick() {
         return submitSelfScore("partial");
       }
-    }, "\u25B3 \u60DC\u3057\u3044"), /*#__PURE__*/React.createElement("button", {
+    }, "\uD83E\uDD14 \u60DC\u3057\u3044"), /*#__PURE__*/React.createElement("button", {
       style: _objectSpread(_objectSpread({}, S.btn()), {}, {
         color: "#9a4a4a",
         borderColor: "#9a4a4a"
@@ -5140,7 +5140,7 @@ function MYKITAEnglishApp() {
       onClick: function onClick() {
         return submitSelfScore("incorrect");
       }
-    }, "\u2717 \u4E0D\u6B63\u89E3"))), !claudeApiKey && !quizResult && /*#__PURE__*/React.createElement("div", {
+    }, "\uD83E\uDD7A \u4E0D\u6B63\u89E3"))), !claudeApiKey && !quizResult && /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "11px",
         color: "#6a5a2a",
