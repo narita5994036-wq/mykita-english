@@ -2773,7 +2773,7 @@ function MYKITAEnglishApp() {
     setWordLookup(null);
     setSelfScoreMode(false);
   };
-  var lookupWord = function lookupWord(word) {
+  var quizLookupWord = function quizLookupWord(word) {
     if (!claudeApiKey || wordLookup && wordLookup.loading) return;
     setWordLookup({
       word: word,
@@ -5103,7 +5103,48 @@ function MYKITAEnglishApp() {
         lineHeight: "1.6",
         marginBottom: "14px"
       }
-    }, q.answer), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("span", null, q.answer.split(/(\s+|[^\w'\s]+)/).filter(Boolean).map(function (token, i) {
+      var isWord = /^[\w']+$/.test(token);
+      return /*#__PURE__*/React.createElement("span", {
+        key: i,
+        style: isWord && claudeApiKey ? {
+          cursor: "pointer",
+          textDecoration: "underline",
+          textDecorationStyle: "dotted",
+          color: wordLookup && wordLookup.word.toLowerCase() === token.toLowerCase() ? "#c8b89a" : "#f0ede8"
+        } : null,
+        onClick: isWord && claudeApiKey ? function () {
+          return quizLookupWord(token);
+        } : undefined
+      }, token);
+    }))), wordLookup && /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: "14px",
+        background: "#0a0a1a",
+        border: "1px solid #2a2a4a",
+        borderRadius: "3px",
+        padding: "10px 12px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "10px",
+        color: "#7a7ab0",
+        letterSpacing: "0.1em",
+        marginBottom: "6px"
+      }
+    }, wordLookup.word.toUpperCase()), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "11px",
+        color: "#555"
+      }
+    }, "\u8ABF\u3079\u3066\u3044\u307E\u3059...") : /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "12px",
+        color: "#aaa",
+        lineHeight: "1.7",
+        whiteSpace: "pre-wrap"
+      }
+    }, wordLookup.result)), /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "10px",
         color: "#666",
@@ -5270,7 +5311,7 @@ function MYKITAEnglishApp() {
             color: wordLookup && wordLookup.word.toLowerCase() === token.toLowerCase() ? "#c8b89a" : "#555"
           } : null,
           onClick: isWord && claudeApiKey ? function () {
-            return lookupWord(token);
+            return quizLookupWord(token);
           } : undefined
         }, token);
       }))), wordLookup && /*#__PURE__*/React.createElement("div", {
