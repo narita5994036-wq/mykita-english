@@ -3674,13 +3674,14 @@ function MYKITAEnglishApp() {
     reader.onload = function(e) {
       mammoth.extractRawText({arrayBuffer: e.target.result}).then(function(result) {
         var text = result.value.trim().slice(0, 8000);
-        var prompt = "以下のテキストに含まれる日本語と英語の対訳ペアを全て抽出してください。\n\n返答はJSON配列のみ（説明文・コードブロック不要）。形式:\n[{\"jp\":\"日本語\",\"answer\":\"English\",\"hint\":\"重要単語・文法ヒント（日本語）\"}]\n\nテキスト:\n" + text;
+        var prompt = "以下のテキストに含まれる日本語と英語の対訳ペアを最大30問抽出してください。\n\n返答はJSON配列のみ（説明文・コードブロック不要）。形式:\n[{\"jp\":\"日本語\",\"answer\":\"English\",\"hint\":\"重要単語・文法ヒント（日本語）\"}]\n\nテキスト:\n" + text;
         fetch("https://api.anthropic.com/v1/messages", {
           method: "POST",
           headers: {"Content-Type":"application/json","x-api-key":claudeApiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
           body: JSON.stringify({model:"claude-haiku-4-5-20251001", max_tokens:4096, system:"英語学習用クイズを作る専門家。JSONのみ返答する。", messages:[{role:"user",content:prompt}]})
         }).then(function(r) { return r.json(); }).then(function(data) {
           var res = (data.content && data.content[0] && data.content[0].text) || "";
+          var stopReason = data.stop_reason || "unknown";
           try {
             var raw = res.trim().replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/i, "").trim();
             var m = raw.match(/\[[\s\S]*\]/);
@@ -3699,7 +3700,7 @@ function MYKITAEnglishApp() {
             setCustomQuizLoading(false);
           } catch(err) {
             setCustomQuizLoading(false);
-            alert("解析エラー: " + err.message + "\n\nAPI返答（先頭200文字）:\n" + res.slice(0, 200));
+            alert("解析エラー: " + err.message + " [stop:" + stopReason + "]\n\nAPI返答（先頭300文字）:\n" + res.slice(0, 300));
           }
         }).catch(function(err) {
           setCustomQuizLoading(false);
