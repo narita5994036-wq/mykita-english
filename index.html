@@ -3667,45 +3667,46 @@ function MYKITAEnglishApp() {
   }();
   var loadWordDoc = function loadWordDoc(file) {
     if (!file) return;
+    if (!claudeApiKey) { alert("カスタムクイズにはClaude APIキーが必要です。"); return; }
     setCustomQuizLoading(true);
     setCustomFileName(file.name);
     var reader = new FileReader();
     reader.onload = function(e) {
       mammoth.extractRawText({arrayBuffer: e.target.result}).then(function(result) {
-        var text = result.value;
-        var prompt = claudeApiKey
-          ? "以下のテキストから日本語と英語の例文ペアを全て抽出し、JSONで返してください。\n形式: [{\"jp\":\"日本語文\",\"answer\":\"英語文\",\"hint\":\"重要単語や文法のヒント（日本語で簡潔に）\"}]\n\nJSONのみ返してください。他のテキストは不要です。\n\n" + text
-          : null;
-        if (!prompt) {
-          setCustomQuizLoading(false);
-          alert("カスタムクイズにはClaude APIキーが必要です。");
-          return;
-        }
-        callAPI("あなたは英語学習の専門家です。", [{role:"user", content:prompt}]).then(function(res) {
+        var text = result.value.trim().slice(0, 8000);
+        var prompt = "以下のテキストに含まれる日本語と英語の対訳ペアを全て抽出してください。\n\n返答はJSON配列のみ（説明文・コードブロック不要）。形式:\n[{\"jp\":\"日本語\",\"answer\":\"English\",\"hint\":\"重要単語・文法ヒント（日本語）\"}]\n\nテキスト:\n" + text;
+        callAPI("英語学習用クイズを作る専門家。JSONのみ返答する。", [{role:"user", content:prompt}]).then(function(res) {
           try {
-            var jsonStr = res.trim();
-            var m = jsonStr.match(/\[[\s\S]*\]/);
-            if (m) jsonStr = m[0];
-            var parsed = JSON.parse(jsonStr);
+            var raw = res.trim();
+            // strip markdown code fences
+            raw = raw.replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/i, "").trim();
+            // extract [...] array
+            var m = raw.match(/\[[\s\S]*\]/);
+            if (m) raw = m[0];
+            var parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed) || parsed.length === 0) throw new Error("empty");
             var questions = parsed.map(function(item, i) {
-              return {id: "cq" + i, jp: item.jp, answer: item.answer, hint: item.hint || ""};
-            });
+              return {id: "cq" + i, jp: String(item.jp || ""), answer: String(item.answer || ""), hint: String(item.hint || "")};
+            }).filter(function(q) { return q.jp && q.answer; });
+            if (questions.length === 0) throw new Error("no valid pairs");
             setCustomQuizQuestions(questions);
             setUseCustomQuiz(true);
             setCurrentQuizIndex(null);
             setQuizResult(null);
             setQuizInput("");
+            setCustomQuizLoading(false);
           } catch(err) {
-            alert("クイズの生成に失敗しました。ファイルの内容を確認してください。");
+            console.error("Quiz parse error:", err, "\nRaw response:", res);
+            setCustomQuizLoading(false);
+            alert("クイズの生成に失敗しました。\nコンソール（F12）で詳細を確認できます。");
           }
+        }).catch(function(err) {
           setCustomQuizLoading(false);
-        }).catch(function() {
-          setCustomQuizLoading(false);
-          alert("APIエラーが発生しました。");
+          alert("APIエラーが発生しました: " + (err && err.message || err));
         });
-      }).catch(function() {
+      }).catch(function(err) {
         setCustomQuizLoading(false);
-        alert("ファイルの読み込みに失敗しました。");
+        alert("ファイルの読み込みに失敗しました: " + (err && err.message || err));
       });
     };
     reader.readAsArrayBuffer(file);
