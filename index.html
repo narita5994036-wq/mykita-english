@@ -2213,6 +2213,36 @@ var QUIZ_QUESTIONS = [{
   jp: "\u773c\u93e1\u304c\u5b8c\u6210\u6b21\u7b2c / \u30d5\u30ec\u30fc\u30e0\u304c\u5165\u8377\u6b21\u7b2c\u3001\u767a\u9001\u3055\u305b\u3066\u3044\u305f\u3060\u304d\u307e\u3059\u3002\u8ffd\u8de1\u756a\u53f7\u3092\u30e1\u30fc\u30eb\u3067\u304a\u9001\u308a\u3057\u307e\u3059\u3002",
   answer: "As soon as the glasses are completed / frames arrive, they will be shipped. We will send you a tracking number by email.",
   hint: "As soon as the glasses are completed..."
+}, {
+  id: "m25",
+  jp: "\u5927\u304d\u3044\u93e1\u306f\u3053\u3061\u3089\u306b\u306a\u308a\u307e\u3059\u3002",
+  answer: "The large mirror is here.",
+  hint: "The large mirror is here."
+}, {
+  id: "m26",
+  jp: "\u4ed6\u306e\u30ab\u30e9\u30fc\u306e\u30b5\u30f3\u30d7\u30eb\u304c\u3042\u308b\u304b\u3082\u3057\u308c\u306a\u3044\u306e\u3067\u78ba\u8a8d\u3057\u307e\u3059\u3002",
+  answer: "I will check to see if there may be samples of other colors.",
+  hint: "I will check to see if..."
+}, {
+  id: "m27",
+  jp: "\u30ec\u30f3\u30ba\u306f\uff5e\u5186\u304b\u3089\u3054\u7528\u610f\u304c\u3054\u3056\u3044\u307e\u3059\u3002",
+  answer: "Lenses are available from \uFF5Eyen.",
+  hint: "Lenses are available from..."
+}, {
+  id: "m28",
+  jp: "\u3042\u306a\u305f\u306e\u5ea6\u6570\u3067\u306f\u3053\u306e\u30ec\u30f3\u30ba\u304c\u304a\u52e7\u3081\u3067\u3059\u3002",
+  answer: "We recommend this lens for your prescription.",
+  hint: "We recommend this lens..."
+}, {
+  id: "m29",
+  jp: "\u5c11\u3005\u304a\u5f85\u3061\u4e0b\u3055\u3044\u3002",
+  answer: "Please hold on one second.",
+  hint: "Please hold on..."
+}, {
+  id: "m30",
+  jp: "\u301c\u3078\u3054\u6848\u5185\u3057\u307e\u3059\u3002",
+  answer: "I will show you to \u301c.",
+  hint: "I will show you to..."
 }];
 
 // \u2500\u2500\u2500 Brand Knowledge \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -3669,6 +3699,10 @@ function MYKITAEnglishApp() {
   var loadWordDoc = function loadWordDoc(file) {
     if (!file) return;
     if (!claudeApiKey) { alert("カスタムクイズにはClaude APIキーが必要です。"); return; }
+    if (typeof mammoth === "undefined") {
+      alert("mammoth.jsが読み込まれていません。ネットワーク接続を確認してページを再読み込みしてください。\n\n※ Wordファイルの内容はすでに組み込みクイズ（m01〜m30）に含まれています。");
+      return;
+    }
     setCustomQuizLoading(true);
     setCustomFileName(file.name);
     var reader = new FileReader();
