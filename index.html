@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eyewear English Training</title>
@@ -3684,10 +3685,20 @@ function MYKITAEnglishApp() {
           var stopReason = data.stop_reason || "unknown";
           try {
             var raw = res.trim().replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/i, "").trim();
-            var m = raw.match(/\[[\s\S]*\]/);
-            if (m) raw = m[0];
-            var parsed = JSON.parse(raw);
-            if (!Array.isArray(parsed) || parsed.length === 0) throw new Error("no array found");
+            // extract complete JSON objects even from truncated response
+            var parsed = [];
+            try {
+              var arrMatch = raw.match(/\[[\s\S]*\]/);
+              parsed = JSON.parse(arrMatch ? arrMatch[0] : raw);
+            } catch(e) {
+              // salvage: extract complete {…} objects using brace matching
+              var depth = 0, start = -1;
+              for (var ci = 0; ci < raw.length; ci++) {
+                if (raw[ci] === '{') { if (depth === 0) start = ci; depth++; }
+                else if (raw[ci] === '}') { depth--; if (depth === 0 && start !== -1) { try { parsed.push(JSON.parse(raw.slice(start, ci + 1))); } catch(e2) {} start = -1; } }
+              }
+            }
+            if (!Array.isArray(parsed) || parsed.length === 0) throw new Error("no array found [stop:" + stopReason + "]");
             var questions = parsed.map(function(item, i) {
               return {id: "cq" + i, jp: String(item.jp || ""), answer: String(item.answer || ""), hint: String(item.hint || "")};
             }).filter(function(q) { return q.jp && q.answer; });
