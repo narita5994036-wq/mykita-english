@@ -16,6 +16,7 @@
   <div id="root"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
   <script charset="UTF-8">
 "use strict";
 
@@ -2686,6 +2687,22 @@ function MYKITAEnglishApp() {
     _useStateSS2 = _slicedToArray(_useStateSS, 2),
     selfScoreMode = _useStateSS2[0],
     setSelfScoreMode = _useStateSS2[1];
+  var _useStateCQ = useState([]),
+    _useStateCQ2 = _slicedToArray(_useStateCQ, 2),
+    customQuizQuestions = _useStateCQ2[0],
+    setCustomQuizQuestions = _useStateCQ2[1];
+  var _useStateCQL = useState(false),
+    _useStateCQL2 = _slicedToArray(_useStateCQL, 2),
+    customQuizLoading = _useStateCQL2[0],
+    setCustomQuizLoading = _useStateCQL2[1];
+  var _useStateCQF = useState(""),
+    _useStateCQF2 = _slicedToArray(_useStateCQF, 2),
+    customFileName = _useStateCQF2[0],
+    setCustomFileName = _useStateCQF2[1];
+  var _useStateCQU = useState(false),
+    _useStateCQU2 = _slicedToArray(_useStateCQU, 2),
+    useCustomQuiz = _useStateCQU2[0],
+    setUseCustomQuiz = _useStateCQU2[1];
 
   // Vocab stats for adaptive flashcard
   var _useState89 = useState({}),
@@ -2745,6 +2762,8 @@ function MYKITAEnglishApp() {
 
   // \u2500\u2500\u2500 Init quiz \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
+  var activeQuiz = (useCustomQuiz && customQuizQuestions.length > 0) ? customQuizQuestions : QUIZ_QUESTIONS;
+
   useEffect(function () {
     if (activeTab === "quiz" && currentQuizIndex === null) pickNextQuestion({});
   }, [activeTab]);
@@ -2752,7 +2771,7 @@ function MYKITAEnglishApp() {
     var stats = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : quizStats;
     var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : quizMode;
     var forceIdx = arguments.length > 2 ? arguments[2] : undefined;
-    var statArr = QUIZ_QUESTIONS.map(function (q) {
+    var statArr = activeQuiz.map(function (q) {
       return stats[q.id] || {
         attempts: 0,
         correct: 0
@@ -2762,29 +2781,29 @@ function MYKITAEnglishApp() {
     if (typeof forceIdx === "number") {
       idx = forceIdx;
     } else if (mode === "random") {
-      idx = Math.floor(Math.random() * QUIZ_QUESTIONS.length);
+      idx = Math.floor(Math.random() * activeQuiz.length);
     } else if (mode === "struggling") {
-      var _cands = QUIZ_QUESTIONS.map(function (_, i) {
+      var _cands = activeQuiz.map(function (_, i) {
         return i;
       }).filter(function (i) {
         var lv = masteryLevel(statArr[i]);
         return lv === "struggling" || lv === "new";
       });
-      if (_cands.length === 0) _cands = QUIZ_QUESTIONS.map(function (_, i) {
+      if (_cands.length === 0) _cands = activeQuiz.map(function (_, i) {
         return i;
       });
       idx = _cands[Math.floor(Math.random() * _cands.length)];
     } else if (mode === "unanswered") {
-      var _unanswered = QUIZ_QUESTIONS.map(function (_, i) {
+      var _unanswered = activeQuiz.map(function (_, i) {
         return i;
       }).filter(function (i) {
         return statArr[i].attempts === 0;
       });
-      idx = _unanswered.length > 0 ? _unanswered[Math.floor(Math.random() * _unanswered.length)] : Math.floor(Math.random() * QUIZ_QUESTIONS.length);
+      idx = _unanswered.length > 0 ? _unanswered[Math.floor(Math.random() * _unanswered.length)] : Math.floor(Math.random() * activeQuiz.length);
     } else if (mode === "sequential") {
-      idx = currentQuizIndex === null ? 0 : (currentQuizIndex + 1) % QUIZ_QUESTIONS.length;
+      idx = currentQuizIndex === null ? 0 : (currentQuizIndex + 1) % activeQuiz.length;
     } else {
-      idx = weightedPick(QUIZ_QUESTIONS, statArr);
+      idx = weightedPick(activeQuiz, statArr);
     }
     setCurrentQuizIndex(idx);
     setQuizInput("");
@@ -2814,7 +2833,7 @@ function MYKITAEnglishApp() {
         max_tokens: 256,
         messages: [{
           role: "user",
-          content: "\"".concat(word, "\"\u306e\u6700\u3082\u65e5\u5e38\u7684\u30fb\u4e00\u822c\u7684\u306a\u610f\u5473\u3092\u65e5\u672c\u8a9e\u3067\u7c21\u6f54\u306b\u8aac\u660e\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u54c1\u8a5e\u3068\u77ed\u3044\u4f8b\u6587\u3082\u542b\u3081\u30663\u884c\u4ee5\u5185\u3067\u3002\u5c02\u9580\u7684\u30fb\u5b66\u8853\u7684\u306a\u5b9a\u7fa9\u306f\u907f\u3051\u3066\u304f\u3060\u3055\u3044\u3002")
+          content: "\"".concat(word, "\"\u306e\u6700\u3082\u65e5\u5e38\u7684\u30fb\u4e00\u822c\u7684\u306a\u610f\u5473\u3092\u65e5\u672c\u8a9e\u3067\u7c21\u6f54\u306b\u8aac\u660e\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u54c1\u8a5e\u3068\u77ed\u3044\u4f8b\u6587\u3082\u542b\u3081\u30663\u884c\u4ee5\u5185\u3067\u3002\u30de\u30fc\u30af\u30c0\u30a6\u30f3\u4e0d\u8981\u3001\u30d7\u30ec\u30fc\u30f3\u30c6\u30ad\u30b9\u30c8\u306e\u307f\u3002")
         }]
       })
     }).then(function (res) {
@@ -2836,7 +2855,7 @@ function MYKITAEnglishApp() {
     });
   };
   var submitSelfScore = function submitSelfScore(grade) {
-    var _q = QUIZ_QUESTIONS[currentQuizIndex];
+    var _q = activeQuiz[currentQuizIndex];
     var next = _objectSpread(_objectSpread({}, quizStats), {}, _defineProperty({}, _q.id, {
       attempts: ((quizStats[_q.id] || {}).attempts || 0) + 1,
       correct: ((quizStats[_q.id] || {}).correct || 0) + (grade === "correct" ? 1 : 0)
@@ -3082,7 +3101,7 @@ function MYKITAEnglishApp() {
             return claudeApiKey ? fetch("https://api.anthropic.com/v1/messages", {
               method: "POST",
               headers: {"Content-Type":"application/json","x-api-key":claudeApiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-              body: JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:256,messages:[{role:"user",content:"\""+clean+"\"\u306e\u6700\u3082\u65e5\u5e38\u7684\u30fb\u4e00\u822c\u7684\u306a\u610f\u5473\u3092\u65e5\u672c\u8a9e\u3067\u7c21\u6f54\u306b\u8aac\u660e\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u54c1\u8a5e\u3068\u77ed\u3044\u4f8b\u6587\u3082\u542b\u3081\u30663\u884c\u4ee5\u5185\u3067\u3002\u5c02\u9580\u7684\u30fb\u5b66\u8853\u7684\u306a\u5b9a\u7fa9\u306f\u907f\u3051\u3066\u304f\u3060\u3055\u3044\u3002"}]})
+              body: JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:256,messages:[{role:"user",content:"\""+clean+"\"\u306e\u6700\u3082\u65e5\u5e38\u7684\u30fb\u4e00\u822c\u7684\u306a\u610f\u5473\u3092\u65e5\u672c\u8a9e\u3067\u7c21\u6f54\u306b\u8aac\u660e\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u54c1\u8a5e\u3068\u77ed\u3044\u4f8b\u6587\u3082\u542b\u3081\u30663\u884c\u4ee5\u5185\u3067\u3002\u30de\u30fc\u30af\u30c0\u30a6\u30f3\u4e0d\u8981\u3001\u30d7\u30ec\u30fc\u30f3\u30c6\u30ad\u30b9\u30c8\u306e\u307f\u3002"}]})
             }) : fetch("https://api.mymemory.translated.net/get?q=".concat(encodeURIComponent(enDef), "&langpair=en|ja"));
           case 16:
             trRes = _context2.v;
@@ -3333,9 +3352,23 @@ function MYKITAEnglishApp() {
             case 6:
               rec = new SR();
               rec.lang = "en-US";
-              rec.continuous = false;
+              rec.continuous = true;
               rec.interimResults = true;
               rec.maxAlternatives = 5;
+              var silenceTimer = null;
+              var accumulated = "";
+              rec.onspeechstart = function() {
+                if (silenceTimer) { clearTimeout(silenceTimer); silenceTimer = null; }
+              };
+              rec.onspeechend = function() {
+                silenceTimer = setTimeout(function() {
+                  silenceTimer = null;
+                  if (!stoppedByUser.current) {
+                    stoppedByUser.current = true;
+                    try { rec.stop(); } catch(e) {}
+                  }
+                }, 1000);
+              };
               rec.onresult = function (e) {
                 var interim = "";
                 var _loop = function _loop() {
@@ -3352,18 +3385,20 @@ function MYKITAEnglishApp() {
                       setJpWarning(true);
                       best = stripJapanese(best);
                     }
-                    setTranscript(best);
+                    accumulated = (accumulated + " " + best).trim();
+                    var finalText = accumulated;
+                    setTranscript(finalText);
                     // context\u306b\u5fdc\u3058\u3066\u5404input\u306b\u3082\u53cd\u6620
                     setRecordingContext(function (ctx) {
                       if (ctx === "quiz") {
-                        setQuizInput(best);
+                        setQuizInput(finalText);
                         if (claudeApiKey) {
-                          callAPI("\u82f1\u8a9e\u306e\u97f3\u58f0\u8a8d\u8b58\u30c6\u30ad\u30b9\u30c8\u306b\u9069\u5207\u306a\u53e5\u8aad\u70b9\u3068\u5927\u6587\u5b57\u5c0f\u6587\u5b57\u3092\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u82f1\u8a9e\u30c6\u30ad\u30b9\u30c8\u306e\u307f\u8fd4\u3057\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:best}])
+                          callAPI("\u82f1\u8a9e\u306e\u97f3\u58f0\u8a8d\u8b58\u30c6\u30ad\u30b9\u30c8\u306b\u9069\u5207\u306a\u53e5\u8aad\u70b9\u3068\u5927\u6587\u5b57\u5c0f\u6587\u5b57\u3092\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u82f1\u8a9e\u30c6\u30ad\u30b9\u30c8\u306e\u307f\u8fd4\u3057\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:finalText}])
                             .then(function(r) { setQuizInput(r.trim()); })
                             .catch(function() {});
                         }
                       } else if (ctx === "roleplay") {
-                        setUserInput(best);
+                        setUserInput(finalText);
                       }
                       return ctx;
                     });
@@ -3387,8 +3422,10 @@ function MYKITAEnglishApp() {
               recognitionRef.current._stoppedByUser = stoppedByUser;
               rec.onend = function () {
                 setInterimTranscript("");
+                if (silenceTimer) { clearTimeout(silenceTimer); silenceTimer = null; }
                 // \u30e6\u30fc\u30b6\u30fc\u304c\u505c\u6b62\u3057\u3066\u3044\u306a\u3051\u308c\u3070\u81ea\u52d5\u518d\u958b
                 if (!stoppedByUser.current) {
+                  accumulated = "";
                   try {
                     rec.start();
                   } catch (e) {}
@@ -3628,6 +3665,51 @@ function MYKITAEnglishApp() {
       return _ref8.apply(this, arguments);
     };
   }();
+  var loadWordDoc = function loadWordDoc(file) {
+    if (!file) return;
+    setCustomQuizLoading(true);
+    setCustomFileName(file.name);
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      mammoth.extractRawText({arrayBuffer: e.target.result}).then(function(result) {
+        var text = result.value;
+        var prompt = claudeApiKey
+          ? "以下のテキストから日本語と英語の例文ペアを全て抽出し、JSONで返してください。\n形式: [{\"jp\":\"日本語文\",\"answer\":\"英語文\",\"hint\":\"重要単語や文法のヒント（日本語で簡潔に）\"}]\n\nJSONのみ返してください。他のテキストは不要です。\n\n" + text
+          : null;
+        if (!prompt) {
+          setCustomQuizLoading(false);
+          alert("カスタムクイズにはClaude APIキーが必要です。");
+          return;
+        }
+        callAPI("あなたは英語学習の専門家です。", [{role:"user", content:prompt}]).then(function(res) {
+          try {
+            var jsonStr = res.trim();
+            var m = jsonStr.match(/\[[\s\S]*\]/);
+            if (m) jsonStr = m[0];
+            var parsed = JSON.parse(jsonStr);
+            var questions = parsed.map(function(item, i) {
+              return {id: "cq" + i, jp: item.jp, answer: item.answer, hint: item.hint || ""};
+            });
+            setCustomQuizQuestions(questions);
+            setUseCustomQuiz(true);
+            setCurrentQuizIndex(null);
+            setQuizResult(null);
+            setQuizInput("");
+          } catch(err) {
+            alert("クイズの生成に失敗しました。ファイルの内容を確認してください。");
+          }
+          setCustomQuizLoading(false);
+        }).catch(function() {
+          setCustomQuizLoading(false);
+          alert("APIエラーが発生しました。");
+        });
+      }).catch(function() {
+        setCustomQuizLoading(false);
+        alert("ファイルの読み込みに失敗しました。");
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  };
   var resetChat = function resetChat() {
     setMessages([{
       role: "assistant",
@@ -3670,7 +3752,7 @@ function MYKITAEnglishApp() {
       return _regenerator().w(function (_context8) {
         while (1) switch (_context8.p = _context8.n) {
           case 0:
-            q = QUIZ_QUESTIONS[currentQuizIndex];
+            q = activeQuiz[currentQuizIndex];
             setQuizResult({
               loading: true
             });
@@ -4253,7 +4335,7 @@ function MYKITAEnglishApp() {
           letterSpacing: "0.1em"
         }
       }, /*#__PURE__*/React.createElement("span", {style:{display:"inline-flex",alignItems:"center",gap:"6px"}}, dictWord, /*#__PURE__*/React.createElement("button", {
-          style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+          style: {background:"transparent",border:"none",color:"#c8b89a",cursor:"pointer",fontSize:"12px",padding:"0 2px",lineHeight:"1",opacity:"0.8"},
           onClick: function onClick() { return speak(dictWord); }
         }, "\u25B6"))), dictLoading ? /*#__PURE__*/React.createElement("div", {
         style: {
@@ -4921,13 +5003,49 @@ function MYKITAEnglishApp() {
   // \u2500\u2500\u2500 Tab: Quiz (Adaptive) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
   var renderQuiz = function renderQuiz() {
-    if (currentQuizIndex === null) return /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontFamily: "monospace",
-        color: "#555"
-      }
-    }, "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026");
-    var q = QUIZ_QUESTIONS[currentQuizIndex];
+    var fileUploadBar = /*#__PURE__*/React.createElement("div", {
+      style: {display:"flex", alignItems:"center", gap:"10px", marginBottom:"12px", flexWrap:"wrap"}
+    },
+      /*#__PURE__*/React.createElement("label", {
+        style: {
+          display:"inline-flex", alignItems:"center", gap:"6px", cursor:"pointer",
+          fontFamily:"monospace", fontSize:"11px", color:"#c8b89a",
+          background:"transparent", border:"1px solid #444", borderRadius:"3px",
+          padding:"4px 10px"
+        }
+      },
+        customQuizLoading ? "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026" : "\uD83D\uDCC2 Word\u30D5\u30A1\u30A4\u30EB\u304B\u3089\u30AF\u30A4\u30BA\u4F5C\u6210",
+        /*#__PURE__*/React.createElement("input", {
+          type:"file", accept:".docx", style:{display:"none"},
+          onChange: function(e) { loadWordDoc(e.target.files[0]); e.target.value=""; }
+        })
+      ),
+      customQuizQuestions.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null,
+        /*#__PURE__*/React.createElement("button", {
+          style: {
+            fontFamily:"monospace", fontSize:"11px", padding:"4px 10px",
+            background: useCustomQuiz ? "#c8b89a" : "transparent",
+            color: useCustomQuiz ? "#111" : "#888",
+            border:"1px solid #444", borderRadius:"3px", cursor:"pointer"
+          },
+          onClick: function() {
+            var next = !useCustomQuiz;
+            setUseCustomQuiz(next);
+            setCurrentQuizIndex(null);
+            setQuizResult(null);
+            setQuizInput("");
+          }
+        }, useCustomQuiz ? "\u30AB\u30B9\u30BF\u30E0 ON" : "\u30AB\u30B9\u30BF\u30E0 OFF"),
+        /*#__PURE__*/React.createElement("span", {style:{fontFamily:"monospace",fontSize:"10px",color:"#555"}},
+          customFileName, " (", customQuizQuestions.length, "\u554F)"
+        )
+      )
+    );
+    if (currentQuizIndex === null) return /*#__PURE__*/React.createElement("div", null,
+      fileUploadBar,
+      /*#__PURE__*/React.createElement("div", {style:{fontFamily:"monospace",color:"#555"}}, "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026")
+    );
+    var q = activeQuiz[currentQuizIndex];
     var stat = quizStats[q.id] || {
       attempts: 0,
       correct: 0
@@ -4935,19 +5053,19 @@ function MYKITAEnglishApp() {
     var level = masteryLevel(stat);
 
     // Overall stats
-    var masteredCount = QUIZ_QUESTIONS.filter(function (q2) {
+    var masteredCount = activeQuiz.filter(function (q2) {
       return masteryLevel(quizStats[q2.id] || {
         attempts: 0,
         correct: 0
       }) === "mastered";
     }).length;
-    var learningCount = QUIZ_QUESTIONS.filter(function (q2) {
+    var learningCount = activeQuiz.filter(function (q2) {
       return masteryLevel(quizStats[q2.id] || {
         attempts: 0,
         correct: 0
       }) === "learning";
     }).length;
-    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    return /*#__PURE__*/React.createElement("div", null, fileUploadBar, /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         alignItems: "baseline",
@@ -4958,20 +5076,20 @@ function MYKITAEnglishApp() {
       style: Object.assign({}, S.label, {
         marginBottom: 0
       })
-    }, "\u65E5\u672C\u8A9E \u2192 \u82F1\u8A9E \u5909\u63DB\u30AF\u30A4\u30BA\uFF08\u9069\u5FDC\u578B\uFF09"), /*#__PURE__*/React.createElement("button", {
+    }, useCustomQuiz ? customFileName : "\u65E5\u672C\u8A9E \u2192 \u82F1\u8A9E \u5909\u63DB\u30AF\u30A4\u30BA\uFF08\u9069\u5FDC\u578B\uFF09"), /*#__PURE__*/React.createElement("button", {
       style: S.btn(),
       onClick: function onClick() {
         return setQuizListView(!quizListView);
       }
-    }, quizListView ? "\u30AF\u30A4\u30BA\u306B\u623B\u308B" : "\u4E00\u89A7\u8868\u793A")), renderProgressBar(QUIZ_QUESTIONS, quizStats, function (i) {
-      return QUIZ_QUESTIONS[i].id;
+    }, quizListView ? "\u30AF\u30A4\u30BA\u306B\u623B\u308B" : "\u4E00\u89A7\u8868\u793A")), renderProgressBar(activeQuiz, quizStats, function (i) {
+      return activeQuiz[i].id;
     }), quizListView ? /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         flexDirection: "column",
         gap: "8px"
       }
-    }, QUIZ_QUESTIONS.map(function (q2, idx) {
+    }, activeQuiz.map(function (q2, idx) {
       var s2 = quizStats[q2.id] || {
         attempts: 0,
         correct: 0
@@ -5055,7 +5173,7 @@ function MYKITAEnglishApp() {
         fontSize: "10px",
         color: "#666"
       }
-    }, /*#__PURE__*/React.createElement("span", null, "\u5168", QUIZ_QUESTIONS.length, "\u554F"), /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement("span", null, "\u5168", activeQuiz.length, "\u554F"), /*#__PURE__*/React.createElement("span", {
       style: {
         color: MASTERY_COLOR[level]
       }
@@ -5171,7 +5289,7 @@ function MYKITAEnglishApp() {
         gap: "8px"
       }
     }, "\u6A21\u7BC4\u89E3\u7B54", /*#__PURE__*/React.createElement("button", {
-      style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+      style: {background:"transparent",border:"none",color:"#c8b89a",cursor:"pointer",fontSize:"12px",padding:"0 2px",lineHeight:"1",opacity:"0.8"},
       onClick: function onClick() { return speak(q.answer); }
     }, "\u25B6")), /*#__PURE__*/React.createElement("div", {
       style: {
@@ -5213,7 +5331,7 @@ function MYKITAEnglishApp() {
         gap: "6px"
       }
     }, wordLookup.word.toUpperCase(), /*#__PURE__*/React.createElement("button", {
-      style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+      style: {background:"transparent",border:"none",color:"#c8b89a",cursor:"pointer",fontSize:"12px",padding:"0 2px",lineHeight:"1",opacity:"0.8"},
       onClick: function onClick() { return speak(wordLookup.word); }
     }, "\u25B6")), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
       style: {
@@ -5384,7 +5502,7 @@ function MYKITAEnglishApp() {
           paddingTop: "8px"
         }
       }, /*#__PURE__*/React.createElement("span", {style:{display:"inline-flex",alignItems:"center",gap:"6px"}},"模範回答：", /*#__PURE__*/React.createElement("button", {
-        style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+        style: {background:"transparent",border:"none",color:"#c8b89a",cursor:"pointer",fontSize:"12px",padding:"0 2px",lineHeight:"1",opacity:"0.8"},
         onClick: function onClick() { return speak(q.answer); }
       }, "\u25B6")), /*#__PURE__*/React.createElement("span", null, q.answer.split(/(\s+|[^\w'\s]+)/).filter(Boolean).map(function (token, i) {
         var isWord = /^[\w']+$/.test(token);
@@ -5419,7 +5537,7 @@ function MYKITAEnglishApp() {
           gap: "6px"
         }
       }, wordLookup.word.toUpperCase(), /*#__PURE__*/React.createElement("button", {
-        style: _objectSpread(_objectSpread({}, S.btn("p")), {}, {padding:"2px 8px",fontSize:"11px"}),
+        style: {background:"transparent",border:"none",color:"#c8b89a",cursor:"pointer",fontSize:"12px",padding:"0 2px",lineHeight:"1",opacity:"0.8"},
         onClick: function onClick() { return speak(wordLookup.word); }
       }, "\u25B6")), wordLookup.loading ? /*#__PURE__*/React.createElement("div", {
         style: {
