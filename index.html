@@ -3675,16 +3675,18 @@ function MYKITAEnglishApp() {
       mammoth.extractRawText({arrayBuffer: e.target.result}).then(function(result) {
         var text = result.value.trim().slice(0, 8000);
         var prompt = "以下のテキストに含まれる日本語と英語の対訳ペアを全て抽出してください。\n\n返答はJSON配列のみ（説明文・コードブロック不要）。形式:\n[{\"jp\":\"日本語\",\"answer\":\"English\",\"hint\":\"重要単語・文法ヒント（日本語）\"}]\n\nテキスト:\n" + text;
-        callAPI("英語学習用クイズを作る専門家。JSONのみ返答する。", [{role:"user", content:prompt}]).then(function(res) {
+        fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {"Content-Type":"application/json","x-api-key":claudeApiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+          body: JSON.stringify({model:"claude-haiku-4-5-20251001", max_tokens:4096, system:"英語学習用クイズを作る専門家。JSONのみ返答する。", messages:[{role:"user",content:prompt}]})
+        }).then(function(r) { return r.json(); }).then(function(data) {
+          var res = (data.content && data.content[0] && data.content[0].text) || "";
           try {
-            var raw = res.trim();
-            // strip markdown code fences
-            raw = raw.replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/i, "").trim();
-            // extract [...] array
+            var raw = res.trim().replace(/^```[a-z]*\n?/i, "").replace(/\n?```$/i, "").trim();
             var m = raw.match(/\[[\s\S]*\]/);
             if (m) raw = m[0];
             var parsed = JSON.parse(raw);
-            if (!Array.isArray(parsed) || parsed.length === 0) throw new Error("empty");
+            if (!Array.isArray(parsed) || parsed.length === 0) throw new Error("no array found");
             var questions = parsed.map(function(item, i) {
               return {id: "cq" + i, jp: String(item.jp || ""), answer: String(item.answer || ""), hint: String(item.hint || "")};
             }).filter(function(q) { return q.jp && q.answer; });
@@ -3701,11 +3703,11 @@ function MYKITAEnglishApp() {
           }
         }).catch(function(err) {
           setCustomQuizLoading(false);
-          alert("APIエラーが発生しました: " + (err && err.message || err));
+          alert("APIエラー: " + (err && err.message || err));
         });
       }).catch(function(err) {
         setCustomQuizLoading(false);
-        alert("ファイルの読み込みに失敗しました: " + (err && err.message || err));
+        alert("ファイル読み込みエラー: " + (err && err.message || err));
       });
     };
     reader.readAsArrayBuffer(file);
