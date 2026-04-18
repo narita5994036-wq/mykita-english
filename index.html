@@ -3696,9 +3696,8 @@ function MYKITAEnglishApp() {
             setQuizInput("");
             setCustomQuizLoading(false);
           } catch(err) {
-            console.error("Quiz parse error:", err, "\nRaw response:", res);
             setCustomQuizLoading(false);
-            alert("クイズの生成に失敗しました。\nコンソール（F12）で詳細を確認できます。");
+            alert("解析エラー: " + err.message + "\n\nAPI返答（先頭200文字）:\n" + res.slice(0, 200));
           }
         }).catch(function(err) {
           setCustomQuizLoading(false);
