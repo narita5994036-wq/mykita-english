@@ -3736,6 +3736,26 @@ function MYKITAEnglishApp() {
     setQuizInput("");
     setShowPastePanel(false);
     setPasteText("");
+    // generate hints in background if API key available
+    if (claudeApiKey) {
+      var hintPrompt = "以下の英語フレーズのヒントを作成してください。\n重要単語・文法ポイントを日本語で簡潔に（例: \"feel free to + 動詞\", \"out of stock（在庫切れ）\", \"may I + 動詞？ で丁寧な依頼\"）。\n\nJSONのみ返答: [\"ヒント1\", \"ヒント2\", ...]\n\n" +
+        questions.map(function(q, i) { return (i + 1) + ". " + q.answer; }).join("\n");
+      fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {"Content-Type":"application/json","x-api-key":claudeApiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+        body: JSON.stringify({model:"claude-haiku-4-5-20251001", max_tokens:2048, system:"英語学習のヒントを作る専門家。JSONのみ返答する。", messages:[{role:"user",content:hintPrompt}]})
+      }).then(function(r){return r.json();}).then(function(data) {
+        var res = (data.content && data.content[0] && data.content[0].text) || "";
+        try {
+          var raw = res.trim().replace(/^```[a-z]*\n?/i,"").replace(/\n?```$/i,"").trim();
+          var m = raw.match(/\[[\s\S]*\]/); if (m) raw = m[0];
+          var hints = JSON.parse(raw);
+          setCustomQuizQuestions(function(prev) {
+            return prev.map(function(q, i) { return Object.assign({}, q, {hint: hints[i] || q.hint}); });
+          });
+        } catch(e) {}
+      }).catch(function(){});
+    }
   };
   var loadWordDoc = function loadWordDoc(file) {
     if (!file) return;
