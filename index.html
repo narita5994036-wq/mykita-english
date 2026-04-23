@@ -2734,6 +2734,10 @@ function MYKITAEnglishApp() {
     _useStateCQU2 = _slicedToArray(_useStateCQU, 2),
     useCustomQuiz = _useStateCQU2[0],
     setUseCustomQuiz = _useStateCQU2[1];
+  var _useStateBQ = useState({}),
+    _useStateBQ2 = _slicedToArray(_useStateBQ, 2),
+    blankQuizIds = _useStateBQ2[0],
+    setBlankQuizIds = _useStateBQ2[1];
   var _useStatePP = useState(false),
     _useStatePP2 = _slicedToArray(_useStatePP, 2),
     showPastePanel = _useStatePP2[0],
@@ -2784,6 +2788,10 @@ function MYKITAEnglishApp() {
       var v = localStorage.getItem("mykita_vocab_stats");
       if (v) setVocabStats(JSON.parse(v));
     } catch (e) {}
+    try {
+      var b = localStorage.getItem("mykita_blank_ids");
+      if (b) setBlankQuizIds(JSON.parse(b));
+    } catch (e) {}
     ;
   }, []);
   var saveQuizStats = function saveQuizStats(next) {
@@ -2791,6 +2799,14 @@ function MYKITAEnglishApp() {
     try {
       localStorage.setItem("mykita_quiz_stats", JSON.stringify(next));
     } catch (e) {}
+  };
+  var toggleBlankQuiz = function toggleBlankQuiz(id) {
+    setBlankQuizIds(function(prev) {
+      var next = Object.assign({}, prev);
+      if (next[id]) { delete next[id]; } else { next[id] = true; }
+      try { localStorage.setItem("mykita_blank_ids", JSON.stringify(next)); } catch(e) {}
+      return next;
+    });
   };
   var saveVocabStats = function saveVocabStats(next) {
     setVocabStats(next);
@@ -2801,7 +2817,8 @@ function MYKITAEnglishApp() {
 
   // \u2500\u2500\u2500 Init quiz \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
-  var activeQuiz = (useCustomQuiz && customQuizQuestions.length > 0) ? customQuizQuestions : QUIZ_QUESTIONS;
+  var allQuizList = (useCustomQuiz && customQuizQuestions.length > 0) ? customQuizQuestions : QUIZ_QUESTIONS;
+  var activeQuiz = allQuizList.filter(function(q) { return !blankQuizIds[q.id]; });
 
   useEffect(function () {
     if (activeTab === "quiz" && currentQuizIndex === null) pickNextQuestion({});
@@ -5196,19 +5213,21 @@ function MYKITAEnglishApp() {
         flexDirection: "column",
         gap: "8px"
       }
-    }, activeQuiz.map(function (q2, idx) {
+    }, allQuizList.map(function (q2, idx) {
       var s2 = quizStats[q2.id] || {
         attempts: 0,
         correct: 0
       };
       var lv = masteryLevel(s2);
+      var isBlank = !!blankQuizIds[q2.id];
       return /*#__PURE__*/React.createElement("div", {
         key: q2.id,
         style: {
           padding: "12px 14px",
           background: "#111",
-          border: "1px solid #222",
-          borderRadius: "3px"
+          border: "1px solid " + (isBlank ? "#1a1a1a" : "#222"),
+          borderRadius: "3px",
+          opacity: isBlank ? 0.4 : 1
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
@@ -5225,20 +5244,25 @@ function MYKITAEnglishApp() {
           minWidth: "22px"
         }
       }, idx + 1), /*#__PURE__*/React.createElement("span", {
-        style: S.dot(lv)
+        style: S.dot(isBlank ? "new" : lv)
       }), /*#__PURE__*/React.createElement("span", {
         style: {
           fontFamily: "monospace",
           fontSize: "10px",
-          color: MASTERY_COLOR[lv]
+          color: isBlank ? "#444" : MASTERY_COLOR[lv]
         }
-      }, MASTERY_LABEL[lv]), s2.attempts > 0 && /*#__PURE__*/React.createElement("span", {
+      }, isBlank ? "\u30D6\u30E9\u30F3\u30AF" : MASTERY_LABEL[lv]), s2.attempts > 0 && !isBlank && /*#__PURE__*/React.createElement("span", {
         style: {
           fontFamily: "monospace",
           fontSize: "10px",
           color: "#555"
         }
-      }, "(".concat(s2.correct, "/").concat(s2.attempts, ")"))), /*#__PURE__*/React.createElement("div", {
+      }, "(".concat(s2.correct, "/").concat(s2.attempts, ")")),
+      /*#__PURE__*/React.createElement("button", {
+        style: {background:"transparent",border:"1px solid #333",borderRadius:"3px",color:isBlank?"#666":"#444",fontFamily:"monospace",fontSize:"10px",padding:"1px 7px",cursor:"pointer",marginLeft:"auto"},
+        onClick: function() { toggleBlankQuiz(q2.id); }
+      }, isBlank ? "\u89E3\u9664" : "\u30D6\u30E9\u30F3\u30AF")
+      ), /*#__PURE__*/React.createElement("div", {
         style: {
           fontSize: "14px",
           color: "#f0ede8",
