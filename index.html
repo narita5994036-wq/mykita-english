@@ -2771,6 +2771,18 @@ function MYKITAEnglishApp() {
     _useState98 = _slicedToArray(_useState97, 2),
     pendingRecord = _useState98[0],
     setPendingRecord = _useState98[1];
+  var _useStateENL = useState(""),
+    _useStateENL2 = _slicedToArray(_useStateENL, 2),
+    enLookupInput = _useStateENL2[0],
+    setEnLookupInput = _useStateENL2[1];
+  var _useStateENR = useState(null),
+    _useStateENR2 = _slicedToArray(_useStateENR, 2),
+    enLookupResult = _useStateENR2[0],
+    setEnLookupResult = _useStateENR2[1];
+  var _useStateENLD = useState(false),
+    _useStateENLD2 = _slicedToArray(_useStateENLD, 2),
+    enLookupLoading = _useStateENLD2[0],
+    setEnLookupLoading = _useStateENLD2[1];
   var chatEndRef = useRef(null);
   var recognitionRef = useRef(null);
   var mediaRecorderRef = useRef(null);
@@ -2799,6 +2811,22 @@ function MYKITAEnglishApp() {
     try {
       localStorage.setItem("mykita_quiz_stats", JSON.stringify(next));
     } catch (e) {}
+  };
+  var lookupEnWord = function lookupEnWord() {
+    var word = enLookupInput.trim();
+    if (!word || !claudeApiKey || enLookupLoading) return;
+    setEnLookupLoading(true);
+    setEnLookupResult(null);
+    callAPI(
+      "あなたは英語学習のプロ講師です。眼鏡店スタッフ向けに英語フレーズを日本語で解説します。マークダウン不要、プレーンテキストのみ。",
+      [{role:"user", content:"以下の英語の単語またはフレーズを日本語で解説してください。\n\n【" + word + "】\n\n以下の形式で：\n意味：\n使い方・ニュアンス：\n例文1：（英語）→（日本語訳）\n例文2：（英語）→（日本語訳）\n注意点：（あれば）"}]
+    ).then(function(res) {
+      setEnLookupResult(res.trim());
+      setEnLookupLoading(false);
+    }).catch(function() {
+      setEnLookupResult("エラーが発生しました。");
+      setEnLookupLoading(false);
+    });
   };
   var toggleBlankQuiz = function toggleBlankQuiz(id) {
     setBlankQuizIds(function(prev) {
@@ -5861,7 +5889,31 @@ function MYKITAEnglishApp() {
       color: "#444",
       marginTop: "6px"
     }
-  }, "\u30AD\u30FC\u306F\u3053\u306E\u30C7\u30D0\u30A4\u30B9\u306ElocalStorage\u306B\u306E\u307F\u4FDD\u5B58\u3055\u308C\u307E\u3059")), /*#__PURE__*/React.createElement("div", {
+  }, "\u30AD\u30FC\u306F\u3053\u306E\u30C7\u30D0\u30A4\u30B9\u306ElocalStorage\u306B\u306E\u307F\u4FDD\u5B58\u3055\u308C\u307E\u3059", /*#__PURE__*/React.createElement("div", {
+    style: {background:"#0d0d1a", border:"1px solid #2a2a4a", borderRadius:"4px", padding:"14px", marginBottom:"20px"}
+  },
+    /*#__PURE__*/React.createElement("div", {style:{fontSize:"10px",letterSpacing:"0.12em",color:"#7a7ab0",marginBottom:"10px"}}, "\u82F1\u8A9E \u2192 \u65E5\u672C\u8A9E \u89E3\u8AAC"),
+    /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:"8px",marginBottom:"10px"}},
+      /*#__PURE__*/React.createElement("input", {
+        value: enLookupInput,
+        onChange: function(e){setEnLookupInput(e.target.value);},
+        onKeyDown: function(e){if(e.key==="Enter") lookupEnWord();},
+        placeholder: "e.g. feel free to, progressive lenses, deposit...",
+        style:{flex:1,background:"#0a0a0a",border:"1px solid #333",borderRadius:"3px",padding:"8px 10px",color:"#f0ede8",fontSize:"13px",outline:"none",fontFamily:"inherit"}
+      }),
+      /*#__PURE__*/React.createElement("button", {
+        onClick: lookupEnWord,
+        disabled: !enLookupInput.trim() || !claudeApiKey || enLookupLoading,
+        style:{background:"transparent",border:"1px solid #444",borderRadius:"3px",color:"#c8b89a",fontFamily:"monospace",fontSize:"11px",padding:"0 14px",cursor:"pointer",opacity:(!enLookupInput.trim()||!claudeApiKey||enLookupLoading)?0.4:1,whiteSpace:"nowrap"}
+      }, enLookupLoading ? "\u89E3\u8AAC\u4E2D\u2026" : "\u89E3\u8AAC")
+    ),
+    enLookupResult && /*#__PURE__*/React.createElement("div", {
+      style:{background:"#0a0a0a",border:"1px solid #222",borderRadius:"3px",padding:"12px",fontFamily:"monospace",fontSize:"12px",color:"#c8b89a",lineHeight:"1.8",whiteSpace:"pre-wrap"}
+    }, enLookupResult),
+    !claudeApiKey && /*#__PURE__*/React.createElement("div", {style:{fontFamily:"monospace",fontSize:"10px",color:"#555"}},
+      "\u2192 API KEY\u3092\u8A2D\u5B9A\u3059\u308B\u3068\u4F7F\u7528\u3067\u304D\u307E\u3059"
+    )
+  ))), /*#__PURE__*/React.createElement("div", {
     style: {
       background: memoEditId !== null ? "#0a1a0a" : "#111",
       border: "1px solid ".concat(memoEditId !== null ? "#2a5a2a" : "#2a2a2a"),
