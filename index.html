@@ -3596,10 +3596,16 @@ function MYKITAEnglishApp() {
   // \u2500\u2500\u2500 API \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
   var SCENARIOS = {
-    general: "You are a customer at a high-end eyewear boutique. You're browsing and open to suggestions. Respond naturally. English only.",
-    mykita: "You are a customer interested in MYKITA frames. Ask detailed questions about the brand, hinge design, and materials. English only.",
-    objection: "You are a customer hesitant about the price. Push back politely on value claims. English only.",
-    tourist: "You are a tourist in Japan who speaks only English. You need prescription glasses urgently. English only."
+    general: "You are an English-speaking salesperson at a MYKITA eyewear boutique. Help the customer find glasses. Be professional, warm, and natural. English only.",
+    mykita: "You are an English-speaking salesperson at MYKITA. Enthusiastically explain the brand's unique hinge design, lightweight materials, and craftsmanship. English only.",
+    objection: "You are an English-speaking salesperson at MYKITA. The customer is hesitant about the price. Address their concerns with confidence, emphasizing value and quality. English only.",
+    tourist: "You are an English-speaking salesperson at MYKITA. A tourist needs prescription glasses urgently. Help them efficiently and warmly. English only."
+  };
+  var SCENARIO_OPENERS = {
+    general: "Welcome! Feel free to look around. Is there anything specific I can help you with today?",
+    mykita: "Welcome to MYKITA! Are you already familiar with our brand and our unique spring-hinge design?",
+    objection: "Welcome! I see you're looking at one of our most popular frames. These are truly a long-term investment.",
+    tourist: "Welcome! Do you speak English? I'd be happy to help you find the perfect pair of glasses."
   };
   var RP_LENGTH_GUIDE = [
     "Reply in 1 sentence. Be very brief.",
@@ -3685,12 +3691,11 @@ function MYKITAEnglishApp() {
             setIsLoading(true);
             _context6.p = 2;
             _context6.n = 3;
-            return callAPI(SCENARIOS[scenario] + " " + RP_LENGTH_GUIDE[rpLength - 1], newMsgs.map(function (m) {
-              return {
-                role: m.role,
-                content: m.content
-              };
-            }));
+            var apiMsgs = newMsgs.map(function(m) { return {role: m.role, content: m.content}; });
+            if (apiMsgs.length > 0 && apiMsgs[0].role === "assistant") {
+              apiMsgs = [{role:"user",content:"(Customer enters the store)"}].concat(apiMsgs);
+            }
+            return callAPI(SCENARIOS[scenario] + " " + RP_LENGTH_GUIDE[rpLength - 1], apiMsgs);
           case 3:
             reply = _context6.v;
             setMessages(function (prev) {
@@ -3875,10 +3880,11 @@ function MYKITAEnglishApp() {
     };
     reader.readAsArrayBuffer(file);
   };
-  var resetChat = function resetChat() {
+  var resetChat = function resetChat(sc) {
+    var key = sc || scenario;
     setMessages([{
       role: "assistant",
-      content: "Hello! Welcome to your store. I'm looking for some new glasses today. Can you help me?"
+      content: SCENARIO_OPENERS[key] || SCENARIO_OPENERS.general
     }]);
     setUserInput("");
     setJpFeedback({});
@@ -3897,8 +3903,8 @@ function MYKITAEnglishApp() {
     if (!claudeApiKey) return;
     setRpLoadingHint(true);
     setRpHint(null);
-    var convText = messages.map(function(m) { return (m.role==="user"?"\u8ca9\u58f2\u54e1: ":"Customer: ")+m.content; }).join("\n");
-    callAPI("\u3042\u306a\u305f\u306f\u30e1\u30ac\u30cd\u8ca9\u58f2\u54e1\u5411\u3051\u82f1\u4f1a\u8a71\u30b3\u30fc\u30c1\u3067\u3059\u3002\u4ee5\u4e0b\u306e\u4f1a\u8a71\u306e\u6d41\u308c\u3092\u898b\u3066\u3001\u8ca9\u58f2\u54e1\u304c\u6b21\u306b\u8a00\u3048\u305d\u3046\u306a\u82f1\u8a9e\u30d5\u30ec\u30fc\u30ba\u306e\u30d2\u30f3\u30c8\u30921\u301c2\u6587\u306e\u65e5\u672c\u8a9e\u3067\u63d0\u6848\u3057\u3001\u82f1\u8a9e\u30d5\u30ec\u30fc\u30ba\u4f8b\u30921\u3064\u542b\u3081\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:convText}])
+    var convText = messages.map(function(m) { return (m.role==="user"?"Customer: ":"\u8ca9\u58f2\u54e1: ")+m.content; }).join("\n");
+    callAPI("\u3042\u306a\u305f\u306f\u30e1\u30ac\u30cd\u5e97\u306e\u82f1\u4f1a\u8a71\u30b3\u30fc\u30c1\u3067\u3059\u3002\u4ee5\u4e0b\u306e\u4f1a\u8a71\u3092\u898b\u3066\u3001\u9867\u5ba2\uff08Customer\uff09\u304c\u6b21\u306b\u8a00\u3048\u305d\u3046\u306a\u82f1\u8a9e\u30d5\u30ec\u30fc\u30ba\u306e\u30d2\u30f3\u30c8\u30921\u301c2\u6587\u306e\u65e5\u672c\u8a9e\u3067\u63d0\u6848\u3057\u3001\u82f1\u8a9e\u30d5\u30ec\u30fc\u30ba\u4f8b\u30921\u3064\u542b\u3081\u3066\u304f\u3060\u3055\u3044\u3002", [{role:"user",content:convText}])
       .then(function(h) { setRpHint(h); })
       .catch(function() { setRpHint("\u30d2\u30f3\u30c8\u306e\u53d6\u5f97\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002"); })
       .finally(function() { setRpLoadingHint(false); });
@@ -4170,7 +4176,7 @@ function MYKITAEnglishApp() {
     bubble: function bubble(r) {
       return {
         display: "flex",
-        justifyContent: r === "user" ? "flex-start" : "flex-end",
+        justifyContent: r === "user" ? "flex-end" : "flex-start",
         marginBottom: "8px"
       };
     },
@@ -4179,11 +4185,11 @@ function MYKITAEnglishApp() {
         maxWidth: "75%",
         padding: "10px 14px",
         borderRadius: "3px",
-        background: r === "user" ? "#1a1a1a" : "#c8b89a",
-        color: r === "user" ? "#e0ddd8" : "#0a0a0a",
+        background: r === "user" ? "#c8b89a" : "#1a1a1a",
+        color: r === "user" ? "#0a0a0a" : "#e0ddd8",
         fontSize: "13px",
         lineHeight: "1.5",
-        border: "1px solid ".concat(r === "user" ? "#2a2a2a" : "#c8b89a")
+        border: "1px solid ".concat(r === "user" ? "#c8b89a" : "#2a2a2a")
       };
     },
     roleLabel: function roleLabel(r) {
@@ -4194,7 +4200,7 @@ function MYKITAEnglishApp() {
         fontFamily: "monospace",
         textTransform: "uppercase",
         marginBottom: "2px",
-        textAlign: r === "user" ? "left" : "right"
+        textAlign: r === "user" ? "right" : "left"
       };
     },
     inputRow: {
@@ -5071,14 +5077,14 @@ function MYKITAEnglishApp() {
 
   var renderRoleplay = function renderRoleplay() {
     return React.createElement("div", null,
-      React.createElement("span", {style: S.label}, "AI\u30ed\u30fc\u30eb\u30d7\u30ec\u30a4 \u2014 \u3042\u306a\u305f\u304c\u8ca9\u58f2\u54e1"),
+      React.createElement("span", {style: S.label}, "AI\u30ed\u30fc\u30eb\u30d7\u30ec\u30a4 \u2014 \u3042\u306a\u305f\u304c\u9867\u5ba2"),
       React.createElement("div", {style: S.row},
         [{key:"general",label:"\u4e00\u822c\u5ba2"},{key:"mykita",label:"MYKITA\u30d5\u30a1\u30f3"},{key:"objection",label:"\u4fa1\u683c\u4ea4\u6e09\u5ba2"},{key:"tourist",label:"\u82f1\u8a9e\u89b3\u5149\u5ba2"}]
           .map(function(sc) {
             return React.createElement("button", {
               key: sc.key,
               style: S.catBtn(scenario === sc.key),
-              onClick: function() { setScenario(sc.key); resetChat(); }
+              onClick: function() { setScenario(sc.key); resetChat(sc.key); }
             }, sc.label);
           })
       ),
@@ -5105,11 +5111,11 @@ function MYKITAEnglishApp() {
       React.createElement("div", {style: S.chatBox},
         messages.map(function(m, i) {
           return React.createElement("div", {key: i},
-            React.createElement("div", {style: S.roleLabel(m.role)}, m.role === "user" ? "\u3042\u306a\u305f\uff08\u8ca9\u58f2\u54e1\uff09" : "Customer"),
+            React.createElement("div", {style: S.roleLabel(m.role)}, m.role === "user" ? "\u3042\u306a\u305f\uff08Customer\uff09" : "\u8ca9\u58f2\u54e1\uff08AI\uff09"),
             React.createElement("div", {style: S.bubble(m.role)},
               React.createElement("div", {style: S.bubbleIn(m.role)}, m.content)
             ),
-            m.role === "assistant" && React.createElement("div", {style:{textAlign:"right",marginTop:"-4px",marginBottom:"10px"}},
+            m.role === "assistant" && React.createElement("div", {style:{textAlign:"left",marginTop:"-4px",marginBottom:"10px"}},
               React.createElement("button", {
                 style: S.btn("j"),
                 onClick: function() {
@@ -5123,7 +5129,7 @@ function MYKITAEnglishApp() {
               }, rpLoadingTrans === i ? "\u7ffb\u8a33\u4e2d\u2026" : rpTranslations[i] ? "\u8a33\u3092\u9690\u3059" : "\u65e5\u672c\u8a9e\u8a33"),
               rpTranslations[i] && React.createElement("div", {style: S.fbBox}, rpTranslations[i])
             ),
-            m.role === "user" && React.createElement("div", {style:{textAlign:"left",marginTop:"-4px",marginBottom:"10px"}},
+            m.role === "user" && React.createElement("div", {style:{textAlign:"right",marginTop:"-4px",marginBottom:"10px"}},
               React.createElement("button", {
                 style: S.btn("j"),
                 onClick: function() { return getFeedback(i, m.content); },
@@ -5134,7 +5140,7 @@ function MYKITAEnglishApp() {
           );
         }),
         isLoading && React.createElement("div", null,
-          React.createElement("div", {style: S.roleLabel("assistant")}, "Customer"),
+          React.createElement("div", {style: S.roleLabel("assistant")}, "\u8ca9\u58f2\u54e1\uff08AI\uff09"),
           React.createElement("div", {style: S.bubble("assistant")},
             React.createElement("div", {style: _objectSpread(_objectSpread({}, S.bubbleIn("assistant")), {}, {color:"#555"})}, "typing\u2026")
           )
