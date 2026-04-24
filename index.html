@@ -5889,31 +5889,68 @@ function MYKITAEnglishApp() {
       color: "#444",
       marginTop: "6px"
     }
-  }, "\u30AD\u30FC\u306F\u3053\u306E\u30C7\u30D0\u30A4\u30B9\u306ElocalStorage\u306B\u306E\u307F\u4FDD\u5B58\u3055\u308C\u307E\u3059", /*#__PURE__*/React.createElement("div", {
-    style: {background:"#0d0d1a", border:"1px solid #2a2a4a", borderRadius:"4px", padding:"14px", marginBottom:"20px"}
-  },
-    /*#__PURE__*/React.createElement("div", {style:{fontSize:"10px",letterSpacing:"0.12em",color:"#7a7ab0",marginBottom:"10px"}}, "\u82F1\u8A9E \u2192 \u65E5\u672C\u8A9E \u89E3\u8AAC"),
-    /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:"8px",marginBottom:"10px"}},
-      /*#__PURE__*/React.createElement("input", {
-        value: enLookupInput,
-        onChange: function(e){setEnLookupInput(e.target.value);},
-        onKeyDown: function(e){if(e.key==="Enter") lookupEnWord();},
-        placeholder: "e.g. feel free to, progressive lenses, deposit...",
-        style:{flex:1,background:"#0a0a0a",border:"1px solid #333",borderRadius:"3px",padding:"8px 10px",color:"#f0ede8",fontSize:"13px",outline:"none",fontFamily:"inherit"}
-      }),
-      /*#__PURE__*/React.createElement("button", {
-        onClick: lookupEnWord,
-        disabled: !enLookupInput.trim() || !claudeApiKey || enLookupLoading,
-        style:{background:"transparent",border:"1px solid #444",borderRadius:"3px",color:"#c8b89a",fontFamily:"monospace",fontSize:"11px",padding:"0 14px",cursor:"pointer",opacity:(!enLookupInput.trim()||!claudeApiKey||enLookupLoading)?0.4:1,whiteSpace:"nowrap"}
-      }, enLookupLoading ? "\u89E3\u8AAC\u4E2D\u2026" : "\u89E3\u8AAC")
-    ),
-    enLookupResult && /*#__PURE__*/React.createElement("div", {
-      style:{background:"#0a0a0a",border:"1px solid #222",borderRadius:"3px",padding:"12px",fontFamily:"monospace",fontSize:"12px",color:"#c8b89a",lineHeight:"1.8",whiteSpace:"pre-wrap"}
-    }, enLookupResult),
-    !claudeApiKey && /*#__PURE__*/React.createElement("div", {style:{fontFamily:"monospace",fontSize:"10px",color:"#555"}},
-      "\u2192 API KEY\u3092\u8A2D\u5B9A\u3059\u308B\u3068\u4F7F\u7528\u3067\u304D\u307E\u3059"
-    )
-  ))), /*#__PURE__*/React.createElement("div", {
+  }, "\u30AD\u30FC\u306F\u3053\u306E\u30C7\u30D0\u30A4\u30B9\u306ElocalStorage\u306B\u306E\u307F\u4FDD\u5B58\u3055\u308C\u307E\u3059")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#0d0d1a",
+      border: "1px solid #2a2a4a",
+      borderRadius: "4px",
+      padding: "14px",
+      marginBottom: "20px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "10px",
+      color: "#7a7ab0",
+      letterSpacing: "0.1em",
+      marginBottom: "10px"
+    }
+  }, "\u82f1\u8a9e \u2192 \u65e5\u672c\u8a9e \u89e3\u8aac"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: "8px",
+      marginBottom: "10px"
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    value: enLookupInput,
+    onChange: function onChange(e) {
+      return setEnLookupInput(e.target.value);
+    },
+    onKeyDown: function onKeyDown(e) {
+      if (e.key === "Enter") lookupEnWord();
+    },
+    placeholder: "e.g. feel free to, deposit...",
+    style: {
+      flex: 1,
+      background: "#0a0a0a",
+      border: "1px solid #333",
+      borderRadius: "3px",
+      padding: "8px 10px",
+      color: "#f0ede8",
+      fontSize: "12px",
+      outline: "none",
+      fontFamily: "monospace"
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: lookupEnWord,
+    disabled: !claudeApiKey || enLookupLoading,
+    style: S.btn("p")
+  }, enLookupLoading ? "\u89e3\u8aac\u4e2d\u2026" : "\u89e3\u8aac")), enLookupResult && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#111",
+      border: "1px solid #2a2a2a",
+      borderRadius: "3px",
+      padding: "12px",
+      fontSize: "13px",
+      color: "#c8d8c8",
+      whiteSpace: "pre-wrap",
+      lineHeight: "1.7"
+    }
+  }, enLookupResult), !claudeApiKey && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "11px",
+      color: "#666"
+    }
+  }, "\u2192 API KEY\u3092\u8a2d\u5b9a\u3059\u308b\u3068\u4f7f\u7528\u3067\u304d\u307e\u3059")), /*#__PURE__*/React.createElement("div", {
     style: {
       background: memoEditId !== null ? "#0a1a0a" : "#111",
       border: "1px solid ".concat(memoEditId !== null ? "#2a5a2a" : "#2a2a2a"),
