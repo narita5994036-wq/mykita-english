@@ -2524,6 +2524,9 @@ function MYKITAEnglishApp() {
     setMemoEditId(m.id);
     setMemoQ(m.q);
     setMemoA(m.a);
+    setTimeout(function() {
+      if (memoFormRef.current) memoFormRef.current.scrollIntoView({behavior: "smooth", block: "start"});
+    }, 50);
   };
   var cancelEdit = function cancelEdit() {
     setMemoEditId(null);
@@ -2792,7 +2795,16 @@ function MYKITAEnglishApp() {
     _useStateENLD2 = _slicedToArray(_useStateENLD, 2),
     enLookupLoading = _useStateENLD2[0],
     setEnLookupLoading = _useStateENLD2[1];
+  var _useStateENS = useState([]),
+    _useStateENS2 = _slicedToArray(_useStateENS, 2),
+    enLookupStocks = _useStateENS2[0],
+    setEnLookupStocks = _useStateENS2[1];
+  var _useStateENW = useState(""),
+    _useStateENW2 = _slicedToArray(_useStateENW, 2),
+    enLookupWord = _useStateENW2[0],
+    setEnLookupWord = _useStateENW2[1];
   var chatEndRef = useRef(null);
+  var memoFormRef = useRef(null);
   var recognitionRef = useRef(null);
   var mediaRecorderRef = useRef(null);
   var audioChunksRef = useRef([]);
@@ -2813,6 +2825,10 @@ function MYKITAEnglishApp() {
       var b = localStorage.getItem("mykita_blank_ids");
       if (b) setBlankQuizIds(JSON.parse(b));
     } catch (e) {}
+    try {
+      var es = localStorage.getItem("mykita_en_stocks");
+      if (es) setEnLookupStocks(JSON.parse(es));
+    } catch (e) {}
     ;
   }, []);
   var saveQuizStats = function saveQuizStats(next) {
@@ -2826,6 +2842,7 @@ function MYKITAEnglishApp() {
     if (!word || !claudeApiKey || enLookupLoading) return;
     setEnLookupLoading(true);
     setEnLookupResult(null);
+    setEnLookupWord(word);
     callAPI(
       "あなたは英語学習のプロ講師です。眼鏡店スタッフ向けに英語フレーズを日本語で解説します。マークダウン不要、プレーンテキストのみ。",
       [{role:"user", content:"以下の英語の単語またはフレーズを日本語で解説してください。\n\n【" + word + "】\n\n以下の形式で：\n意味：\n使い方・ニュアンス：\n例文1：（英語）→（日本語訳）\n例文2：（英語）→（日本語訳）\n注意点：（あれば）"}]
@@ -5987,12 +6004,47 @@ function MYKITAEnglishApp() {
       whiteSpace: "pre-wrap",
       lineHeight: "1.7"
     }
-  }, enLookupResult), !claudeApiKey && /*#__PURE__*/React.createElement("div", {
+  }, enLookupResult), enLookupResult && /*#__PURE__*/React.createElement("div", {
+    style: {textAlign: "right", marginTop: "6px"}
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      var stock = {word: enLookupWord, result: enLookupResult, date: new Date().toLocaleDateString("ja-JP")};
+      setEnLookupStocks(function(prev) {
+        var next = [stock].concat(prev.filter(function(s) { return s.word !== enLookupWord; }));
+        try { localStorage.setItem("mykita_en_stocks", JSON.stringify(next)); } catch(e) {}
+        return next;
+      });
+    },
+    style: {fontFamily:"monospace",fontSize:"10px",padding:"3px 10px",background:"transparent",border:"1px solid #444",borderRadius:"3px",color:"#c8b89a",cursor:"pointer"}
+  }, "+ \u30B9\u30C8\u30C3\u30AF")), !claudeApiKey && /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: "11px",
       color: "#666"
     }
-  }, "\u2192 API KEY\u3092\u8a2d\u5b9a\u3059\u308b\u3068\u4f7f\u7528\u3067\u304d\u307e\u3059")), /*#__PURE__*/React.createElement("div", {
+  }, "\u2192 API KEY\u3092\u8a2d\u5b9a\u3059\u308b\u3068\u4f7f\u7528\u3067\u304d\u307e\u3059"),
+  enLookupStocks.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {marginTop: "14px", borderTop: "1px solid #1a1a1a", paddingTop: "10px"}
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {fontFamily:"monospace",fontSize:"9px",color:"#444",letterSpacing:"0.2em",marginBottom:"8px"}
+  }, "STOCKED"), enLookupStocks.map(function(s, idx) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: idx,
+      style: {background:"#0a0a0a",border:"1px solid #1a1a1a",borderRadius:"3px",padding:"10px",marginBottom:"6px",position:"relative"}
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {fontFamily:"monospace",fontSize:"10px",color:"#7a7ab0",marginBottom:"4px"}
+    }, s.word), /*#__PURE__*/React.createElement("div", {
+      style: {fontSize:"12px",color:"#c8d8c8",whiteSpace:"pre-wrap",lineHeight:"1.6"}
+    }, s.result), /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        setEnLookupStocks(function(prev) {
+          var next = prev.filter(function(_, i) { return i !== idx; });
+          try { localStorage.setItem("mykita_en_stocks", JSON.stringify(next)); } catch(e) {}
+          return next;
+        });
+      },
+      style: {position:"absolute",top:"6px",right:"6px",background:"transparent",border:"none",color:"#444",cursor:"pointer",fontSize:"14px",lineHeight:1,padding:"0"}
+    }, "\xd7"));
+  }))), /*#__PURE__*/React.createElement("div", {
     style: {
       background: memoEditId !== null ? "#0a1a0a" : "#111",
       border: "1px solid ".concat(memoEditId !== null ? "#2a5a2a" : "#2a2a2a"),
@@ -6001,18 +6053,20 @@ function MYKITAEnglishApp() {
       marginBottom: "20px"
     }
   }, /*#__PURE__*/React.createElement("div", {
+    ref: memoFormRef,
     style: {
       fontSize: "10px",
       letterSpacing: "0.12em",
       color: memoEditId !== null ? "#6a9a6a" : "#c8b89a",
       marginBottom: "10px"
     }
-  }, memoEditId !== null ? "EDIT MEMO" : "NEW MEMO"), /*#__PURE__*/React.createElement("input", {
+  }, memoEditId !== null ? "EDIT MEMO" : "NEW MEMO"), /*#__PURE__*/React.createElement("textarea", {
     value: memoQ,
     onChange: function onChange(e) {
       return setMemoQ(e.target.value);
     },
     placeholder: "\u3088\u304F\u805E\u304B\u308C\u308B\u3053\u3068\uFF08\u8CEA\u554F\u30FB\u72B6\u6CC1\uFF09 \u203B\uFF5B\u30AB\u30B8\u30E5\u30A2\u30EB\u306B\uFF5D\u3067\u30CB\u30E5\u30A2\u30F3\u30B9\u6307\u5B9A\u53EF",
+    rows: 2,
     style: {
       width: "100%",
       background: "#0a0a0a",
@@ -6023,7 +6077,8 @@ function MYKITAEnglishApp() {
       fontSize: "13px",
       marginBottom: "8px",
       outline: "none",
-      fontFamily: "inherit"
+      fontFamily: "inherit",
+      resize: "vertical"
     }
   }), /*#__PURE__*/React.createElement("textarea", {
     value: memoA,
