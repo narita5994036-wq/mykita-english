@@ -2431,6 +2431,11 @@ function MYKITAEnglishApp() {
             setTranslating(m.id);
             _context.p = 2;
             _context.n = 3;
+            var _nuanceMatch = (m.q + " " + (m.a||"")).match(/\{([^}]+)\}/);
+            var _nuance = _nuanceMatch ? _nuanceMatch[1] : null;
+            var _qClean = m.q.replace(/\{[^}]*\}/g, "").trim();
+            var _aClean = (m.a||"").replace(/\{[^}]*\}/g, "").trim();
+            var _nuanceInstr = _nuance ? "\nNuance/Tone: " + _nuance : "";
             return fetch("https://api.anthropic.com/v1/messages", {
               method: "POST",
               headers: {
@@ -2444,7 +2449,7 @@ function MYKITAEnglishApp() {
                 max_tokens: 1024,
                 messages: [{
                   role: "user",
-                  content: "Translate the following FAQ item into natural English. Return ONLY a JSON object: {\"q\": \"...\", \"a\": \"...or null\"}\n\nQ: ".concat(m.q).concat(m.a ? "\nA: ".concat(m.a) : "")
+                  content: "Translate the following FAQ item into natural English, reflecting the specified nuance/tone if given. Return ONLY a JSON object: {\"q\": \"...\", \"a\": \"...or null\"}" + _nuanceInstr + "\n\nQ: " + _qClean + (_aClean ? "\nA: " + _aClean : "")
                 }]
               })
             });
@@ -6007,7 +6012,7 @@ function MYKITAEnglishApp() {
     onChange: function onChange(e) {
       return setMemoQ(e.target.value);
     },
-    placeholder: "\u3088\u304F\u805E\u304B\u308C\u308B\u3053\u3068\uFF08\u8CEA\u554F\u30FB\u72B6\u6CC1\uFF09",
+    placeholder: "\u3088\u304F\u805E\u304B\u308C\u308B\u3053\u3068\uFF08\u8CEA\u554F\u30FB\u72B6\u6CC1\uFF09 \u203B\uFF5B\u30AB\u30B8\u30E5\u30A2\u30EB\u306B\uFF5D\u3067\u30CB\u30E5\u30A2\u30F3\u30B9\u6307\u5B9A\u53EF",
     style: {
       width: "100%",
       background: "#0a0a0a",
