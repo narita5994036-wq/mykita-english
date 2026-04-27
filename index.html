@@ -2763,6 +2763,10 @@ function MYKITAEnglishApp() {
     _useStateBQ2 = _slicedToArray(_useStateBQ, 2),
     blankQuizIds = _useStateBQ2[0],
     setBlankQuizIds = _useStateBQ2[1];
+  var _useStateMQI = useState({}),
+    _useStateMQI2 = _slicedToArray(_useStateMQI, 2),
+    memoQuizIds = _useStateMQI2[0],
+    setMemoQuizIds = _useStateMQI2[1];
   var _useStatePP = useState(false),
     _useStatePP2 = _slicedToArray(_useStatePP, 2),
     showPastePanel = _useStatePP2[0],
@@ -2842,6 +2846,10 @@ function MYKITAEnglishApp() {
       var es = localStorage.getItem("mykita_en_stocks");
       if (es) setEnLookupStocks(JSON.parse(es));
     } catch (e) {}
+    try {
+      var mqi = localStorage.getItem("mykita_memo_quiz_ids");
+      if (mqi) setMemoQuizIds(JSON.parse(mqi));
+    } catch (e) {}
     ;
   }, []);
   var saveQuizStats = function saveQuizStats(next) {
@@ -2875,6 +2883,14 @@ function MYKITAEnglishApp() {
       return next;
     });
   };
+  var toggleMemoQuiz = function toggleMemoQuiz(memo) {
+    setMemoQuizIds(function(prev) {
+      var next = Object.assign({}, prev);
+      if (next[memo.id]) { delete next[memo.id]; } else { next[memo.id] = true; }
+      try { localStorage.setItem("mykita_memo_quiz_ids", JSON.stringify(next)); } catch(e) {}
+      return next;
+    });
+  };
   var saveVocabStats = function saveVocabStats(next) {
     setVocabStats(next);
     try {
@@ -2884,7 +2900,9 @@ function MYKITAEnglishApp() {
 
   // \u2500\u2500\u2500 Init quiz \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
-  var allQuizList = (useCustomQuiz && customQuizQuestions.length > 0) ? customQuizQuestions : QUIZ_QUESTIONS;
+  var memoQuizQuestions = memos.filter(function(m) { return memoQuizIds[m.id] && m.q && m.a; }).map(function(m) { return {id: "memo_" + m.id, jp: m.q, answer: m.a, hint: m.qEn || ""}; });
+  var _baseQuizList = (useCustomQuiz && customQuizQuestions.length > 0) ? customQuizQuestions : QUIZ_QUESTIONS;
+  var allQuizList = memoQuizQuestions.length > 0 ? memoQuizQuestions.concat(_baseQuizList) : _baseQuizList;
   var activeQuiz = allQuizList.filter(function(q) { return !blankQuizIds[q.id]; });
 
   useEffect(function () {
@@ -6222,7 +6240,7 @@ function MYKITAEnglishApp() {
         padding: "3px 8px",
         cursor: translating === m.id ? "default" : "pointer"
       }
-    }, translating === m.id ? "\u7ffb\u8a33\u4e2d..." : "\u82f1\u8a33"))), m.a && /*#__PURE__*/React.createElement("div", {
+    }, translating === m.id ? "\u7ffb\u8a33\u4e2d..." : "\u82f1\u8a33"), m.a && /*#__PURE__*/React.createElement("button", {onClick: function onClick() { return toggleMemoQuiz(m); }, style: {background: memoQuizIds[m.id] ? "#0a1a0a" : "none", border: "1px solid " + (memoQuizIds[m.id] ? "#2a5a2a" : "#2a4a2a"), borderRadius: "3px", color: memoQuizIds[m.id] ? "#6a9a6a" : "#6a8a6a", fontSize: "11px", padding: "3px 8px", cursor: "pointer"}}, memoQuizIds[m.id] ? "\u767b\u9332\u6e08" : "\u30af\u30a4\u30ba\u767b\u9332"))), m.a && /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "12px",
         color: "#aaa",
