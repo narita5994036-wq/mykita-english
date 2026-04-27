@@ -4986,7 +4986,7 @@ function MYKITAEnglishApp() {
           setFlashRevealed(false);
         }
       }, "\u30B9\u30AD\u30C3\u30D7 \u2192")));
-    }())), _isStocked && /*#__PURE__*/React.createElement("div", null, enLookupStocks.length === 0 ? /*#__PURE__*/React.createElement("div", {style: {color: "#444", fontSize: "12px", padding: "20px 0", textAlign: "center"}}, "\u30B9\u30C8\u30C3\u30AF\u306F\u3042\u308A\u307E\u305B\u3093") : enLookupStocks.map(function(s, si) { return /*#__PURE__*/React.createElement("div", {key: si, style: {background: "#111", border: "1px solid #222", borderRadius: "6px", padding: "12px", marginBottom: "10px"}}, /*#__PURE__*/React.createElement("div", {style: {display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px"}}, /*#__PURE__*/React.createElement("div", {style: {color: "#c8b89a", fontWeight: "bold", fontSize: "13px"}}, s.word), /*#__PURE__*/React.createElement("button", {style: {background: "none", border: "none", color: "#555", cursor: "pointer", fontSize: "16px"}, onClick: function onClick(e) {e.stopPropagation(); var next = enLookupStocks.filter(function(_, xi) { return xi !== si; }); setEnLookupStocks(next); try { localStorage.setItem("mykita_en_stocks", JSON.stringify(next)); } catch(err) {}}}, "\xD7")), /*#__PURE__*/React.createElement("div", {style: {fontSize: "11px", color: "#888", lineHeight: "1.7", whiteSpace: "pre-wrap"}}, s.result)); })));
+    }()), _isStocked && /*#__PURE__*/React.createElement("div", null, enLookupStocks.length === 0 ? /*#__PURE__*/React.createElement("div", {style: {color: "#444", fontSize: "12px", padding: "20px 0", textAlign: "center"}}, "\u30B9\u30C8\u30C3\u30AF\u306F\u3042\u308A\u307E\u305B\u3093") : enLookupStocks.map(function(s, si) { return /*#__PURE__*/React.createElement("div", {key: si, style: {background: "#111", border: "1px solid #222", borderRadius: "6px", padding: "12px", marginBottom: "10px"}}, /*#__PURE__*/React.createElement("div", {style: {display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px"}}, /*#__PURE__*/React.createElement("div", {style: {color: "#c8b89a", fontWeight: "bold", fontSize: "13px"}}, s.word), /*#__PURE__*/React.createElement("button", {style: {background: "none", border: "none", color: "#555", cursor: "pointer", fontSize: "16px"}, onClick: function onClick(e) {e.stopPropagation(); var next = enLookupStocks.filter(function(_, xi) { return xi !== si; }); setEnLookupStocks(next); try { localStorage.setItem("mykita_en_stocks", JSON.stringify(next)); } catch(err) {}}}, "\xD7")), /*#__PURE__*/React.createElement("div", {style: {fontSize: "11px", color: "#888", lineHeight: "1.7", whiteSpace: "pre-wrap"}}, s.result)); })));
   };
 
   // \u2500\u2500\u2500 Tab: Knowledge \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -6052,30 +6052,7 @@ function MYKITAEnglishApp() {
       fontSize: "11px",
       color: "#666"
     }
-  }, "\u2192 API KEY\u3092\u8a2d\u5b9a\u3059\u308b\u3068\u4f7f\u7528\u3067\u304d\u307e\u3059"),
-  enLookupStocks.length > 0 && /*#__PURE__*/React.createElement("div", {
-    style: {marginTop: "14px", borderTop: "1px solid #1a1a1a", paddingTop: "10px"}
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {fontFamily:"monospace",fontSize:"9px",color:"#444",letterSpacing:"0.2em",marginBottom:"8px"}
-  }, "STOCKED"), enLookupStocks.map(function(s, idx) {
-    return /*#__PURE__*/React.createElement("div", {
-      key: idx,
-      style: {background:"#0a0a0a",border:"1px solid #1a1a1a",borderRadius:"3px",padding:"10px",marginBottom:"6px",position:"relative"}
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {fontFamily:"monospace",fontSize:"10px",color:"#7a7ab0",marginBottom:"4px"}
-    }, s.word), /*#__PURE__*/React.createElement("div", {
-      style: {fontSize:"12px",color:"#c8d8c8",whiteSpace:"pre-wrap",lineHeight:"1.6"}
-    }, s.result), /*#__PURE__*/React.createElement("button", {
-      onClick: function onClick() {
-        setEnLookupStocks(function(prev) {
-          var next = prev.filter(function(_, i) { return i !== idx; });
-          try { localStorage.setItem("mykita_en_stocks", JSON.stringify(next)); } catch(e) {}
-          return next;
-        });
-      },
-      style: {position:"absolute",top:"6px",right:"6px",background:"transparent",border:"none",color:"#444",cursor:"pointer",fontSize:"14px",lineHeight:1,padding:"0"}
-    }, "\xd7"));
-  }))), /*#__PURE__*/React.createElement("div", {
+  }, "\u2192 API KEY\u3092\u8a2d\u5b9a\u3059\u308b\u3068\u4f7f\u7528\u3067\u304d\u307e\u3059")), /*#__PURE__*/React.createElement("div", {
     style: {
       background: memoEditId !== null ? "#0a1a0a" : "#111",
       border: "1px solid ".concat(memoEditId !== null ? "#2a5a2a" : "#2a2a2a"),
