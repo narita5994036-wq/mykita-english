@@ -5708,6 +5708,7 @@ function MYKITAEnglishApp() {
     }, "\u25A0 \u505C\u6B62"), /*#__PURE__*/React.createElement("button", {
       style: S.btn(),
       onClick: function onClick() {
+        quizInputBaseRef.current = "";
         return setQuizInput("");
       },
       disabled: !quizInput
