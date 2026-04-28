@@ -2973,6 +2973,7 @@ function MYKITAEnglishApp() {
   var audioChunksRef = useRef([]);
   var ttsCacheRef = useRef({});
   var quizInputBaseRef = useRef("");
+  var accumulatedRef = useRef("");
 
   // \u2500\u2500\u2500 Load/Save Progress \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
@@ -3680,7 +3681,7 @@ function MYKITAEnglishApp() {
               rec.interimResults = true;
               rec.maxAlternatives = 5;
               var silenceTimer = null;
-              var accumulated = "";
+              accumulatedRef.current = "";
               rec.onspeechstart = function() {
                 if (silenceTimer) { clearTimeout(silenceTimer); silenceTimer = null; }
               };
@@ -3709,8 +3710,8 @@ function MYKITAEnglishApp() {
                       setJpWarning(true);
                       best = stripJapanese(best);
                     }
-                    accumulated = (accumulated + " " + best).trim();
-                    var finalText = accumulated;
+                    accumulatedRef.current = (accumulatedRef.current + " " + best).trim();
+                    var finalText = accumulatedRef.current;
                     setTranscript(finalText);
                     // context\u306b\u5fdc\u3058\u3066\u5404input\u306b\u3082\u53cd\u6620
                     setRecordingContext(function (ctx) {
@@ -3745,7 +3746,7 @@ function MYKITAEnglishApp() {
                 if (silenceTimer) { clearTimeout(silenceTimer); silenceTimer = null; }
                 // \u30e6\u30fc\u30b6\u30fc\u304c\u505c\u6b62\u3057\u3066\u3044\u306a\u3051\u308c\u3070\u81ea\u52d5\u518d\u958b
                 if (!stoppedByUser.current) {
-                  accumulated = "";
+                  accumulatedRef.current = "";
                   try {
                     rec.start();
                   } catch (e) {}
@@ -5709,6 +5710,7 @@ function MYKITAEnglishApp() {
       style: S.btn(),
       onClick: function onClick() {
         quizInputBaseRef.current = "";
+        accumulatedRef.current = "";
         return setQuizInput("");
       },
       disabled: !quizInput
