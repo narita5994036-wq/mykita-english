@@ -2845,6 +2845,10 @@ function MYKITAEnglishApp() {
     _useState82 = _slicedToArray(_useState81, 2),
     quizInput = _useState82[0],
     setQuizInput = _useState82[1];
+  var _useStateVA = useState([]),
+    _useStateVA2 = _slicedToArray(_useStateVA, 2),
+    voiceAlternatives = _useStateVA2[0],
+    setVoiceAlternatives = _useStateVA2[1];
   var _useState83 = useState(null),
     _useState84 = _slicedToArray(_useState83, 2),
     quizResult = _useState84[0],
@@ -3698,26 +3702,29 @@ function MYKITAEnglishApp() {
                 var interim = "";
                 var _loop = function _loop() {
                   if (e.results[i].isFinal) {
-                    var best = e.results[i][0].transcript;
+                    // Collect all non-Japanese alternatives
+                    var alts = [];
                     for (var j = 0; j < e.results[i].length; j++) {
-                      var alt = e.results[i][j].transcript;
-                      if (!hasJapanese(alt)) {
-                        best = alt;
-                        break;
-                      }
+                      var _a = e.results[i][j].transcript;
+                      if (hasJapanese(_a)) _a = stripJapanese(_a);
+                      _a = _a.trim();
+                      if (_a && alts.indexOf(_a) === -1) alts.push(_a);
                     }
-                    if (hasJapanese(best)) {
-                      setJpWarning(true);
-                      best = stripJapanese(best);
-                    }
+                    if (alts.length === 0) alts = [e.results[i][0].transcript.trim()];
+                    var best = alts[0];
+                    if (hasJapanese(best)) { setJpWarning(true); best = stripJapanese(best); }
                     accumulatedRef.current = (accumulatedRef.current + " " + best).trim();
                     var finalText = accumulatedRef.current;
                     setTranscript(finalText);
-                    // context\u306b\u5fdc\u3058\u3066\u5404input\u306b\u3082\u53cd\u6620
                     setRecordingContext(function (ctx) {
                       if (ctx === "quiz") {
-                        var base = quizInputBaseRef.current;
-                        setQuizInput((base ? base + " " : "") + finalText);
+                        if (alts.length > 1) {
+                          // Show alternatives for user to choose
+                          setVoiceAlternatives(alts);
+                        } else {
+                          var base = quizInputBaseRef.current;
+                          setQuizInput((base ? base + " " : "") + finalText);
+                        }
                       } else if (ctx === "roleplay") {
                         setUserInput(finalText);
                       }
@@ -5700,6 +5707,7 @@ function MYKITAEnglishApp() {
       style: S.btn("p"),
       onClick: function onClick() {
         setJpWarning(false);
+        setVoiceAlternatives([]);
         quizInputBaseRef.current = quizInput;
         startRecording("quiz");
       }
@@ -5711,9 +5719,10 @@ function MYKITAEnglishApp() {
       onClick: function onClick() {
         quizInputBaseRef.current = "";
         accumulatedRef.current = "";
+        setVoiceAlternatives([]);
         return setQuizInput("");
       },
-      disabled: !quizInput
+      disabled: !quizInput && voiceAlternatives.length === 0
     }, "\u30AF\u30EA\u30A2")), isRecording && recordingContext === "quiz" && /*#__PURE__*/React.createElement("div", {
       style: {
         fontFamily: "monospace",
@@ -5725,10 +5734,40 @@ function MYKITAEnglishApp() {
       style: {
         color: "#666"
       }
-    }, interimTranscript)), /*#__PURE__*/React.createElement("textarea", {
+    }, interimTranscript)), voiceAlternatives.length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: {marginBottom: "8px"}
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {fontFamily:"monospace", fontSize:"10px", color:"#555", marginBottom:"4px"}
+    }, "認識候補 — タップして選択:"), /*#__PURE__*/React.createElement("div", {
+      style: {display:"flex", gap:"6px", flexWrap:"wrap"}
+    }, voiceAlternatives.map(function(alt, ai) {
+      return /*#__PURE__*/React.createElement("button", {
+        key: ai,
+        onClick: function() {
+          var base = quizInputBaseRef.current;
+          setQuizInput((base ? base + " " : "") + (accumulatedRef.current ? accumulatedRef.current.replace(/\S+$/, alt) : alt));
+          setVoiceAlternatives([]);
+        },
+        style: {
+          background: ai === 0 ? "#1a2a1a" : "transparent",
+          border: "1px solid " + (ai === 0 ? "#3a5a3a" : "#333"),
+          borderRadius: "3px",
+          color: ai === 0 ? "#8aba8a" : "#777",
+          fontFamily: "monospace",
+          fontSize: "12px",
+          padding: "3px 10px",
+          cursor: "pointer"
+        }
+      }, alt);
+    }))), /*#__PURE__*/React.createElement("textarea", {
       style: _objectSpread(_objectSpread({}, S.quizInput), {}, {
         borderColor: quizInput ? "#444" : "#222"
       }),
+      lang: "en",
+      inputMode: "latin",
+      autoCapitalize: "none",
+      autoCorrect: "off",
+      spellCheck: false,
       value: quizInput,
       onChange: function onChange(e) {
         return setQuizInput(e.target.value);
