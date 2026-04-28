@@ -5763,6 +5763,11 @@ function MYKITAEnglishApp() {
       style: _objectSpread(_objectSpread({}, S.quizInput), {}, {
         borderColor: quizInput ? "#444" : "#222"
       }),
+      lang: "en",
+      inputMode: "latin",
+      autoCapitalize: "none",
+      autoCorrect: "off",
+      spellCheck: false,
       value: quizInput,
       onChange: function onChange(e) {
         return setQuizInput(e.target.value);
