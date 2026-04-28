@@ -2826,6 +2826,7 @@ function MYKITAEnglishApp() {
   var mediaRecorderRef = useRef(null);
   var audioChunksRef = useRef([]);
   var ttsCacheRef = useRef({});
+  var quizInputBaseRef = useRef("");
 
   // \u2500\u2500\u2500 Load/Save Progress \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
@@ -3532,7 +3533,8 @@ function MYKITAEnglishApp() {
                     // context\u306b\u5fdc\u3058\u3066\u5404input\u306b\u3082\u53cd\u6620
                     setRecordingContext(function (ctx) {
                       if (ctx === "quiz") {
-                        setQuizInput(finalText);
+                        var base = quizInputBaseRef.current;
+                        setQuizInput((base ? base + " " : "") + finalText);
                       } else if (ctx === "roleplay") {
                         setUserInput(finalText);
                       }
@@ -5462,6 +5464,7 @@ function MYKITAEnglishApp() {
       style: S.btn("p"),
       onClick: function onClick() {
         setJpWarning(false);
+        quizInputBaseRef.current = quizInput;
         startRecording("quiz");
       }
     }, "MIC \u97F3\u58F0\u5165\u529B") : /*#__PURE__*/React.createElement("button", {
