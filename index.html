@@ -2905,6 +2905,15 @@ function MYKITAEnglishApp() {
     _useStateDQI2 = _slicedToArray(_useStateDQI, 2),
     deletedQuizIds = _useStateDQI2[0],
     setDeletedQuizIds = _useStateDQI2[1];
+  var _useStateCQO = useState([]),
+    _useStateCQO2 = _slicedToArray(_useStateCQO, 2),
+    customQuizOrder = _useStateCQO2[0],
+    setCustomQuizOrder = _useStateCQO2[1];
+  var _useStateDOI = useState(null),
+    _useStateDOI2 = _slicedToArray(_useStateDOI, 2),
+    dragOverIdx = _useStateDOI2[0],
+    setDragOverIdx = _useStateDOI2[1];
+  var dragItemIdxRef = useRef(null);
   var _useStatePP = useState(false),
     _useStatePP2 = _slicedToArray(_useStatePP, 2),
     showPastePanel = _useStatePP2[0],
@@ -2993,6 +3002,10 @@ function MYKITAEnglishApp() {
       var dqi = localStorage.getItem("mykita_deleted_ids");
       if (dqi) setDeletedQuizIds(JSON.parse(dqi));
     } catch (e) {}
+    try {
+      var cqo = localStorage.getItem("mykita_quiz_order");
+      if (cqo) setCustomQuizOrder(JSON.parse(cqo));
+    } catch (e) {}
     ;
   }, []);
   var saveQuizStats = function saveQuizStats(next) {
@@ -3051,6 +3064,10 @@ function MYKITAEnglishApp() {
     });
     setSelectedBlankIds({});
   };
+  var saveQuizOrder = function saveQuizOrder(ids) {
+    setCustomQuizOrder(ids);
+    try { localStorage.setItem("mykita_quiz_order", JSON.stringify(ids)); } catch(e) {}
+  };
   var saveVocabStats = function saveVocabStats(next) {
     setVocabStats(next);
     try {
@@ -3062,7 +3079,14 @@ function MYKITAEnglishApp() {
 
   var memoQuizQuestions = memos.filter(function(m) { return memoQuizIds[m.id] && m.q && m.a; }).map(function(m) { return {id: "memo_" + m.id, jp: m.q, answer: m.a, hint: m.qEn || ""}; });
   var _baseQuizList = (useCustomQuiz && customQuizQuestions.length > 0) ? customQuizQuestions : QUIZ_QUESTIONS;
-  var allQuizList = (memoQuizQuestions.length > 0 ? memoQuizQuestions.concat(_baseQuizList) : _baseQuizList).filter(function(q) { return !deletedQuizIds[q.id]; });
+  var _rawQuizList = (memoQuizQuestions.length > 0 ? memoQuizQuestions.concat(_baseQuizList) : _baseQuizList).filter(function(q) { return !deletedQuizIds[q.id]; });
+  var allQuizList = customQuizOrder.length > 0 ? (function() {
+    var _om = {};
+    customQuizOrder.forEach(function(id, i) { _om[id] = i; });
+    return _rawQuizList.slice().sort(function(a, b) {
+      return (_om[a.id] !== undefined ? _om[a.id] : 99999) - (_om[b.id] !== undefined ? _om[b.id] : 99999);
+    });
+  })() : _rawQuizList;
   var activeQuiz = allQuizList.filter(function(q) { return !blankQuizIds[q.id]; });
 
   useEffect(function () {
@@ -5508,15 +5532,20 @@ function MYKITAEnglishApp() {
     }, (function() {
       var _bq = allQuizList.filter(function(q) { return blankQuizIds[q.id]; });
       var _selCount = Object.keys(selectedBlankIds).filter(function(id) { return selectedBlankIds[id]; }).length;
-      return _bq.length > 0 ? /*#__PURE__*/React.createElement("div", {style: {display:"flex", gap:"8px", alignItems:"center", padding:"4px 2px", marginBottom:"4px"}},
-        /*#__PURE__*/React.createElement("input", {type:"checkbox", checked: _selCount === _bq.length, onChange: function(e) {
+      var _hasToolbar = _bq.length > 0 || customQuizOrder.length > 0;
+      return _hasToolbar ? /*#__PURE__*/React.createElement("div", {style: {display:"flex", gap:"8px", alignItems:"center", padding:"4px 2px", marginBottom:"4px", flexWrap:"wrap"}},
+        _bq.length > 0 && /*#__PURE__*/React.createElement("input", {type:"checkbox", checked: _selCount === _bq.length, onChange: function(e) {
           if (e.target.checked) { var n={}; _bq.forEach(function(q) { n[q.id]=true; }); setSelectedBlankIds(n); } else { setSelectedBlankIds({}); }
         }, style: {cursor:"pointer", accentColor:"#6a4a4a"}}),
-        /*#__PURE__*/React.createElement("span", {style: {fontFamily:"monospace", fontSize:"11px", color:"#555"}}, "ブランク " + _bq.length + "件 全選択"),
-        _selCount > 0 && /*#__PURE__*/React.createElement("button", {
+        _bq.length > 0 && /*#__PURE__*/React.createElement("span", {style: {fontFamily:"monospace", fontSize:"11px", color:"#555"}}, "ブランク " + _bq.length + "件 全選択"),
+        _bq.length > 0 && _selCount > 0 && /*#__PURE__*/React.createElement("button", {
           onClick: function() { if (window.confirm(_selCount + "件を完全に削除しますか？")) deleteSelectedBlankQuiz(); },
           style: {background:"transparent", border:"1px solid #5a2a2a", borderRadius:"3px", color:"#8a5a5a", fontFamily:"monospace", fontSize:"10px", padding:"1px 7px", cursor:"pointer"}
-        }, "選択削除(" + _selCount + ")")
+        }, "選択削除(" + _selCount + ")"),
+        customQuizOrder.length > 0 && /*#__PURE__*/React.createElement("button", {
+          onClick: function() { saveQuizOrder([]); },
+          style: {background:"transparent", border:"1px solid #333", borderRadius:"3px", color:"#555", fontFamily:"monospace", fontSize:"10px", padding:"1px 7px", cursor:"pointer", marginLeft:"auto"}
+        }, "順序リセット")
       ) : null;
     })(), allQuizList.map(function (q2, idx) {
       var s2 = quizStats[q2.id] || {
@@ -5527,12 +5556,28 @@ function MYKITAEnglishApp() {
       var isBlank = !!blankQuizIds[q2.id];
       return /*#__PURE__*/React.createElement("div", {
         key: q2.id,
+        draggable: true,
+        onDragStart: function(e) { dragItemIdxRef.current = idx; e.dataTransfer.effectAllowed = "move"; },
+        onDragOver: function(e) { e.preventDefault(); setDragOverIdx(idx); },
+        onDrop: function(e) {
+          e.preventDefault();
+          var from = dragItemIdxRef.current;
+          if (from === null || from === idx) { setDragOverIdx(null); return; }
+          var newList = allQuizList.slice();
+          var item = newList.splice(from, 1)[0];
+          newList.splice(idx, 0, item);
+          saveQuizOrder(newList.map(function(q) { return q.id; }));
+          setDragOverIdx(null);
+          dragItemIdxRef.current = null;
+        },
+        onDragEnd: function() { setDragOverIdx(null); dragItemIdxRef.current = null; },
         style: {
           padding: "12px 14px",
           background: "#111",
-          border: "1px solid " + (isBlank ? "#1a1a1a" : "#222"),
+          border: "1px solid " + (dragOverIdx === idx ? "#4a6a9a" : isBlank ? "#1a1a1a" : "#222"),
           borderRadius: "3px",
-          opacity: isBlank ? 0.4 : 1
+          opacity: isBlank ? 0.4 : 1,
+          cursor: "grab"
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
@@ -5541,7 +5586,9 @@ function MYKITAEnglishApp() {
           gap: "8px",
           marginBottom: "6px"
         }
-      }, isBlank && /*#__PURE__*/React.createElement("input", {
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {color:"#333", fontSize:"14px", cursor:"grab", userSelect:"none", flexShrink:0, lineHeight:1}
+      }, "≡"), isBlank && /*#__PURE__*/React.createElement("input", {
         type: "checkbox",
         checked: !!selectedBlankIds[q2.id],
         onChange: function(e) {
