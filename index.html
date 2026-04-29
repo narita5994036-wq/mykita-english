@@ -5759,7 +5759,13 @@ function MYKITAEnglishApp() {
           cursor: "pointer"
         }
       }, alt);
-    }))), /*#__PURE__*/React.createElement("textarea", {
+    }), /*#__PURE__*/React.createElement("button", {
+      onClick: function() {
+        accumulatedRef.current = accumulatedRef.current.replace(/\s*\S+$/, "").trim();
+        setVoiceAlternatives([]);
+      },
+      style: {background:"transparent", border:"1px solid #2a2a2a", borderRadius:"3px", color:"#444", fontFamily:"monospace", fontSize:"12px", padding:"3px 8px", cursor:"pointer"}
+    }, "✕"))), /*#__PURE__*/React.createElement("textarea", {
       style: _objectSpread(_objectSpread({}, S.quizInput), {}, {
         borderColor: quizInput ? "#444" : "#222"
       }),
