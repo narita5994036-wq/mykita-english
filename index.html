@@ -3011,6 +3011,14 @@ function MYKITAEnglishApp() {
       var cqo = localStorage.getItem("mykita_quiz_order");
       if (cqo) setCustomQuizOrder(JSON.parse(cqo));
     } catch (e) {}
+    try {
+      var cqq = localStorage.getItem("mykita_custom_quiz");
+      if (cqq) { var _cqq = JSON.parse(cqq); setCustomQuizQuestions(_cqq); if (_cqq.length > 0) setUseCustomQuiz(true); }
+    } catch (e) {}
+    try {
+      var cfn = localStorage.getItem("mykita_custom_filename");
+      if (cfn) setCustomFileName(cfn);
+    } catch (e) {}
     ;
   }, []);
   var saveQuizStats = function saveQuizStats(next) {
@@ -3097,6 +3105,12 @@ function MYKITAEnglishApp() {
   useEffect(function () {
     if (activeTab === "quiz" && currentQuizIndex === null) pickNextQuestion({});
   }, [activeTab]);
+  useEffect(function () {
+    try { localStorage.setItem("mykita_custom_quiz", JSON.stringify(customQuizQuestions)); } catch(e) {}
+  }, [customQuizQuestions]);
+  useEffect(function () {
+    if (customFileName) { try { localStorage.setItem("mykita_custom_filename", customFileName); } catch(e) {} }
+  }, [customFileName]);
   var pickNextQuestion = function pickNextQuestion() {
     var stats = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : quizStats;
     var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : quizMode;
