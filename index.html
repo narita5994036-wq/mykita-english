@@ -4061,6 +4061,42 @@ function MYKITAEnglishApp() {
       }).catch(function(){});
     }
   };
+  var appendPastedText = function appendPastedText() {
+    var questions = parseTextToQuiz(pasteText);
+    if (questions.length === 0) { alert("日英ペアが見つかりませんでした。日本語と英語が交互に並んでいるテキストを貼り付けてください。"); return; }
+    var startIdx = customQuizQuestions.length;
+    var merged = customQuizQuestions.concat(questions);
+    setCustomQuizQuestions(merged);
+    setCustomFileName("貼り付けテキスト (" + merged.length + "問)");
+    setUseCustomQuiz(true);
+    setCurrentQuizIndex(null);
+    setQuizResult(null);
+    setQuizInput("");
+    setShowPastePanel(false);
+    setPasteText("");
+    if (claudeApiKey && questions.length > 0) {
+      var hintPrompt = "以下の英語フレーズのヒントを作成してください。\n重要単語・文法ポイントを日本語で簡潔に（例: \"feel free to + 動詞\", \"out of stock（在庫切れ）\", \"may I + 動詞？ で丁寧な依頼\"）。\n\nJSONのみ返答: [\"ヒント1\", \"ヒント2\", ...]\n\n" +
+        questions.map(function(q, i) { return (i + 1) + ". " + q.answer; }).join("\n");
+      fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {"Content-Type":"application/json","x-api-key":claudeApiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+        body: JSON.stringify({model:"claude-haiku-4-5-20251001", max_tokens:2048, system:"英語学習のヒントを作る専門家。JSONのみ返答する。", messages:[{role:"user",content:hintPrompt}]})
+      }).then(function(r){return r.json();}).then(function(data) {
+        var res = (data.content && data.content[0] && data.content[0].text) || "";
+        try {
+          var raw = res.trim().replace(/^```[a-z]*\n?/i,"").replace(/\n?```$/i,"").trim();
+          var m2 = raw.match(/\[[\s\S]*\]/); if (m2) raw = m2[0];
+          var hints = JSON.parse(raw);
+          setCustomQuizQuestions(function(prev) {
+            return prev.map(function(q, i) {
+              var hi = i - startIdx;
+              return (hi >= 0 && hints[hi]) ? Object.assign({}, q, {hint: hints[hi]}) : q;
+            });
+          });
+        } catch(e) {}
+      }).catch(function(){});
+    }
+  };
   var loadWordDoc = function loadWordDoc(file) {
     if (!file) return;
     if (!claudeApiKey) { alert("カスタムクイズにはClaude APIキーが必要です。"); return; }
@@ -5485,10 +5521,18 @@ function MYKITAEnglishApp() {
           placeholder: "\u3069\u3046\u305E\u304A\u6C17\u8EFD\u306B\u304A\u8A66\u3057\u304F\u3060\u3055\u3044\u3002\nPlease feel free to try on.\n\n\u5168\u3066\u30E6\u30CB\u30BB\u30C3\u30AF\u30B9\u306E\u5546\u54C1\u3067\u3059\u3002\nThese are all unisex.",
           style:{width:"100%",minHeight:"150px",background:"#111",color:"#f0ede8",border:"1px solid #333",borderRadius:"3px",fontFamily:"monospace",fontSize:"12px",padding:"8px",resize:"vertical",boxSizing:"border-box"}
         }),
-        /*#__PURE__*/React.createElement("button", {
-          style: Object.assign({}, _btnS, {alignSelf:"flex-start", opacity:pasteText.trim()?1:0.4}),
-          onClick: applyPastedText
-        }, "\u30AF\u30A4\u30BA\u3092\u4F5C\u6210")
+        /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:"8px",flexWrap:"wrap"}},
+          /*#__PURE__*/React.createElement("button", {
+            style: Object.assign({}, _btnS, {opacity:pasteText.trim()?1:0.4}),
+            onClick: applyPastedText,
+            disabled: !pasteText.trim()
+          }, "\u65B0\u898F\u4F5C\u6210"),
+          customQuizQuestions.length > 0 && /*#__PURE__*/React.createElement("button", {
+            style: Object.assign({}, _btnS, {opacity:pasteText.trim()?1:0.4, borderColor:"#4a7a4a", color:"#8aba8a"}),
+            onClick: appendPastedText,
+            disabled: !pasteText.trim()
+          }, "\u8FFD\u52A0 (" + customQuizQuestions.length + "\u554F\u306B\u8FFD\u52A0)")
+        )
       )
     );
     if (currentQuizIndex === null) return /*#__PURE__*/React.createElement("div", null,
@@ -6447,17 +6491,15 @@ function MYKITAEnglishApp() {
     }, /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        gap: "8px",
+        flexDirection: "column",
+        gap: "6px",
         marginBottom: m.a ? "8px" : "0"
       }
     }, /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "13px",
         color: "#f0ede8",
-        lineHeight: "1.6",
-        flex: 1
+        lineHeight: "1.6"
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
@@ -6485,7 +6527,7 @@ function MYKITAEnglishApp() {
       style: {
         display: "flex",
         gap: "6px",
-        flexShrink: 0
+        flexWrap: "wrap"
       }
     }, /*#__PURE__*/React.createElement("button", {
       onClick: function onClick() {
