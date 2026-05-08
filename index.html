@@ -3011,6 +3011,14 @@ function MYKITAEnglishApp() {
       var cqo = localStorage.getItem("mykita_quiz_order");
       if (cqo) setCustomQuizOrder(JSON.parse(cqo));
     } catch (e) {}
+    try {
+      var cqq = localStorage.getItem("mykita_custom_quiz");
+      if (cqq) { var _cqq = JSON.parse(cqq); setCustomQuizQuestions(_cqq); }
+    } catch (e) {}
+    try {
+      var cfn = localStorage.getItem("mykita_custom_filename");
+      if (cfn) setCustomFileName(cfn);
+    } catch (e) {}
     ;
   }, []);
   var saveQuizStats = function saveQuizStats(next) {
@@ -3083,7 +3091,7 @@ function MYKITAEnglishApp() {
   // \u2500\u2500\u2500 Init quiz \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 
   var memoQuizQuestions = memos.filter(function(m) { return memoQuizIds[m.id] && m.q && m.a; }).map(function(m) { return {id: "memo_" + m.id, jp: m.q, answer: m.a, hint: m.qEn || ""}; });
-  var _baseQuizList = (useCustomQuiz && customQuizQuestions.length > 0) ? customQuizQuestions : QUIZ_QUESTIONS;
+  var _baseQuizList = (useCustomQuiz && customQuizQuestions.length > 0) ? customQuizQuestions : (customQuizQuestions.length > 0 ? customQuizQuestions.concat(QUIZ_QUESTIONS) : QUIZ_QUESTIONS);
   var _rawQuizList = (memoQuizQuestions.length > 0 ? memoQuizQuestions.concat(_baseQuizList) : _baseQuizList).filter(function(q) { return !deletedQuizIds[q.id]; });
   var allQuizList = customQuizOrder.length > 0 ? (function() {
     var _om = {};
@@ -4033,69 +4041,31 @@ function MYKITAEnglishApp() {
     var questions = parseTextToQuiz(pasteText);
     if (questions.length === 0) { alert("日英ペアが見つかりませんでした。日本語と英語が交互に並んでいるテキストを貼り付けてください。"); return; }
     setCustomQuizQuestions(questions);
-    setCustomFileName("貼り付けテキスト (" + questions.length + "問)");
+    var fname = "貼り付けテキスト (" + questions.length + "問)";
+    setCustomFileName(fname);
+    try { localStorage.setItem("mykita_custom_quiz", JSON.stringify(questions)); } catch(e) {}
+    try { localStorage.setItem("mykita_custom_filename", fname); } catch(e) {}
     setUseCustomQuiz(true);
     setCurrentQuizIndex(null);
     setQuizResult(null);
     setQuizInput("");
     setShowPastePanel(false);
     setPasteText("");
-    // generate hints in background if API key available
-    if (claudeApiKey) {
-      var hintPrompt = "以下の英語フレーズのヒントを作成してください。\n重要単語・文法ポイントを日本語で簡潔に（例: \"feel free to + 動詞\", \"out of stock（在庫切れ）\", \"may I + 動詞？ で丁寧な依頼\"）。\n\nJSONのみ返答: [\"ヒント1\", \"ヒント2\", ...]\n\n" +
-        questions.map(function(q, i) { return (i + 1) + ". " + q.answer; }).join("\n");
-      fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {"Content-Type":"application/json","x-api-key":claudeApiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-        body: JSON.stringify({model:"claude-haiku-4-5-20251001", max_tokens:2048, system:"英語学習のヒントを作る専門家。JSONのみ返答する。", messages:[{role:"user",content:hintPrompt}]})
-      }).then(function(r){return r.json();}).then(function(data) {
-        var res = (data.content && data.content[0] && data.content[0].text) || "";
-        try {
-          var raw = res.trim().replace(/^```[a-z]*\n?/i,"").replace(/\n?```$/i,"").trim();
-          var m = raw.match(/\[[\s\S]*\]/); if (m) raw = m[0];
-          var hints = JSON.parse(raw);
-          setCustomQuizQuestions(function(prev) {
-            return prev.map(function(q, i) { return Object.assign({}, q, {hint: hints[i] || q.hint}); });
-          });
-        } catch(e) {}
-      }).catch(function(){});
-    }
   };
   var appendPastedText = function appendPastedText() {
     var questions = parseTextToQuiz(pasteText);
     if (questions.length === 0) { alert("日英ペアが見つかりませんでした。日本語と英語が交互に並んでいるテキストを貼り付けてください。"); return; }
-    var startIdx = customQuizQuestions.length;
     var merged = customQuizQuestions.concat(questions);
     setCustomQuizQuestions(merged);
-    setCustomFileName("貼り付けテキスト (" + merged.length + "問)");
-    setUseCustomQuiz(true);
+    var fname = "貼り付けテキスト (" + merged.length + "問)";
+    setCustomFileName(fname);
+    try { localStorage.setItem("mykita_custom_quiz", JSON.stringify(merged)); } catch(e) {}
+    try { localStorage.setItem("mykita_custom_filename", fname); } catch(e) {}
     setCurrentQuizIndex(null);
     setQuizResult(null);
     setQuizInput("");
     setShowPastePanel(false);
     setPasteText("");
-    if (claudeApiKey && questions.length > 0) {
-      var hintPrompt = "以下の英語フレーズのヒントを作成してください。\n重要単語・文法ポイントを日本語で簡潔に（例: \"feel free to + 動詞\", \"out of stock（在庫切れ）\", \"may I + 動詞？ で丁寧な依頼\"）。\n\nJSONのみ返答: [\"ヒント1\", \"ヒント2\", ...]\n\n" +
-        questions.map(function(q, i) { return (i + 1) + ". " + q.answer; }).join("\n");
-      fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {"Content-Type":"application/json","x-api-key":claudeApiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-        body: JSON.stringify({model:"claude-haiku-4-5-20251001", max_tokens:2048, system:"英語学習のヒントを作る専門家。JSONのみ返答する。", messages:[{role:"user",content:hintPrompt}]})
-      }).then(function(r){return r.json();}).then(function(data) {
-        var res = (data.content && data.content[0] && data.content[0].text) || "";
-        try {
-          var raw = res.trim().replace(/^```[a-z]*\n?/i,"").replace(/\n?```$/i,"").trim();
-          var m2 = raw.match(/\[[\s\S]*\]/); if (m2) raw = m2[0];
-          var hints = JSON.parse(raw);
-          setCustomQuizQuestions(function(prev) {
-            return prev.map(function(q, i) {
-              var hi = i - startIdx;
-              return (hi >= 0 && hints[hi]) ? Object.assign({}, q, {hint: hints[hi]}) : q;
-            });
-          });
-        } catch(e) {}
-      }).catch(function(){});
-    }
   };
   var loadWordDoc = function loadWordDoc(file) {
     if (!file) return;
@@ -4139,6 +4109,8 @@ function MYKITAEnglishApp() {
             }).filter(function(q) { return q.jp && q.answer; });
             if (questions.length === 0) throw new Error("no valid pairs");
             setCustomQuizQuestions(questions);
+            try { localStorage.setItem("mykita_custom_quiz", JSON.stringify(questions)); } catch(e) {}
+            try { localStorage.setItem("mykita_custom_filename", file.name); } catch(e) {}
             setUseCustomQuiz(true);
             setCurrentQuizIndex(null);
             setQuizResult(null);
@@ -5527,11 +5499,11 @@ function MYKITAEnglishApp() {
             onClick: applyPastedText,
             disabled: !pasteText.trim()
           }, "\u65B0\u898F\u4F5C\u6210"),
-          customQuizQuestions.length > 0 && /*#__PURE__*/React.createElement("button", {
+          /*#__PURE__*/React.createElement("button", {
             style: Object.assign({}, _btnS, {opacity:pasteText.trim()?1:0.4, borderColor:"#4a7a4a", color:"#8aba8a"}),
             onClick: appendPastedText,
             disabled: !pasteText.trim()
-          }, "\u8FFD\u52A0 (" + customQuizQuestions.length + "\u554F\u306B\u8FFD\u52A0)")
+          }, customQuizQuestions.length > 0 ? "\u8FFD\u52A0 (" + customQuizQuestions.length + "\u554F\u306B\u8FFD\u52A0)" : "\u8FFD\u52A0")
         )
       )
     );
