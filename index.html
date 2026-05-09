@@ -4061,9 +4061,6 @@ function MYKITAEnglishApp() {
     setCustomFileName(fname);
     try { localStorage.setItem("mykita_custom_quiz", JSON.stringify(merged)); } catch(e) {}
     try { localStorage.setItem("mykita_custom_filename", fname); } catch(e) {}
-    setCurrentQuizIndex(null);
-    setQuizResult(null);
-    setQuizInput("");
     setShowPastePanel(false);
     setPasteText("");
   };
