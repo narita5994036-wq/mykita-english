@@ -3103,9 +3103,15 @@ function MYKITAEnglishApp() {
   var activeQuiz = allQuizList.filter(function(q) { return !blankQuizIds[q.id]; });
 
   useEffect(function () {
-    if (activeTab === "quiz" && currentQuizIndex === null) pickNextQuestion({});
-  }, [activeTab]);
+    if (activeTab === "quiz" && currentQuizIndex === null && activeQuiz.length > 0) pickNextQuestion({});
+  }, [activeTab, currentQuizIndex]);
+  useEffect(function () {
+    if (activeTab === "quiz" && currentQuizIndex !== null && activeQuiz.length > 0 && !activeQuiz[currentQuizIndex]) {
+      setCurrentQuizIndex(null);
+    }
+  }, [activeTab, currentQuizIndex, useCustomQuiz]);
   var pickNextQuestion = function pickNextQuestion() {
+    if (activeQuiz.length === 0) { setCurrentQuizIndex(null); return; }
     var stats = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : quizStats;
     var mode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : quizMode;
     var forceIdx = arguments.length > 2 ? arguments[2] : undefined;
@@ -5509,6 +5515,7 @@ function MYKITAEnglishApp() {
       /*#__PURE__*/React.createElement("div", {style:{fontFamily:"monospace",color:"#555"}}, "\u8AAD\u307F\u8FBC\u307F\u4E2D\u2026")
     );
     var q = activeQuiz[currentQuizIndex];
+    if (!q) return null;
     var stat = quizStats[q.id] || {
       attempts: 0,
       correct: 0
