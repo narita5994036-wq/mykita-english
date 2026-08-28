@@ -6453,7 +6453,19 @@ function MYKITAEnglishApp() {
       fontSize: "13px",
       padding: "40px 0"
     }
-  }, "\u307E\u3060\u30E1\u30E2\u306F\u3042\u308A\u307E\u305B\u3093"), memos.map(function (m) {
+  }, "\u307E\u3060\u30E1\u30E2\u306F\u3042\u308A\u307E\u305B\u3093"), memos.length > 0 && /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      var text = memos.map(function(m) {
+        var lines = ["Q: " + m.q];
+        if (m.qEn) lines.push("EN: " + m.qEn);
+        if (m.a) { lines.push("A: " + m.a); }
+        if (m.aEn) lines.push("EN: " + m.aEn);
+        return lines.join("\n");
+      }).join("\n\n");
+      navigator.clipboard.writeText(text).catch(function(){});
+    },
+    style: {background:"none",border:"1px solid #2a4a2a",borderRadius:"3px",color:"#7a9a7a",fontSize:"11px",padding:"4px 10px",cursor:"pointer",marginBottom:"10px"}
+  }, "\u5168\u4EF6\u30B3\u30D4\u30FC (" + memos.length + "\u4EF6)"), memos.map(function (m) {
     return /*#__PURE__*/React.createElement("div", {
       key: m.id,
       "data-memo-id": m.id,
@@ -6545,7 +6557,16 @@ function MYKITAEnglishApp() {
         padding: "3px 8px",
         cursor: translating === m.id ? "default" : "pointer"
       }
-    }, translating === m.id ? "\u7ffb\u8a33\u4e2d..." : "\u82f1\u8a33"), m.a && /*#__PURE__*/React.createElement("button", {onClick: function onClick() { return toggleMemoQuiz(m); }, style: {background: memoQuizIds[m.id] ? "#0a1a0a" : "none", border: "1px solid " + (memoQuizIds[m.id] ? "#2a5a2a" : "#2a4a2a"), borderRadius: "3px", color: memoQuizIds[m.id] ? "#6a9a6a" : "#6a8a6a", fontSize: "11px", padding: "3px 8px", cursor: "pointer"}}, memoQuizIds[m.id] ? "\u767b\u9332\u6e08" : "\u30af\u30a4\u30ba\u767b\u9332"))), m.a && /*#__PURE__*/React.createElement("div", {
+    }, translating === m.id ? "\u7ffb\u8a33\u4e2d..." : "\u82f1\u8a33"), m.a && /*#__PURE__*/React.createElement("button", {onClick: function onClick() { return toggleMemoQuiz(m); }, style: {background: memoQuizIds[m.id] ? "#0a1a0a" : "none", border: "1px solid " + (memoQuizIds[m.id] ? "#2a5a2a" : "#2a4a2a"), borderRadius: "3px", color: memoQuizIds[m.id] ? "#6a9a6a" : "#6a8a6a", fontSize: "11px", padding: "3px 8px", cursor: "pointer"}}, memoQuizIds[m.id] ? "\u767b\u9332\u6e08" : "\u30af\u30a4\u30ba\u767b\u9332"), /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        var lines = ["Q: " + m.q];
+        if (m.qEn) lines.push("EN: " + m.qEn);
+        if (m.a) { lines.push("A: " + m.a); }
+        if (m.aEn) lines.push("EN: " + m.aEn);
+        navigator.clipboard.writeText(lines.join("\n")).catch(function(){});
+      },
+      style: {background:"none",border:"1px solid #2a4a2a",borderRadius:"3px",color:"#7a9a7a",fontSize:"11px",padding:"3px 8px",cursor:"pointer"}
+    }, "\u30b3\u30d4\u30fc"))), m.a && /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: "12px",
         color: "#aaa",
