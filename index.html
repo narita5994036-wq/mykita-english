@@ -2540,6 +2540,37 @@ function MYKITAEnglishApp() {
     _useState16 = _slicedToArray(_useState15, 2),
     translating = _useState16[0],
     setTranslating = _useState16[1]; // memo id being translated
+  var _useStateAMO = React.useState(""), aiMemoOutput = _useStateAMO[0], setAiMemoOutput = _useStateAMO[1];
+  var _useStateAML = React.useState(false), aiMemoLoading = _useStateAML[0], setAiMemoLoading = _useStateAML[1];
+  var _useStateAMP = React.useState(false), showAiMemoPanel = _useStateAMP[0], setShowAiMemoPanel = _useStateAMP[1];
+  var organizeMemosWithAI = function organizeMemosWithAI() {
+    if (!claudeApiKey) { alert("Claude APIキーが必要です。FAQメモタブで設定してください。"); return; }
+    if (memos.length === 0) { alert("メモがありません。"); return; }
+    setAiMemoLoading(true);
+    setAiMemoOutput("");
+    setShowAiMemoPanel(true);
+    var memoText = memos.map(function(m, i) {
+      var parts = [];
+      parts.push("Q: " + m.q);
+      if (m.qEn) parts.push("EN-Q: " + m.qEn);
+      if (m.a) parts.push("A: " + m.a);
+      if (m.aEn) parts.push("EN-A: " + m.aEn);
+      return (i + 1) + ".\n" + parts.join("\n");
+    }).join("\n\n");
+    var prompt = "以下のFAQメモ一覧を整理してください。\n\n条件:\n- 意味・テーマ・場面でカテゴリ分けし、各カテゴリに日本語の見出しをつける\n- カテゴリ内は関連度の高い順に並べる\n- 以下の形式で出力する（コードブロック不要、余計な説明なし）:\n\n【カテゴリ名】\nQ: ...\nA: ...\n（英語訳がある場合は次行に EN: ...）\n\nQ: ...\nA: ...\n\n【次のカテゴリ】\n...\n\nメモ:\n" + memoText;
+    fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {"Content-Type":"application/json","x-api-key":claudeApiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body: JSON.stringify({model:"claude-haiku-4-5-20251001", max_tokens:4096, messages:[{role:"user",content:prompt}]})
+    }).then(function(r){return r.json();}).then(function(data) {
+      var text = (data.content && data.content[0] && data.content[0].text) || "";
+      setAiMemoOutput(text);
+      setAiMemoLoading(false);
+    }).catch(function() {
+      setAiMemoOutput("エラーが発生しました。");
+      setAiMemoLoading(false);
+    });
+  };
   var saveApiKey = function saveApiKey(key) {
     setClaudeApiKey(key);
     try {
@@ -6465,7 +6496,33 @@ function MYKITAEnglishApp() {
       navigator.clipboard.writeText(text).catch(function(){});
     },
     style: {background:"none",border:"1px solid #2a4a2a",borderRadius:"3px",color:"#7a9a7a",fontSize:"11px",padding:"4px 10px",cursor:"pointer",marginBottom:"10px"}
-  }, "\u5168\u4EF6\u30B3\u30D4\u30FC (" + memos.length + "\u4EF6)"), memos.map(function (m) {
+  }, "\u5168\u4EF6\u30B3\u30D4\u30FC (" + memos.length + "\u4EF6)"),
+  memos.length > 0 && claudeApiKey && /*#__PURE__*/React.createElement("button", {
+    onClick: organizeMemosWithAI,
+    disabled: aiMemoLoading,
+    style: {background:"none",border:"1px solid #2a3a5a",borderRadius:"3px",color:aiMemoLoading?"#555":"#7a9abf",fontSize:"11px",padding:"4px 10px",cursor:aiMemoLoading?"default":"pointer",marginBottom:"10px",marginLeft:"6px"}
+  }, aiMemoLoading ? "AI\u6574\u7406\u4E2D..." : "AI\u6574\u7406\u3057\u3066\u30B3\u30D4\u30FC"),
+  showAiMemoPanel && /*#__PURE__*/React.createElement("div", {
+    style: {background:"#111",border:"1px solid #2a3a5a",borderRadius:"4px",padding:"14px",marginBottom:"14px"}
+  },
+    /*#__PURE__*/React.createElement("div", {style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"8px"}},
+      /*#__PURE__*/React.createElement("span", {style:{fontSize:"12px",color:"#7a9abf"}}, "AI\u6574\u7406\u7D50\u679C"),
+      /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:"6px"}},
+        !aiMemoLoading && aiMemoOutput && /*#__PURE__*/React.createElement("button", {
+          onClick: function() { navigator.clipboard.writeText(aiMemoOutput).catch(function(){}); },
+          style: {background:"none",border:"1px solid #2a4a2a",borderRadius:"3px",color:"#7a9a7a",fontSize:"11px",padding:"3px 8px",cursor:"pointer"}
+        }, "\u30B3\u30D4\u30FC"),
+        /*#__PURE__*/React.createElement("button", {
+          onClick: function() { setShowAiMemoPanel(false); setAiMemoOutput(""); },
+          style: {background:"none",border:"none",color:"#666",fontSize:"14px",cursor:"pointer",padding:"0 4px"}
+        }, "\u2715")
+      )
+    ),
+    aiMemoLoading
+      ? /*#__PURE__*/React.createElement("div", {style:{color:"#555",fontSize:"12px",fontFamily:"monospace"}}, "\u6574\u7406\u4E2D...")
+      : /*#__PURE__*/React.createElement("pre", {style:{margin:0,fontSize:"12px",color:"#f0ede8",lineHeight:"1.8",whiteSpace:"pre-wrap",fontFamily:"monospace",maxHeight:"400px",overflowY:"auto"}}, aiMemoOutput)
+  ),
+  memos.map(function (m) {
     return /*#__PURE__*/React.createElement("div", {
       key: m.id,
       "data-memo-id": m.id,
